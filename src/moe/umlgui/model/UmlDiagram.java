@@ -52,6 +52,7 @@ public abstract class UmlDiagram implements Serializable{
     ArrayList<UmlElement> elementList = new ArrayList();
     ArrayList<Activity> activityList = new ArrayList();
     ArrayList<UmlRelationship> relationshipList = new ArrayList();
+    ArrayList<ControlNode> controlNodeList = new ArrayList();
     
     public HashMap<Long,UmlCoreElement> getCoreElementMap() {
         return coreElementMap;
@@ -69,6 +70,12 @@ public abstract class UmlDiagram implements Serializable{
     public ArrayList<UmlRelationship> getRelationshipList(){
         return relationshipList;
     }
+
+    public ArrayList<ControlNode> getControlNodeList() {
+        return controlNodeList;
+    }
+    
+    
     
     public void addCoreElement(UmlCoreElement umlCoreElement) throws IOException{
         coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
@@ -81,6 +88,8 @@ public abstract class UmlDiagram implements Serializable{
         }
         else if(UmlRelationship.class.isInstance(umlCoreElement)) 
             relationshipList.add((UmlRelationship)umlCoreElement);
+        else if(ControlNode.class.isInstance(umlCoreElement)) 
+            controlNodeList.add((ControlNode)umlCoreElement);
         
         PUMLDriver.update(this);
     }

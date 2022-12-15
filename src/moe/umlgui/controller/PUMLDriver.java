@@ -98,7 +98,38 @@ public class PUMLDriver {
                 sb.append("\n");
             }
             
-            else if(ConditionalNode.class.isInstance(el)){
+           
+                
+            
+            //note
+            if(el.getNote() != null && ! el.getNote().trim().isEmpty()){
+                String pos = "left";
+                if(el.getPosition() == UmlCoreElement.RIGHT){
+                    pos = "right";
+                }
+                else if(el.getPosition() == UmlCoreElement.UP){
+                    pos = "top";
+                }
+                else if(el.getPosition() == UmlCoreElement.DOWN){
+                    pos = "bottom";
+                }
+                
+                sb.append(" note ").append(pos).append(" of ").append(el.getId()).append("\n");
+                sb.append(el.getNote());sb.append("\n");
+                sb.append("end note");
+                sb.append("\n");
+            }
+        
+
+            
+        }
+        
+        //controlNode
+        for(Iterator<ControlNode> i = umlDiagram.getControlNodeList().iterator() ; i.hasNext() ;){
+        
+            ControlNode el = i.next();
+            
+            if(ConditionalNode.class.isInstance(el)){
                 ConditionalNode cn = (ConditionalNode)el;
                 
                 for(ListIterator<LogicalTest> it = cn.getTestList().listIterator(); it.hasNext();){
@@ -141,31 +172,8 @@ public class PUMLDriver {
                     sb.append("\n");
                 }
             }
-                
-            
-            //note
-            if(el.getNote() != null && ! el.getNote().trim().isEmpty()){
-                String pos = "left";
-                if(el.getPosition() == UmlCoreElement.RIGHT){
-                    pos = "right";
-                }
-                else if(el.getPosition() == UmlCoreElement.UP){
-                    pos = "top";
-                }
-                else if(el.getPosition() == UmlCoreElement.DOWN){
-                    pos = "bottom";
-                }
-                
-                sb.append(" note ").append(pos).append(" of ").append(el.getId()).append("\n");
-                sb.append(el.getNote());sb.append("\n");
-                sb.append("end note");
-                sb.append("\n");
-            }
         
-
-            
         }
-        
         //TODO Note Element
 
         //TODO Package

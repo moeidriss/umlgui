@@ -130,8 +130,8 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setDividerLocation(100);
-        jSplitPane1.setResizeWeight(0.3);
+        jSplitPane1.setDividerLocation(200);
+        jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setOneTouchExpandable(true);
 
         contentPanel.setLayout(new java.awt.BorderLayout());
@@ -177,6 +177,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         
         d.getContentPane().add(pe , BorderLayout.CENTER);
         d.pack();
+        d.setSize(400, d.getSize().height);
         d.setLocationRelativeTo(null);
         d.setVisible(true);
     }//GEN-LAST:event_newProjectButtonActionPerformed

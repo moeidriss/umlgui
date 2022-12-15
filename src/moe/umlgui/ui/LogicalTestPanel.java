@@ -14,6 +14,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
@@ -83,7 +84,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                 
                 if(columnIndex == 0){
                     if(rowIndex == 0)   return "IF";
-                    else if(getRowCount() > 2)  return "ELSE IF";
+                    else if(getRowCount() > 2 && rowIndex < (getRowCount()-1))  return "ELSE IF";
                     else return "ELSE";
                 }
                 else if(columnIndex == 1){
@@ -232,9 +233,33 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         JComboBox cb = new JComboBox();
         cb.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
         
+        JButton newActivityButton = new JButton("New ...");
+        newActivityButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object sel = JOptionPane.showInputDialog(null, "Select Actvity Type" , 
+                        "Actvity Type", JOptionPane.INFORMATION_MESSAGE, null, 
+                        new String[] {"Action","Flow End","Stop"}, "Action");
+                Activity ac = null;
+                if(sel.equals("Action")){
+                    ac = new Action();
+                }
+                else if(sel.equals("Flow Final Node")){
+                    ac = new FlowFinalNode();
+                }
+                else if(sel.equals("Activity Final Node")){
+                    ac = new ActivityFinalNode();
+                }                
+                
+                if(ac!=null){
+                    editNewActivity(ac,cb);
+                }
+            }            
+        });
+        
         JPanel pp = new JPanel();
         pp.add(cb);
-        pp.add(getNewActivityButton(ac , "New Activity" ,cb));
+        pp.add(newActivityButton);
         p.add(pp);
         
         JDialog d = new JDialog();
@@ -254,12 +279,13 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         d.getContentPane().add(okButton , BorderLayout.SOUTH);
         
         d.pack();
+        d.setSize(600 , d.getSize().height);
         d.setLocationRelativeTo(null);
         d.setVisible(true);
         
     }//GEN-LAST:event_addButtonActionPerformed
 
-    private JButton getNewActivityButton(Activity ac , String displayText,JComboBox cb ){
+    private void editNewActivity(Activity ac ,JComboBox cb ){
         PropertyEditor pe = new PropertyEditor();
         pe.setContext(context);
         pe.edit(ac , null);
@@ -285,18 +311,10 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         
         acDialog.getContentPane().add(buttonsP , BorderLayout.SOUTH);
         acDialog.pack();
-        
+        acDialog.setSize(600 , acDialog.getSize().height);
         acDialog.setLocationRelativeTo(null);
         
-        JButton newActivityButton = new JButton(displayText);
-        newActivityButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                acDialog.setVisible(true);
-            }            
-        });
-        
-        return newActivityButton;
+        acDialog.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

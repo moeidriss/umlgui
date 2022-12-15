@@ -10,7 +10,7 @@ import java.util.HashMap;
  *
  * @author Moe
  */
-public class WhileNode extends ActivityNode implements java.io.Serializable{
+public class WhileNode extends ControlNode implements java.io.Serializable{
     
     public WhileNode() {
         super("While Node");

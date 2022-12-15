@@ -11,7 +11,7 @@ import java.util.HashMap;
  *
  * @author Moe
  */
-public class ConditionalNode extends ActivityNode implements java.io.Serializable{
+public class ConditionalNode extends ControlNode implements java.io.Serializable{
     
     public ConditionalNode() {
         super("Conditional Node");

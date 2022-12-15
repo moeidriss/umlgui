@@ -6,6 +6,10 @@ package moe.umlgui.ui;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import moe.umlgui.model.*;
 
@@ -162,8 +166,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         
         //DiagramPanel events
         else if(evt.getPropertyName().equals("Element inserted")){
-            propertyEditor.edit((UmlCoreElement)evt.getNewValue() , ((UmlDiagramPanel)evt.getSource()).umlDiagram);
             project.addCoreElement((UmlCoreElement)evt.getNewValue() );
+            propertyEditor.edit((UmlCoreElement)evt.getNewValue() , ((UmlDiagramPanel)evt.getSource()).umlDiagram);            
         }
         
     }

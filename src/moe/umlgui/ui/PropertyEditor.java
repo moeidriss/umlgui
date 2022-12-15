@@ -82,7 +82,7 @@ public class PropertyEditor extends javax.swing.JPanel {
     private Object[] getElementList(){
         ArrayList<Object> l = new ArrayList();
         //l.add(null);
-        if(nowEditing==ELEMENT && UmlDiagram.class.isInstance(context)){
+        if(nowEditing==ELEMENT){
             l.addAll(umlDiagram.getElementList());
         }
         
@@ -377,11 +377,31 @@ public class PropertyEditor extends javax.swing.JPanel {
             }
         }
 
-        if(UmlRelationship.class.isInstance(umlCoreElement)){
+        if(UmlRelationship.class.isInstance(umlCoreElement) && umlDiagram != null){
             ((UmlRelationship)umlCoreElement).setPartyA((UmlElement)fromComboBox.getSelectedItem());
             ((UmlRelationship)umlCoreElement).setPartyB((UmlElement)toComboBox.getSelectedItem());
         }
-
+        
+        //TODO DESIGN CHOICE
+        /*
+        New Activities added by LogicalTestPanel are project actvities.
+        1)if associated to diagram, they could be re-used (!?) and accessed from diagram
+            //will need to be marked invisible not to be drawn as 'normal' activities
+        2)not. single use.
+        */
+        //ControlNode: associate any newly created activity to diagram (if context)
+        /*if(ConditionalNode.class.isInstance(umlCoreElement)){
+            ConditionalNode cn = (ConditionalNode)umlCoreElement;
+            for(Iterator<Activity> i = cn.getTestMap().values().iterator() ; i.hasNext() ; ){
+                Activity at = i.next();
+                if(!umlDiagram.getActivityList().contains(at)){
+                    umlDiagram.addCoreElement(at);
+                }
+                
+            }
+        }
+        */
+        
         this.firePropertyChange("Element updated", null, umlCoreElement);
     }
     
