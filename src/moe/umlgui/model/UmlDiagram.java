@@ -50,6 +50,7 @@ public abstract class UmlDiagram implements Serializable{
     
     HashMap<Long,UmlCoreElement> coreElementMap = new HashMap();
     ArrayList<UmlElement> elementList = new ArrayList();
+    ArrayList<UmlCoreElement> coreElementList = new ArrayList();
     ArrayList<Activity> activityList = new ArrayList();
     ArrayList<UmlRelationship> relationshipList = new ArrayList();
     ArrayList<ControlNode> controlNodeList = new ArrayList();
@@ -60,6 +61,10 @@ public abstract class UmlDiagram implements Serializable{
     
     public ArrayList<UmlElement> getElementList(){
         return elementList;
+    }
+    
+    public ArrayList<UmlCoreElement> getCoreElementList(){
+        return coreElementList;
     }
     
     public ArrayList<Activity> getActivityList(){
@@ -79,6 +84,7 @@ public abstract class UmlDiagram implements Serializable{
     
     public void addCoreElement(UmlCoreElement umlCoreElement) throws IOException{
         coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
+        coreElementList.add(umlCoreElement);
         
         if(UmlElement.class.isInstance(umlCoreElement)){
             elementList.add((UmlElement)umlCoreElement);

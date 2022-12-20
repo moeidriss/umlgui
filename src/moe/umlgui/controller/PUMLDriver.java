@@ -31,8 +31,8 @@ public class PUMLDriver {
         sb.append("\n");
         
         //define elements
-        for(Iterator<UmlElement> i= umlDiagram.getElementList().iterator(); i.hasNext();){
-            UmlElement el = i.next();
+        for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
+            UmlCoreElement el = i.next();
             
             if(UseCase.class.isInstance(el)){
                 String desc = "";
@@ -99,35 +99,8 @@ public class PUMLDriver {
             }
             
            
-                
-            
-            //note
-            if(el.getNote() != null && ! el.getNote().trim().isEmpty()){
-                String pos = "left";
-                if(el.getPosition() == UmlCoreElement.RIGHT){
-                    pos = "right";
-                }
-                else if(el.getPosition() == UmlCoreElement.UP){
-                    pos = "top";
-                }
-                else if(el.getPosition() == UmlCoreElement.DOWN){
-                    pos = "bottom";
-                }
-                
-                sb.append(" note ").append(pos).append(" of ").append(el.getId()).append("\n");
-                sb.append(el.getNote());sb.append("\n");
-                sb.append("end note");
-                sb.append("\n");
-            }
         
 
-            
-        }
-        
-        //controlNode
-        for(Iterator<ControlNode> i = umlDiagram.getControlNodeList().iterator() ; i.hasNext() ;){
-        
-            ControlNode el = i.next();
             
             if(ConditionalNode.class.isInstance(el)){
                 ConditionalNode cn = (ConditionalNode)el;
@@ -166,11 +139,36 @@ public class PUMLDriver {
                         }
                     }
                     
-                    
+                    //'else'
+                    else{
+                        sb.append("\n").append(":").append(cn.getTestMap().get(test)).append(";");
+                    }
                     
                     
                     sb.append("\n");
                 }
+            }
+            
+            
+                
+            
+            //note
+            if(el.getNote() != null && ! el.getNote().trim().isEmpty()){
+                String pos = "left";
+                if(el.getPosition() == UmlCoreElement.RIGHT){
+                    pos = "right";
+                }
+                else if(el.getPosition() == UmlCoreElement.UP){
+                    pos = "top";
+                }
+                else if(el.getPosition() == UmlCoreElement.DOWN){
+                    pos = "bottom";
+                }
+                
+                sb.append(" note ").append(pos).append(" of ").append(el.getId()).append("\n");
+                sb.append(el.getNote());sb.append("\n");
+                sb.append("end note");
+                sb.append("\n");
             }
         
         }
