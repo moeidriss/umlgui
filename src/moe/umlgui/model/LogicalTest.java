@@ -15,6 +15,7 @@ public class LogicalTest {
                                 , "<" , "IS" , "IS NOT"};
 
     //TODO Operand, Operator classes
+    String condition;
     String operandA ;
     String operandB;
     String operator;
@@ -55,6 +56,15 @@ public class LogicalTest {
         this.operator = operator;
     }
 
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    
 
     public boolean equals(Object another){
         try{
@@ -62,7 +72,9 @@ public class LogicalTest {
                     &&
                     (((LogicalTest)another).operandB == operandB)
                     &&
-                    (((LogicalTest)another).operator == operator);
+                    (((LogicalTest)another).operator == operator)
+                    &&
+                    (((LogicalTest)another).condition == condition);
         }catch(ClassCastException cce){
             return false;
         }

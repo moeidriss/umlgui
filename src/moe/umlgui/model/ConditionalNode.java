@@ -22,6 +22,8 @@ public class ConditionalNode extends ControlNode implements java.io.Serializable
     ArrayList<LogicalTest> testList = new ArrayList();
     
     //TODO convert Activity to Activity set
+    
+    //TODO implement logic control (a single 'if', single 'else') and testList order
 
     public HashMap<LogicalTest, Activity> getTestMap() {
         return testMap;

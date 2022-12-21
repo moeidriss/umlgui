@@ -83,9 +83,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                 LogicalTest t = (entity.getTestList().get(rowIndex));
                 
                 if(columnIndex == 0){
-                    if(rowIndex == 0)   return "IF";
-                    else if(getRowCount() > 2 && rowIndex < (getRowCount()-1))  return "ELSE IF";
-                    else return "ELSE";
+                    return t.getCondition();
                 }
                 else if(columnIndex == 1){
                     return t.getOperandA();
@@ -126,7 +124,10 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                  LogicalTest t = (entity.getTestList().get(rowIndex));
                 
                 
-                if(columnIndex == 1){
+                if(columnIndex == 0){
+                    t.setCondition((String)aValue);
+                }
+                else if(columnIndex == 1){
                     t.setOperandA((String)aValue);
                 }                
                 else if(columnIndex == 2){
@@ -140,9 +141,9 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                 }
                 
                 //if anything but activity is updated in last row, insert new 'else'
-                if(rowIndex == (entity.getTestList().size()-1) && columnIndex != 4){
+                /*if(rowIndex == (entity.getTestList().size()-1) && columnIndex != 4){
                     entity.newTest();
-                }
+                }*/
             }
             
             ArrayList<TableModelListener> tableModelListeners = new ArrayList();
@@ -217,8 +218,12 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
+    //TODO implement logic control (a single 'if', single 'else') and testList order
+    
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         LogicalTest t = entity.newTest();
+        if(entity.getTestList().isEmpty())  t.setCondition("IF");
+        
         Activity ac = new Action();
         
         LogicalTestComponent tComp = new LogicalTestComponent(t);

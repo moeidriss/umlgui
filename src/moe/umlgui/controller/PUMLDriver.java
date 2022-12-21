@@ -101,30 +101,26 @@ public class PUMLDriver {
            
         
 
-            
+            //TODO this assumes testList order is maintained in entity
             if(ConditionalNode.class.isInstance(el)){
                 ConditionalNode cn = (ConditionalNode)el;
                 
                 for(ListIterator<LogicalTest> it = cn.getTestList().listIterator(); it.hasNext();){
-                    String term1 = null;
-                    if( !it.hasPrevious())  term1 = "if ";
-                    else if(cn.getTestList().size() > 2 && it.nextIndex() < (cn.getTestList().size()-1))
-                        term1 = "elseif ";
-                    else    term1 = "else ";
+                    
+                    
+                    LogicalTest test = it.next();
+                    String term1 = test.getCondition().toLowerCase().replace(" ", "");
                     
                     sb.append(term1);
                     
-                    LogicalTest test = it.next();
-                    
                     //if's and elseif's
-                    if(it.hasNext()){
+                    if(term1.equals("if") || term1.equals("elseif")){
                         //equals / is:if (opA) is/equals (opB) then (act)
                         //all else:if (opA op opB) then (act)
-                        if(test.getOperator().equals("IS")
-                                ||
-                            test.getOperator().equals("=")
+                        if(term1.equals("if") &&
+                           (test.getOperator().equals("IS") || test.getOperator().equals("="))
                         ){
-                            sb.append("(").append(test.getOperandA()).append(") ");
+                            sb.append(" (").append(test.getOperandA()).append(") ");
                             sb.append(test.getOperator().replace("=", "equals"));
                             sb.append(" (").append(test.getOperandB()).append(") ");
                             
@@ -132,7 +128,7 @@ public class PUMLDriver {
                             sb.append(":").append(cn.getTestMap().get(test)).append(";");//TODO customize box per activity subclass
                         }   
                         else{
-                            sb.append("(").append(test.getOperandA()).append(" ").append(test.getOperator()).append(" ").append(test.getOperandB()).append(") ");
+                            sb.append(" (").append(test.getOperandA()).append(" ").append(test.getOperator()).append(" ").append(test.getOperandB()).append(") ");
                             sb.append(" then ");
                             sb.append("(").append(cn.getTestMap().get(test)).append(")\n");
                             sb.append(":").append(cn.getTestMap().get(test)).append(";");//TODO customize box per activity subclass

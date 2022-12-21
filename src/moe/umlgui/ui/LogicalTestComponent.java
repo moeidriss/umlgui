@@ -21,9 +21,17 @@ public class LogicalTestComponent extends javax.swing.JPanel {
     public LogicalTestComponent(LogicalTest test) {
         this.test = test;
         initComponents();
+        load();
     }
 
+    private void load(){
+        if(test.getCondition()!=null) conditionComboBox.setSelectedItem(test.getCondition());
+        if(test.getOperandA()!=null)    jTextField1.setText(test.getOperandA());
+        if(test.getOperator()!=null) jComboBox1.setSelectedItem(test.getOperator());
+        if(test.getOperandB()!=null)    jTextField2.setText(test.getOperandB());
+    }
     public void save(){
+        test.setCondition((String)conditionComboBox.getSelectedItem());
         test.setOperandA(jTextField1.getText());
         test.setOperator((String)jComboBox1.getSelectedItem());
         test.setOperandB(jTextField2.getText());
@@ -38,11 +46,15 @@ public class LogicalTestComponent extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        conditionComboBox = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jTextField2 = new javax.swing.JTextField();
 
         setLayout(new java.awt.GridBagLayout());
+
+        conditionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "IF", "ELSE IF", "ELSE" }));
+        add(conditionComboBox, new java.awt.GridBagConstraints());
 
         jTextField1.setText(test.getOperandA());
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -90,6 +102,7 @@ public class LogicalTestComponent extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> conditionComboBox;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
