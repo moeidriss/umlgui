@@ -28,13 +28,15 @@ public class Palette extends javax.swing.JPanel {
         add(new UmlElementLabel(new Include() ));
         add(new UmlElementLabel(new Action() ));
         add(new UmlElementLabel(new CallActivity() ));
-        add(new UmlElementLabel(new X() ));
+        add(new UmlElementLabel(new AcceptEvent() ));
         add(new UmlElementLabel(new AcceptTimeEvent() ));
         add(new UmlElementLabel(new SendSignal() ));
         add(new UmlElementLabel(new ActivityInitialNode() ));
         add(new UmlElementLabel(new ActivityFinalNode() ));
         add(new UmlElementLabel(new FlowFinalNode() ));
-        add(new UmlElementLabel(new ConditionalNode() ));
+        add(new UmlElementLabel(new ConditionalBlock() ));
+        add(new UmlElementLabel(new WhileLoop() ));
+        add(new UmlElementLabel(new RepeatLoop() ));
     }
 
     /**

@@ -6,14 +6,20 @@ package moe.umlgui.ui;
 
 import moe.umlgui.model.*;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 import moe.umlgui.controller.PUMLDriver;
 
@@ -39,23 +45,58 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
     
     private void loadDiagramPanel(){
         setName(umlDiagram.getName());        
-        this.setBorder(new TitledBorder(umlDiagram.getName()));
+        this.setBorder(new TitledBorder(umlDiagram.getName()));   
+        
+        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        sp.setOneTouchExpandable(true);
+        sp.setDividerLocation(0.4);
+        sp.setResizeWeight(0.4);
+        add(sp, BorderLayout.CENTER);
+        
+        sp.setLeftComponent(new JScrollPane(label));
+        sp.setRightComponent(textArea);
+        
+        JButton updateImgButton = new JButton("Update");
+        updateImgButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                umlDiagram.setUmlCode(textArea.getText());
+                try {
+                    PUMLDriver.updateImage(umlDiagram);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(UmlDiagramPanel.this, ex, "PUMLDriver Error", JOptionPane.ERROR_MESSAGE);
+                    Logger.getLogger(UmlDiagramPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                updateImage();
+            }
+            
+        });
+        
+        add(updateImgButton, BorderLayout.SOUTH);
+        
         this.revalidate();
     }
     
+    JTextArea textArea = new JTextArea();//TODO REMOVE
+    JLabel label = new JLabel();
     
     public void updateImage(){
-        removeAll();
-        JLabel l = new JLabel();
-        l.setIcon(new ImageIcon(umlDiagram.getImage()));
-        add(l, BorderLayout.CENTER);
+        label.setIcon(new ImageIcon(umlDiagram.getImage()));
+        textArea.setText(umlDiagram.getUmlCode());
         revalidate();
        
     }
     
     public void insertElement(UmlCoreElement el) throws IOException{
         umlDiagram.addCoreElement(el);
-        updateImage();
+        textArea.setText(umlDiagram.getUmlCode());
+        
+        //exclude 'complex' elements from img update at insertion
+        if(!ControlNode.class.isInstance(el)
+        ){
+            updateImage();
+        }
+        
         this.firePropertyChange("Element inserted", null, el);
     }
 

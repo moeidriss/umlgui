@@ -48,6 +48,17 @@ public abstract class UmlDiagram implements Serializable{
         this.image = image;
     }
     
+    String umlCode;
+
+    public String getUmlCode() {
+        return umlCode;
+    }
+
+    public void setUmlCode(String umlCode) {
+        this.umlCode = umlCode;
+    }
+    
+    
     HashMap<Long,UmlCoreElement> coreElementMap = new HashMap();
     ArrayList<UmlElement> elementList = new ArrayList();
     ArrayList<UmlCoreElement> coreElementList = new ArrayList();

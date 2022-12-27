@@ -14,6 +14,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -28,7 +29,7 @@ import moe.umlgui.model.*;
  */
 public class LogicalTestPanel extends javax.swing.JPanel {
 
-    ConditionalNode entity;
+    ConditionalBlock entity;
     TestTableModel testTableModel;
     
     Project context;
@@ -36,7 +37,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
     /**
      * Creates new form LogicalTestPanel
      */
-    public LogicalTestPanel(ConditionalNode entity, Project context) {
+    public LogicalTestPanel(ConditionalBlock entity, Project context) {
         this.entity = entity;
         this.context = context;
         testTableModel = new TestTableModel();
@@ -109,13 +110,13 @@ public class LogicalTestPanel extends javax.swing.JPanel {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if(columnIndex == 4)    return Activity.class;//TODO ...
+                if(columnIndex == 4)    return ArrayList.class;//TODO ...
                 return String.class;
             }
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                if(columnIndex==0)  return false;
+                if(columnIndex==0 || columnIndex==4)  return false;
                 return true;
             }
 
@@ -136,9 +137,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                 else if(columnIndex == 3){
                     t.setOperandB((String)aValue);
                 }                
-                else if(columnIndex == 4){
-                    entity.getTestMap().put(t , (Activity)aValue);
-                }
+                
                 
                 //if anything but activity is updated in last row, insert new 'else'
                 /*if(rowIndex == (entity.getTestList().size()-1) && columnIndex != 4){
@@ -249,10 +248,10 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                 if(sel.equals("Action")){
                     ac = new Action();
                 }
-                else if(sel.equals("Flow Final Node")){
+                else if(sel.equals("Flow End")){
                     ac = new FlowFinalNode();
                 }
-                else if(sel.equals("Activity Final Node")){
+                else if(sel.equals("Stop")){
                     ac = new ActivityFinalNode();
                 }                
                 
@@ -263,6 +262,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         });
         
         JPanel pp = new JPanel();
+        pp.add(new JLabel("Action: "));
         pp.add(cb);
         pp.add(newActivityButton);
         p.add(pp);
@@ -275,7 +275,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tComp.save();
-                entity.getTestMap().put(t,(Activity)cb.getSelectedItem());
+                entity.getTestMap().get(t).add((Activity)cb.getSelectedItem());
                 //entity.newTest();//new 'else'
                 jTable1.revalidate();
                 d.setVisible(false);

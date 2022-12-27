@@ -11,14 +11,15 @@ package moe.umlgui.model;
 
 public class LogicalTest {
 
-    public static String[] OPERATORS = {"=" , "!=" , ">" 
+    public static String[] OPERATORS = {null,"=" , "!=" , ">" 
                                 , "<" , "IS" , "IS NOT"};
 
     //TODO Operand, Operator classes
-    String condition;
+    String condition;//NA for while loop
     String operandA ;
     String operandB;
     String operator;
+    String label;
 
     public LogicalTest(){
 
@@ -64,6 +65,15 @@ public class LogicalTest {
         this.condition = condition;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    
     
 
     public boolean equals(Object another){
@@ -74,7 +84,9 @@ public class LogicalTest {
                     &&
                     (((LogicalTest)another).operator == operator)
                     &&
-                    (((LogicalTest)another).condition == condition);
+                    (((LogicalTest)another).condition == condition)
+                    &&
+                    (((LogicalTest)another).label == label);
         }catch(ClassCastException cce){
             return false;
         }

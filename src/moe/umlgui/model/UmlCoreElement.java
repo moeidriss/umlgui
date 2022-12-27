@@ -89,6 +89,20 @@ String type;
         this.id = id;
     }
     
+    
+    
+    String umlCode;
+
+    public String getUmlCode() {
+        return umlCode;
+    }
+
+    public void setUmlCode(String umlCode) {
+        this.umlCode = umlCode;
+    }
+    
+    
+    
     public UmlCoreElement(String type){
         this.type = type;
     }

@@ -94,7 +94,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         jSplitPane1 = new javax.swing.JSplitPane();
         contentPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
         controlsTabbedPane = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -136,15 +136,16 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
 
         contentPanel.setLayout(new java.awt.BorderLayout());
 
+        jLabel1.setBackground(new java.awt.Color(204, 0, 0));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/w4g.png"))); // NOI18N
         contentPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("IN PROGRESS...");
-        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        contentPanel.add(jLabel2, java.awt.BorderLayout.SOUTH);
+        jProgressBar1.setForeground(new java.awt.Color(204, 0, 0));
+        jProgressBar1.setIndeterminate(true);
+        jProgressBar1.setString("IN PROGRESS");
+        jProgressBar1.setStringPainted(true);
+        contentPanel.add(jProgressBar1, java.awt.BorderLayout.SOUTH);
 
         jSplitPane1.setRightComponent(contentPanel);
         jSplitPane1.setTopComponent(controlsTabbedPane);
@@ -228,7 +229,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     private javax.swing.JPanel contentPanel;
     private javax.swing.JTabbedPane controlsTabbedPane;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton newProjectButton;

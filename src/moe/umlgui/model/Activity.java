@@ -4,6 +4,12 @@
  */
 package moe.umlgui.model;
 
+/*
+TODO decide design of "activity flow" or "composite activity" for nesting 
+in conditional blocks, loops, 
+- ArrayList.
+- ActivityBlock, ActivityFlow extends Activity
+*/
 
 public abstract class Activity extends UmlElement  implements java.io.Serializable{
 
