@@ -6,8 +6,10 @@ package moe.umlgui.model;
 
 
 public class ActivityDiagram extends UmlDiagram implements java.io.Serializable{
-    public ActivityDiagram(){
-        super("Activity Diagram");
+    public ActivityDiagram(UmlModel model){
+        super("Activity Diagram",model);
         setName("New Activity Diagram");
     }
+    
+    //TODO override addCoreElement...
 }

@@ -57,6 +57,8 @@ public class UmlElementImportTransferHandler extends TransferHandler {
             return true;
         } catch (UnsupportedFlavorException ex) {
             Logger.getLogger(UmlElementImportTransferHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ModelException ex) {
+            Logger.getLogger(UmlElementImportTransferHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(UmlElementImportTransferHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

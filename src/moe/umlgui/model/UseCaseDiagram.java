@@ -6,8 +6,10 @@ package moe.umlgui.model;
 
 
 public class UseCaseDiagram extends UmlDiagram implements java.io.Serializable {
-    public UseCaseDiagram(){
-        super("Use Case Diagram");
+    public UseCaseDiagram(UmlModel model){
+        super("Use Case Diagram" , model);
         setName("New Use Case Diagram");
     }
+    
+    //TODO override addCoreElement...
 }

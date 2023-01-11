@@ -13,6 +13,7 @@ import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -93,8 +94,9 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         openProjectButton = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         contentPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jLabel1 = new javax.swing.JLabel();
         controlsTabbedPane = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -136,16 +138,20 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
 
         contentPanel.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setBackground(new java.awt.Color(204, 0, 0));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/w4g.png"))); // NOI18N
-        contentPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
-
         jProgressBar1.setForeground(new java.awt.Color(204, 0, 0));
         jProgressBar1.setIndeterminate(true);
         jProgressBar1.setString("IN PROGRESS");
         jProgressBar1.setStringPainted(true);
         contentPanel.add(jProgressBar1, java.awt.BorderLayout.SOUTH);
+
+        jScrollPane1.setBackground(new java.awt.Color(204, 0, 0));
+
+        jLabel1.setBackground(new java.awt.Color(204, 0, 0));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/w4g.png"))); // NOI18N
+        jScrollPane1.setViewportView(jLabel1);
+
+        contentPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setRightComponent(contentPanel);
         jSplitPane1.setTopComponent(controlsTabbedPane);
@@ -230,25 +236,32 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     private javax.swing.JTabbedPane controlsTabbedPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton newProjectButton;
     private javax.swing.JButton openProjectButton;
     // End of variables declaration//GEN-END:variables
 
+    
+    public boolean equals(Object o){
+        return (hashCode()==o.hashCode());
+    }
+    
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {     
+        if(!evt.getPropertyName().equals("Display"))    return;
+        
+        java.lang.System.out.println(evt.getPropertyName());
+        java.lang.System.out.println(evt.getOldValue());
+        java.lang.System.out.println(evt.getSource().getClass());
+        java.lang.System.out.println("---------------");
+        
         String pn = evt.getPropertyName();
-        if(pn.equals("Display")){
+        if(pn.equals("Display") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
             display((JPanel)evt.getNewValue());
             revalidate();
         }
-        /*else if(pn.equals("Project in focus")){
-            propertyEditor.edit((Project)evt.getNewValue() , ((Project)evt.getSource()).project);
-            revalidate();
-        }
-        else if(pn.equals("Element updated")){
-            this.firePropertyChange("Element saved", evt.getOldValue(), evt.getNewValue());
-        }*/
     }
 }

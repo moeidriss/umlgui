@@ -18,7 +18,7 @@ public class UseCase extends UmlElement  implements java.io.Serializable{
     }
 
     public void setDescription(String description) {
-        this.description = description;System.out.println("uc desc:"+description);
+        this.description = description;
     }
     
     int descriptionNumColumns = 1;

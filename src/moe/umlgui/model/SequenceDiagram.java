@@ -6,8 +6,10 @@ package moe.umlgui.model;
 
 
 public class SequenceDiagram extends UmlDiagram implements java.io.Serializable{
-    public SequenceDiagram(){
-        super("Sequence Diagram");
+    public SequenceDiagram(UmlModel model){
+        super("Sequence Diagram",model);
         setName("New Sequence Diagram");
     }
+    
+    //TODO override addCoreElement...
 }

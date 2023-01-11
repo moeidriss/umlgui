@@ -37,6 +37,9 @@ public class Palette extends javax.swing.JPanel {
         add(new UmlElementLabel(new ConditionalBlock() ));
         add(new UmlElementLabel(new WhileLoop() ));
         add(new UmlElementLabel(new RepeatLoop() ));
+        
+        add(new UmlElementLabel(new moe.umlgui.model.System() ));
+        add(new UmlElementLabel(new Message() ));
     }
 
     /**

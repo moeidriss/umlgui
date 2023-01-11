@@ -34,12 +34,14 @@ import javax.swing.JPanel;
 public class PropertyEditor extends javax.swing.JPanel {
 
     UmlCoreElement umlCoreElement;
+    UmlModel model;
     UmlDiagram umlDiagram;
     Project project;
     
     static int ELEMENT = 1;
     static int DIAGRAM = 2;
     static int PROJECT = 3;
+    static int MODEL = 4;
     
     int nowEditing = -1;
     
@@ -62,9 +64,8 @@ public class PropertyEditor extends javax.swing.JPanel {
      * @param umlCoreElement
      * @param umlDiagram if null, context is project or global lib (outside any diagram there)
      */
-    public void edit(UmlCoreElement umlCoreElement, UmlDiagram umlDiagram){
+    public void edit(UmlCoreElement umlCoreElement){
         this.umlCoreElement = umlCoreElement;
-        this.umlDiagram = umlDiagram;
         nowEditing = ELEMENT;
         loadForm();
     }
@@ -80,6 +81,12 @@ public class PropertyEditor extends javax.swing.JPanel {
         nowEditing = PROJECT;
         loadForm();
     }
+
+    public void edit(UmlModel model){
+        this.model = model;
+        nowEditing = MODEL;
+        loadForm();
+    }
     
     public void showToolbar(boolean b){
         remove(saveButton);
@@ -88,11 +95,7 @@ public class PropertyEditor extends javax.swing.JPanel {
     
     private Object[] getElementList(){
         ArrayList<Object> l = new ArrayList();
-        //l.add(null);
-        if(nowEditing==ELEMENT){
-            l.addAll(umlDiagram.getElementList());
-        }
-        
+        l.addAll(context.getElementList());
         return (Object[])l.toArray();
     }
 
@@ -271,7 +274,38 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.gridwidth = 2;
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(tComp, gridBagConstraints);
-            
+        }
+        
+        else if(Message.class.isInstance(umlCoreElement)){
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+            gridBagConstraints.gridy = yCounter;
+            editPanel.add(fromLabel, gridBagConstraints);
+
+            fromComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+            if(((Message)umlCoreElement).getFrom() != null){
+                fromComboBox.setSelectedItem(((Message)umlCoreElement).getFrom());
+            }
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(fromComboBox, gridBagConstraints);
+
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+            gridBagConstraints.gridy = yCounter;
+            editPanel.add(toLabel, gridBagConstraints);
+
+            toComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+            if(((Message)umlCoreElement).getTo() != null){
+                toComboBox.setSelectedItem(((Message)umlCoreElement).getTo());
+            }
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(toComboBox, gridBagConstraints);
         }
         
         //TODO Note Element
@@ -488,9 +522,14 @@ public class PropertyEditor extends javax.swing.JPanel {
             }
         }
 
-        else if(UmlRelationship.class.isInstance(umlCoreElement) && umlDiagram != null){
+        else if(UmlRelationship.class.isInstance(umlCoreElement) && umlCoreElement.getUmlDiagram() != null){
             ((UmlRelationship)umlCoreElement).setPartyA((UmlElement)fromComboBox.getSelectedItem());
             ((UmlRelationship)umlCoreElement).setPartyB((UmlElement)toComboBox.getSelectedItem());
+        }
+
+        else if(Message.class.isInstance(umlCoreElement) && umlCoreElement.getUmlDiagram() != null){
+            ((Message)umlCoreElement).setFrom((Actor)fromComboBox.getSelectedItem());
+            ((Message)umlCoreElement).setTo((Actor)toComboBox.getSelectedItem());
         }
         
         
@@ -530,18 +569,24 @@ public class PropertyEditor extends javax.swing.JPanel {
             }
         }
         
-        this.firePropertyChange("Element updated", null, umlCoreElement);
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Element updated", q, umlCoreElement);
     }
     
     
     private void saveDiagram(){
         umlDiagram.setName(nameTextField.getText());
-        this.firePropertyChange("Diagram updated", null, umlCoreElement);
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Diagram updated", q, umlCoreElement);
     }
     
     private void saveProject(){        
         project.setName(nameTextField.getText());
-        this.firePropertyChange("Project updated", null, project);
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Project updated", q, project);
     }
     
     public void save(){
@@ -632,7 +677,7 @@ public class PropertyEditor extends javax.swing.JPanel {
     private void editNewActivity(Activity ac ,JComboBox cb ){
         PropertyEditor pe = new PropertyEditor();
         pe.setContext(context);
-        pe.edit(ac , null);
+        pe.edit(ac);
         pe.showToolbar(false);
         
         JDialog acDialog = new JDialog();

@@ -4,21 +4,21 @@
  */
 package moe.umlgui.model;
 
-import java.awt.Image;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Date;
-
 /**
  *
  * @author Moe
  */
-public abstract class UmlElement extends UmlCoreElement implements Serializable{
-   
+public class ItSystem extends System{
     
-    public UmlElement(String type) {
-        super(type);
+    public ItSystem() {
+        super();
+        setName("New IT System");
     }
-    
-    
+
+    @Override
+    public UmlCoreElement clone() {
+        ItSystem x = new ItSystem();
+        x.setName(name);
+        return x;
+    }
 }

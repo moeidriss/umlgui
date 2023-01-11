@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -87,7 +89,8 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
        
     }
     
-    public void insertElement(UmlCoreElement el) throws IOException{
+    
+    public void insertElement(UmlCoreElement el) throws ModelException{
         umlDiagram.addCoreElement(el);
         textArea.setText(umlDiagram.getUmlCode());
         
@@ -97,7 +100,9 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
             updateImage();
         }
         
-        this.firePropertyChange("Element inserted", null, el);
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Element inserted", q, el);
     }
 
     /**
@@ -113,11 +118,32 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    public boolean equals(Object o){
+        return (hashCode()==o.hashCode());
+    }
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals("Element updated") &&
+        if(!evt.getPropertyName().equals("Element updated") &&
+            !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Diagram updated") 
+        ){
+            return;
+        }
+        
+        java.lang.System.out.println(evt.getPropertyName());
+        java.lang.System.out.println(evt.getOldValue());
+        java.lang.System.out.println(evt.getSource().getClass());
+        java.lang.System.out.println("---------------");
+        
+        if( (evt.getPropertyName().equals("Element updated") || evt.getPropertyName().equals("Element inserted") ) 
+                &&
+                !((ArrayList)evt.getOldValue()).contains(this)
+                &&
                 umlDiagram.getCoreElementMap().containsKey(((UmlCoreElement)evt.getNewValue()).getId())
         ){
+            ((ArrayList)evt.getOldValue()).add(this);
             try {
                 PUMLDriver.update(umlDiagram);
                 updateImage();
@@ -126,7 +152,8 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
             }
         }
         
-        else if(evt.getPropertyName().equals("Diagram updated")){
+        else if(evt.getPropertyName().equals("Diagram updated") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
             loadDiagramPanel();
         }
     }

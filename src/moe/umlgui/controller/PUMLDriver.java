@@ -87,20 +87,29 @@ public class PUMLDriver {
         StringBuffer sb =  new StringBuffer();
         
         if(UseCase.class.isInstance(el)){
-            String desc = "";
-            if(((UseCase)el).getDescription() != null){
-                desc = "\n--\n" + ((UseCase)el).getDescription() ;
+            sb.append("usecase ").append(el.getId()).append(" as \"").append(el.getName());
+            if(((UseCase)el).getDescription() != null && !((UseCase)el).getDescription().isEmpty()){
+                sb.append("\n--\n" + ((UseCase)el).getDescription()) ;
             }
-            sb.append("usecase ").append(el.getId()).append(" as \"").append(el.getName()).append(desc).append("\"");
+            sb.append("\"");
+            
 
             sb.append("\n");
         }
 
-        else if(Actor.class.isInstance(el)){
-            sb.append(":").append(el.getName()).append(": as ").append(el.getId());
-
-            sb.append("\n");
+        else if(Actor.class.isInstance(el) ){
+            if(moe.umlgui.model.System.class.isInstance(el)){
+                sb.append("participant ").append(el.getName().replace(" ", "")).append(" as ").append(el.getId());
+                sb.append("\n");
+            }
+            
+            else{
+                sb.append("actor ").append(el.getName().replace(" ", "")).append(" as ").append(el.getId());
+                sb.append("\n");
+            }
         }
+
+         
 
         else if(Action.class.isInstance(el)){
             sb.append(":").append(el.getName()).append(";");
@@ -187,6 +196,18 @@ public class PUMLDriver {
             sb.append("-->");
             sb.append(((Include)el).getPartyB().getId());
             sb.append(" : include");
+
+            sb.append("\n");
+        }
+
+        else if(Message.class.isInstance(el) &&
+            ((Message)el).getFrom() != null &&
+            ((Message)el).getTo() != null
+        ){
+            sb.append(((Message)el).getFrom().getId());
+            sb.append("->");
+            sb.append(((Message)el).getTo().getId());
+            sb.append(" : ").append(el.getName());
 
             sb.append("\n");
         }

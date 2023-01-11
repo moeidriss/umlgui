@@ -293,7 +293,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
     private void editNewActivity(Activity ac ,JComboBox cb ){
         PropertyEditor pe = new PropertyEditor();
         pe.setContext(context);
-        pe.edit(ac , null);
+        pe.edit(ac);
         pe.showToolbar(false);
         
         JDialog acDialog = new JDialog();
