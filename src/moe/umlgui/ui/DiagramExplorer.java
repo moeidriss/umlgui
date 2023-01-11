@@ -4,6 +4,9 @@
  */
 package moe.umlgui.ui;
 
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.DefaultListModel;
@@ -11,12 +14,17 @@ import javax.swing.ListModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListDataListener;
 import moe.umlgui.model.*;
+import moe.umlgui.ui.tree.Explorer;
+import moe.umlgui.ui.tree.ExplorerTreeCellRenderer;
+import moe.umlgui.ui.tree.ExplorerTreeCellRenderer;
+import moe.umlgui.ui.tree.ExplorerTreeModel;
+import moe.umlgui.ui.tree.ExplorerTreeModel;
 
 /**
  *
  * @author Moe
  */
-public class DiagramExplorer extends javax.swing.JPanel {
+public class DiagramExplorer extends javax.swing.JPanel implements PropertyChangeListener{
 
     UmlDiagram umlDiagram;
     
@@ -39,35 +47,13 @@ public class DiagramExplorer extends javax.swing.JPanel {
         loadDiagram();
     }
     
-    private ListModel elementListModel = new ListModel(){
-        @Override
-        public int getSize() {
-            if(umlDiagram != null)  return umlDiagram.getElementList().size();
-            return 0;
-        }
-
-        @Override
-        public Object getElementAt(int index) {
-            return umlDiagram.getElementList().get(index);
-        }
-
-        ArrayList<ListDataListener> listDataListeners = new ArrayList();
-        @Override
-        public void addListDataListener(ListDataListener l) {
-            listDataListeners.add(l);
-        }
-
-        @Override
-        public void removeListDataListener(ListDataListener l) {
-            listDataListeners.remove(l);
-        }
-        
-    };
+    Explorer explorer;
     
     private void loadDiagram(){    
-        setBorder(new TitledBorder(umlDiagram.getName()));
+        explorer = new Explorer(umlDiagram);
+        explorer.addPropertyChangeListener(this);
+        add(explorer , BorderLayout.CENTER);
         revalidate();        
-        
     }
     
     
@@ -81,47 +67,51 @@ public class DiagramExplorer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        elementJList = new javax.swing.JList<>();
-        jToolBar1 = new javax.swing.JToolBar();
-        moveUpButton = new javax.swing.JButton();
-        moveDownButton = new javax.swing.JButton();
-
         setLayout(new java.awt.BorderLayout());
-
-        elementJList.setModel(elementListModel);
-        jScrollPane1.setViewportView(elementJList);
-
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        jToolBar1.setBackground(new java.awt.Color(255, 255, 255));
-        jToolBar1.setRollover(true);
-
-        moveUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/go-up.png"))); // NOI18N
-        moveUpButton.setText("Move Up");
-        moveUpButton.setToolTipText("Move Up");
-        moveUpButton.setFocusable(false);
-        moveUpButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        moveUpButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(moveUpButton);
-
-        moveDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/go-down.png"))); // NOI18N
-        moveDownButton.setText("Move Down");
-        moveDownButton.setToolTipText("Move Down");
-        moveDownButton.setFocusable(false);
-        moveDownButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        moveDownButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(moveDownButton);
-
-        add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList<String> elementJList;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JButton moveDownButton;
-    private javax.swing.JButton moveUpButton;
     // End of variables declaration//GEN-END:variables
+
+    
+    public boolean equals(Object o){
+        return (hashCode()==o.hashCode());
+    }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(!evt.getPropertyName().equals("Element updated") &&
+            !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Explorer selection") 
+        ){
+            return;
+        }
+        
+        java.lang.System.out.println(evt.getPropertyName());
+        java.lang.System.out.println(evt.getOldValue());
+        java.lang.System.out.println(evt.getSource().getClass());
+        java.lang.System.out.println("---------------");
+        
+        //PropertyEditor events
+        if(evt.getPropertyName().equals("Element updated") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            explorer.reload();
+            //PropertyChangeEvent.oldValue stores array of event source/consumers
+            //to be copied by event propagators (overriders of PropertyChangeListener.propertyChange()
+            firePropertyChange("Element updated", evt.getOldValue(), evt.getNewValue());
+            
+        }
+        
+        //events
+        else if(evt.getPropertyName().equals("Element inserted") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            explorer.reload();
+            firePropertyChange("Element inserted", evt.getOldValue(), evt.getNewValue());
+        }
+        else if(evt.getPropertyName().equals("Explorer selection") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            firePropertyChange("Explorer selection", evt.getOldValue(), evt.getNewValue());
+        }
+    }
 }

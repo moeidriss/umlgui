@@ -21,12 +21,24 @@ public class LogicalTestComponent extends javax.swing.JPanel {
     public LogicalTestComponent(LogicalTest test) {
         this.test = test;
         initComponents();
+        load();
     }
 
+    private void load(){
+        if(test.getCondition()!=null) conditionComboBox.setSelectedItem(test.getCondition());
+        if(test.getOperandA()!=null)    jTextField1.setText(test.getOperandA());
+        if(test.getOperator()!=null) jComboBox1.setSelectedItem(test.getOperator());
+        if(test.getOperandB()!=null)    jTextField2.setText(test.getOperandB());
+        if(test.getLabel() != null) labelTextField.setText(test.getLabel());
+    }
+    
+    //TODO VALIDATE
     public void save(){
+        test.setCondition((String)conditionComboBox.getSelectedItem());
         test.setOperandA(jTextField1.getText());
         test.setOperator((String)jComboBox1.getSelectedItem());
         test.setOperandB(jTextField2.getText());
+        test.setLabel(labelTextField.getText());
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,11 +50,24 @@ public class LogicalTestComponent extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        conditionComboBox = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jTextField2 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        labelTextField = new javax.swing.JTextField();
 
         setLayout(new java.awt.GridBagLayout());
+
+        conditionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "IF", "ELSE IF", "ELSE" }));
+        conditionComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                conditionComboBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        add(conditionComboBox, gridBagConstraints);
 
         jTextField1.setText(test.getOperandA());
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -74,6 +99,18 @@ public class LogicalTestComponent extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         add(jTextField2, gridBagConstraints);
+
+        jLabel1.setText("Connector Label: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        add(jLabel1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        add(labelTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -81,17 +118,48 @@ public class LogicalTestComponent extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
+        /*if(jComboBox1.getSelectedItem().equals("IS") ||
+            jComboBox1.getSelectedItem().equals("=")
+        ){
+            labelTextField.setEnabled(false);
+            labelTextField.setText(null);
+        }
+        else{
+            labelTextField.setEnabled(true);
+            if(test.getLabel() != null) labelTextField.setText(test.getLabel());
+        }*/
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
+    private void conditionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conditionComboBoxActionPerformed
+        if(conditionComboBox.getSelectedItem().equals("ELSE")){
+            jTextField1.setEnabled(false);
+            jTextField1.setText(null);
+            jComboBox1.setEnabled(false);
+            jComboBox1.setSelectedItem(null);
+            jTextField2.setEnabled(false);
+            jTextField2.setText(null);
+        }
+        else{
+            jTextField1.setEnabled(true);
+            jComboBox1.setEnabled(true);
+            jTextField2.setEnabled(true);
+            if(test.getOperandA()!=null)    jTextField1.setText(test.getOperandA());
+            if(test.getOperator()!=null) jComboBox1.setSelectedItem(test.getOperator());
+            if(test.getOperandB()!=null)    jTextField2.setText(test.getOperandB());
+        }
+    }//GEN-LAST:event_conditionComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> conditionComboBox;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField labelTextField;
     // End of variables declaration//GEN-END:variables
 }

@@ -14,6 +14,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
@@ -27,7 +29,7 @@ import moe.umlgui.model.*;
  */
 public class LogicalTestPanel extends javax.swing.JPanel {
 
-    ConditionalNode entity;
+    ConditionalBlock entity;
     TestTableModel testTableModel;
     
     Project context;
@@ -35,7 +37,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
     /**
      * Creates new form LogicalTestPanel
      */
-    public LogicalTestPanel(ConditionalNode entity, Project context) {
+    public LogicalTestPanel(ConditionalBlock entity, Project context) {
         this.entity = entity;
         this.context = context;
         testTableModel = new TestTableModel();
@@ -82,9 +84,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                 LogicalTest t = (entity.getTestList().get(rowIndex));
                 
                 if(columnIndex == 0){
-                    if(rowIndex == 0)   return "IF";
-                    else if(getRowCount() > 2)  return "ELSE IF";
-                    else return "ELSE";
+                    return t.getCondition();
                 }
                 else if(columnIndex == 1){
                     return t.getOperandA();
@@ -110,13 +110,13 @@ public class LogicalTestPanel extends javax.swing.JPanel {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if(columnIndex == 4)    return Activity.class;//TODO ...
+                if(columnIndex == 4)    return ArrayList.class;//TODO ...
                 return String.class;
             }
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                if(columnIndex==0)  return false;
+                if(columnIndex==0 || columnIndex==4)  return false;
                 return true;
             }
 
@@ -125,7 +125,10 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                  LogicalTest t = (entity.getTestList().get(rowIndex));
                 
                 
-                if(columnIndex == 1){
+                if(columnIndex == 0){
+                    t.setCondition((String)aValue);
+                }
+                else if(columnIndex == 1){
                     t.setOperandA((String)aValue);
                 }                
                 else if(columnIndex == 2){
@@ -134,14 +137,12 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                 else if(columnIndex == 3){
                     t.setOperandB((String)aValue);
                 }                
-                else if(columnIndex == 4){
-                    entity.getTestMap().put(t , (Activity)aValue);
-                }
+                
                 
                 //if anything but activity is updated in last row, insert new 'else'
-                if(rowIndex == (entity.getTestList().size()-1) && columnIndex != 4){
+                /*if(rowIndex == (entity.getTestList().size()-1) && columnIndex != 4){
                     entity.newTest();
-                }
+                }*/
             }
             
             ArrayList<TableModelListener> tableModelListeners = new ArrayList();
@@ -216,8 +217,12 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
+    //TODO implement logic control (a single 'if', single 'else') and testList order
+    
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         LogicalTest t = entity.newTest();
+        if(entity.getTestList().isEmpty())  t.setCondition("IF");
+        
         Activity ac = new Action();
         
         LogicalTestComponent tComp = new LogicalTestComponent(t);
@@ -232,9 +237,34 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         JComboBox cb = new JComboBox();
         cb.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
         
+        JButton newActivityButton = new JButton("New ...");
+        newActivityButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object sel = JOptionPane.showInputDialog(null, "Select Actvity Type" , 
+                        "Actvity Type", JOptionPane.INFORMATION_MESSAGE, null, 
+                        new String[] {"Action","Flow End","Stop"}, "Action");
+                Activity ac = null;
+                if(sel.equals("Action")){
+                    ac = new Action();
+                }
+                else if(sel.equals("Flow End")){
+                    ac = new FlowFinalNode();
+                }
+                else if(sel.equals("Stop")){
+                    ac = new ActivityFinalNode();
+                }                
+                
+                if(ac!=null){
+                    editNewActivity(ac,cb);
+                }
+            }            
+        });
+        
         JPanel pp = new JPanel();
+        pp.add(new JLabel("Action: "));
         pp.add(cb);
-        pp.add(getNewActivityButton(ac , "New Activity" ,cb));
+        pp.add(newActivityButton);
         p.add(pp);
         
         JDialog d = new JDialog();
@@ -245,7 +275,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tComp.save();
-                entity.getTestMap().put(t,(Activity)cb.getSelectedItem());
+                entity.getTestMap().get(t).add((Activity)cb.getSelectedItem());
                 //entity.newTest();//new 'else'
                 jTable1.revalidate();
                 d.setVisible(false);
@@ -254,15 +284,16 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         d.getContentPane().add(okButton , BorderLayout.SOUTH);
         
         d.pack();
+        d.setSize(600 , d.getSize().height);
         d.setLocationRelativeTo(null);
         d.setVisible(true);
         
     }//GEN-LAST:event_addButtonActionPerformed
 
-    private JButton getNewActivityButton(Activity ac , String displayText,JComboBox cb ){
+    private void editNewActivity(Activity ac ,JComboBox cb ){
         PropertyEditor pe = new PropertyEditor();
         pe.setContext(context);
-        pe.edit(ac , null);
+        pe.edit(ac);
         pe.showToolbar(false);
         
         JDialog acDialog = new JDialog();
@@ -285,18 +316,10 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         
         acDialog.getContentPane().add(buttonsP , BorderLayout.SOUTH);
         acDialog.pack();
-        
+        acDialog.setSize(600 , acDialog.getSize().height);
         acDialog.setLocationRelativeTo(null);
         
-        JButton newActivityButton = new JButton(displayText);
-        newActivityButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                acDialog.setVisible(true);
-            }            
-        });
-        
-        return newActivityButton;
+        acDialog.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

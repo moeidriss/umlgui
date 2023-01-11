@@ -5,16 +5,16 @@
 package moe.umlgui.model;
 
 
-public abstract class ActivityNode extends Activity  implements java.io.Serializable{
+public abstract class ControlNode extends UmlCoreElement  implements java.io.Serializable{
 
-    public ActivityNode() {
-        super("Activity Node");
-        setName("New Activity Node");
+    public ControlNode() {
+        super("Control Node");
+        setName("New Control Node");
     }
 
     
-    public ActivityNode(String type) {
+    public ControlNode(String type) {
         super(type);
-        setName("New Activity Node");
+        setName("New Control Node");
     }
 }

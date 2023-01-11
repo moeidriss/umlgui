@@ -5,19 +5,19 @@
 package moe.umlgui.model;
 
 /**
- *
+ * TODO RENAME BACK (!) TO AcceptEvent 
  * @author Moe
  */
-public class ActivityInitialNode extends ActivityNode implements java.io.Serializable{
+public class AcceptEvent extends Activity implements java.io.Serializable{
     
-    public ActivityInitialNode() {
-        super("Activity Initial Node");
-        setName("New Activity Initial Node");
+    public AcceptEvent() {
+        super("Accept Event");
+        setName("New Accept Event");
     }
 
     @Override
     public UmlCoreElement clone() {
-        ActivityInitialNode x = new ActivityInitialNode();
+        AcceptEvent x = new AcceptEvent();
         x.setName(name);
         return x;
     }

@@ -89,6 +89,31 @@ String type;
         this.id = id;
     }
     
+    
+    
+    String umlCode;
+
+    public String getUmlCode() {
+        return umlCode;
+    }
+
+    public void setUmlCode(String umlCode) {
+        this.umlCode = umlCode;
+    }
+    
+     
+    //null if template
+    UmlDiagram umlDiagram;
+
+    public UmlDiagram getUmlDiagram() {
+        return umlDiagram;
+    }
+
+    public void setUmlDiagram(UmlDiagram umlDiagram) {
+        this.umlDiagram = umlDiagram;
+    }
+    
+    
     public UmlCoreElement(String type){
         this.type = type;
     }

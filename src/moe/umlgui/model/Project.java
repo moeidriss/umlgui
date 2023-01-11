@@ -61,6 +61,7 @@ public class Project implements java.io.Serializable{
         return relationshipList;
     }
     
+    //TODO update from UmlDiagram.add
     public void addCoreElement(UmlCoreElement umlCoreElement){
         coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
         
@@ -76,7 +77,18 @@ public class Project implements java.io.Serializable{
     
     
     public Project(){
-        
+        models.add(new BusinessModel(this));
+    }
+    
+    ArrayList<UmlModel> models =new ArrayList();
+
+    public ArrayList<UmlModel> getModels() {
+        return models;
+    }
+    
+    
+    public String toString(){
+        return name;
     }
     
 }

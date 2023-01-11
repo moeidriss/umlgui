@@ -6,14 +6,22 @@ package moe.umlgui.ui;
 
 import moe.umlgui.model.*;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 import moe.umlgui.controller.PUMLDriver;
 
@@ -39,24 +47,62 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
     
     private void loadDiagramPanel(){
         setName(umlDiagram.getName());        
-        this.setBorder(new TitledBorder(umlDiagram.getName()));
+        this.setBorder(new TitledBorder(umlDiagram.getName()));   
+        
+        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        sp.setOneTouchExpandable(true);
+        sp.setDividerLocation(0.4);
+        sp.setResizeWeight(0.4);
+        add(sp, BorderLayout.CENTER);
+        
+        sp.setLeftComponent(new JScrollPane(label));
+        sp.setRightComponent(textArea);
+        
+        JButton updateImgButton = new JButton("Update");
+        updateImgButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                umlDiagram.setUmlCode(textArea.getText());
+                try {
+                    PUMLDriver.updateImage(umlDiagram);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(UmlDiagramPanel.this, ex, "PUMLDriver Error", JOptionPane.ERROR_MESSAGE);
+                    Logger.getLogger(UmlDiagramPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                updateImage();
+            }
+            
+        });
+        
+        add(updateImgButton, BorderLayout.SOUTH);
+        
         this.revalidate();
     }
     
+    JTextArea textArea = new JTextArea();//TODO REMOVE
+    JLabel label = new JLabel();
     
     public void updateImage(){
-        removeAll();
-        JLabel l = new JLabel();
-        l.setIcon(new ImageIcon(umlDiagram.getImage()));
-        add(l, BorderLayout.CENTER);
+        label.setIcon(new ImageIcon(umlDiagram.getImage()));
+        textArea.setText(umlDiagram.getUmlCode());
         revalidate();
        
     }
     
-    public void insertElement(UmlCoreElement el) throws IOException{
+    
+    public void insertElement(UmlCoreElement el) throws ModelException{
         umlDiagram.addCoreElement(el);
-        updateImage();
-        this.firePropertyChange("Element inserted", null, el);
+        textArea.setText(umlDiagram.getUmlCode());
+        
+        //exclude 'complex' elements from img update at insertion
+        if(!ControlNode.class.isInstance(el)
+        ){
+            updateImage();
+        }
+        
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Element inserted", q, el);
     }
 
     /**
@@ -72,11 +118,32 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    public boolean equals(Object o){
+        return (hashCode()==o.hashCode());
+    }
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals("Element updated") &&
+        if(!evt.getPropertyName().equals("Element updated") &&
+            !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Diagram updated") 
+        ){
+            return;
+        }
+        
+        java.lang.System.out.println(evt.getPropertyName());
+        java.lang.System.out.println(evt.getOldValue());
+        java.lang.System.out.println(evt.getSource().getClass());
+        java.lang.System.out.println("---------------");
+        
+        if( (evt.getPropertyName().equals("Element updated") || evt.getPropertyName().equals("Element inserted") ) 
+                &&
+                !((ArrayList)evt.getOldValue()).contains(this)
+                &&
                 umlDiagram.getCoreElementMap().containsKey(((UmlCoreElement)evt.getNewValue()).getId())
         ){
+            ((ArrayList)evt.getOldValue()).add(this);
             try {
                 PUMLDriver.update(umlDiagram);
                 updateImage();
@@ -85,7 +152,8 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
             }
         }
         
-        else if(evt.getPropertyName().equals("Diagram updated")){
+        else if(evt.getPropertyName().equals("Diagram updated") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
             loadDiagramPanel();
         }
     }

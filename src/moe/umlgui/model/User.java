@@ -8,16 +8,16 @@ package moe.umlgui.model;
  *
  * @author Moe
  */
-public class ActivityInitialNode extends ActivityNode implements java.io.Serializable{
+public class User extends Actor {
     
-    public ActivityInitialNode() {
-        super("Activity Initial Node");
-        setName("New Activity Initial Node");
+    public User() {
+        super();
+        setName("New User");
     }
 
     @Override
     public UmlCoreElement clone() {
-        ActivityInitialNode x = new ActivityInitialNode();
+        User x = new User();
         x.setName(name);
         return x;
     }

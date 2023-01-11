@@ -4,20 +4,22 @@
  */
 package moe.umlgui.model;
 
-/**
- *
- * @author Moe
- */
-public class ActivityInitialNode extends ActivityNode implements java.io.Serializable{
-    
-    public ActivityInitialNode() {
-        super("Activity Initial Node");
-        setName("New Activity Initial Node");
+import java.util.ArrayList;
+
+
+public class BusinessObject extends UmlElement  implements java.io.Serializable{
+
+    public BusinessObject() {
+        super("Actor");
+        setName("New Actor");
     }
 
+    ArrayList properties = new ArrayList();
+    ArrayList methods = new ArrayList();
+    
     @Override
     public UmlCoreElement clone() {
-        ActivityInitialNode x = new ActivityInitialNode();
+        BusinessObject x = new BusinessObject();
         x.setName(name);
         return x;
     }

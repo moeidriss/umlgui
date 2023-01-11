@@ -4,21 +4,14 @@
  */
 package moe.umlgui.model;
 
-import java.awt.Image;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Date;
-
 /**
  *
  * @author Moe
  */
-public abstract class UmlElement extends UmlCoreElement implements Serializable{
-   
+public class BusinessModel extends UmlModel {
     
-    public UmlElement(String type) {
-        super(type);
+    public BusinessModel(Project project) {
+        super(project);
     }
-    
     
 }
