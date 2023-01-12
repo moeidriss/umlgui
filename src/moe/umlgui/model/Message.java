@@ -7,7 +7,7 @@ package moe.umlgui.model;
 import java.util.ArrayList;
 
 
-public class Message extends UmlCoreElement  implements java.io.Serializable{
+public class Message extends UmlCoreElement  implements java.io.Serializable , BusinessObjectOwner{
 
     public Message() {
         super("Message");
@@ -16,6 +16,9 @@ public class Message extends UmlCoreElement  implements java.io.Serializable{
 
     Actor from;
     Actor to;
+    
+    
+    
     ArrayList<BusinessObject> businessObjects = new ArrayList();
 
     public ArrayList<BusinessObject> getBusinessObjects() {
@@ -38,6 +41,7 @@ public class Message extends UmlCoreElement  implements java.io.Serializable{
     public void setTo(Actor to) {
         this.to = to;
     }
+    
     
     @Override
     public UmlCoreElement clone() {

@@ -1,0 +1,599 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
+package moe.umlgui.ui;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
+import moe.umlgui.model.*;
+/**
+ *
+ * @author Moe
+ */
+public class BusinessObjectPanel extends javax.swing.JPanel {
+
+    BusinessObjectOwner entity;
+    BusinessObjectTableModel tableModel;
+    
+    Project context;
+    
+    /**
+     * Creates new form LogicalTestPanel
+     */
+    public BusinessObjectPanel(BusinessObjectOwner entity, Project context){
+        
+        
+        this.entity = entity;
+        this.context = context;
+        tableModel = new BusinessObjectTableModel();
+        initComponents();
+        
+        this.setBorder(BorderFactory.createTitledBorder("Business Objects"));
+        /*
+        jTable1.getColumn("Operator").setCellRenderer(new TableCellRenderer(){
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JComboBox b = new JComboBox();
+                b.setModel(new DefaultComboBoxModel(LogicalTest.OPERATORS));
+                if(value!=null) b.setSelectedItem(value);
+                return b;
+            }
+            
+        });
+        
+        jTable1.getColumn("Activity").setCellRenderer(new TableCellRenderer(){
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JComboBox b = new JComboBox();
+                b.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
+                if(value!=null) b.setSelectedItem(value);
+                return b;
+            }
+            
+        });
+        */
+    }
+
+    class  BusinessObjectTableModel implements TableModel{
+            @Override
+            public int getRowCount() {
+                return entity.getBusinessObjects().size();
+            }
+            
+            String[] colNames = {"Name"};
+
+            @Override
+            public int getColumnCount() {
+                return colNames.length;
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                
+                if(columnIndex == 0){
+                    return entity.getBusinessObjects().get(rowIndex);
+                    
+                }
+                
+                return null;
+            }
+
+            @Override
+            public String getColumnName(int columnIndex) {
+                return colNames[columnIndex];
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return String.class;
+            }
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return false;
+            }
+
+            
+            @Override
+            public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+                /*
+                LogicalTest t = (entity.getTestList().get(rowIndex));
+                
+                
+                if(columnIndex == 0){
+                    t.setCondition((String)aValue);
+                }
+                else if(columnIndex == 1){
+                    t.setOperandA((String)aValue);
+                }                
+                else if(columnIndex == 2){
+                    t.setOperator((String)aValue);
+                }                
+                else if(columnIndex == 3){
+                    t.setOperandB((String)aValue);
+                }                
+                
+                */
+                //if anything but activity is updated in last row, insert new 'else'
+                //if(rowIndex == (entity.getTestList().size()-1) && columnIndex != 4){
+                  //  entity.newTest();
+                //}
+            }
+            
+            ArrayList<TableModelListener> tableModelListeners = new ArrayList();
+
+            @Override
+            public void addTableModelListener(TableModelListener l) {
+                tableModelListeners.add(l);
+            }
+
+            @Override
+            public void removeTableModelListener(TableModelListener l) {
+                tableModelListeners.remove(l);
+            }
+            
+        }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        detailsPanel = new javax.swing.JPanel();
+        nameTextField = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        propertyList = new javax.swing.JList<>();
+        jToolBar2 = new javax.swing.JToolBar();
+        addPropertyButton = new javax.swing.JButton();
+        deletePropertyButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        methodList = new javax.swing.JList<>();
+        jToolBar3 = new javax.swing.JToolBar();
+        addMethodButton = new javax.swing.JButton();
+        deleteMethodButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jToolBar1 = new javax.swing.JToolBar();
+        addButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        upButton = new javax.swing.JButton();
+        downButton = new javax.swing.JButton();
+
+        detailsPanel.setLayout(new java.awt.GridBagLayout());
+
+        nameTextField.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder("Name"), new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        detailsPanel.add(nameTextField, gridBagConstraints);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Properties"));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        propertyList.setModel(new DefaultListModel());
+        propertyList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                propertyListKeyPressed(evt);
+            }
+        });
+        jScrollPane2.setViewportView(propertyList);
+
+        jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        jToolBar2.setBackground(new java.awt.Color(255, 255, 255));
+        jToolBar2.setRollover(true);
+
+        addPropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addPropertyButton.setFocusable(false);
+        addPropertyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addPropertyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addPropertyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addPropertyButtonActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(addPropertyButton);
+
+        deletePropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        deletePropertyButton.setFocusable(false);
+        deletePropertyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deletePropertyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(deletePropertyButton);
+
+        jPanel1.add(jToolBar2, java.awt.BorderLayout.PAGE_START);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        detailsPanel.add(jPanel1, gridBagConstraints);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Methods"));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
+        methodList.setModel(new DefaultListModel());
+        methodList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                methodListKeyPressed(evt);
+            }
+        });
+        jScrollPane3.setViewportView(methodList);
+
+        jPanel2.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        jToolBar3.setBackground(new java.awt.Color(255, 255, 255));
+        jToolBar3.setRollover(true);
+
+        addMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addMethodButton.setFocusable(false);
+        addMethodButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addMethodButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addMethodButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMethodButtonActionPerformed(evt);
+            }
+        });
+        jToolBar3.add(addMethodButton);
+
+        deleteMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        deleteMethodButton.setFocusable(false);
+        deleteMethodButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteMethodButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar3.add(deleteMethodButton);
+
+        jPanel2.add(jToolBar3, java.awt.BorderLayout.PAGE_START);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        detailsPanel.add(jPanel2, gridBagConstraints);
+
+        setLayout(new java.awt.BorderLayout());
+
+        jTable1.setModel(tableModel);
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTable1KeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jToolBar1.setBackground(new java.awt.Color(255, 255, 255));
+        jToolBar1.setRollover(true);
+
+        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addButton.setFocusable(false);
+        addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(addButton);
+
+        deleteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        deleteButton.setFocusable(false);
+        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(deleteButton);
+
+        upButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-up.png"))); // NOI18N
+        upButton.setFocusable(false);
+        upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        upButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(upButton);
+
+        downButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-down.png"))); // NOI18N
+        downButton.setFocusable(false);
+        downButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        downButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(downButton);
+
+        add(jToolBar1, java.awt.BorderLayout.PAGE_START);
+    }// </editor-fold>//GEN-END:initComponents
+
+    //TODO implement logic control (a single 'if', single 'else') and testList order
+    
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        BusinessObject obj = new BusinessObject();
+        
+        JDialog d = new JDialog();
+        
+        nameTextField.setText(null);
+        ((DefaultListModel)propertyList.getModel()).removeAllElements();
+        ((DefaultListModel)methodList.getModel()).removeAllElements();
+                
+        ActionListener addPropertyActionListner = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BusinessObjectProperty prop = new BusinessObjectProperty();
+                BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
+                
+                JDialog pD = new JDialog();
+                JButton pB = new JButton("OK");
+                pB.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        pComp.save();
+                        obj.getProperties().add(prop);
+                        ((DefaultListModel)propertyList.getModel()).addElement(prop);
+                        pD.setVisible(false);
+                    }                    
+                });
+                
+                pD.getContentPane().add(pComp , BorderLayout.CENTER);
+                pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                pD.pack();
+                pD.setLocationRelativeTo(null);
+                pD.setVisible(true);
+            }            
+        };
+        addPropertyButton.addActionListener(addPropertyActionListner);
+        
+        
+        ActionListener addMethodActionListner = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BusinessObjectMethod meth = new BusinessObjectMethod();
+                BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
+                
+                JDialog pD = new JDialog();
+                JButton pB = new JButton("OK");
+                pB.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        mComp.save();
+                        obj.getMethods().add(meth);
+                        ((DefaultListModel)methodList.getModel()).addElement(meth);
+                        pD.setVisible(false);
+                    }                    
+                });
+                
+                pD.getContentPane().add(mComp , BorderLayout.CENTER);
+                pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                pD.pack();
+                pD.setLocationRelativeTo(null);
+                pD.setVisible(true);
+            }            
+        };
+        addMethodButton.addActionListener(addMethodActionListner);
+        
+        //save button
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                obj.setName(nameTextField.getText());                
+                entity.getBusinessObjects().add(obj);
+                jTable1.revalidate();
+                d.setVisible(false);
+                addPropertyButton.removeActionListener(addPropertyActionListner);
+                addMethodButton.removeActionListener(addMethodActionListner);
+            }            
+        });
+        
+        
+        
+        
+        d.getContentPane().add(detailsPanel , BorderLayout.CENTER);
+        d.getContentPane().add(okButton , BorderLayout.SOUTH);
+        d.pack();
+        d.setLocationRelativeTo(null);
+        d.setVisible(true);
+        
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void addPropertyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPropertyButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addPropertyButtonActionPerformed
+
+    private void addMethodButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMethodButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addMethodButtonActionPerformed
+
+    private void propertyListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_propertyListKeyPressed
+        if(propertyList.getSelectedIndex()==-1) return;
+        
+        if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
+            BusinessObjectProperty prop = (BusinessObjectProperty)((DefaultListModel)propertyList.getModel()).getElementAt(propertyList.getSelectedIndex());
+            BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
+                
+                JDialog pD = new JDialog();
+                JButton pB = new JButton("OK");
+                pB.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        pComp.save();
+                        //((DefaultListModel)propertyList.getModel()).addElement(prop);
+                        pD.setVisible(false);
+                    }                    
+                });
+                
+                pD.getContentPane().add(pComp , BorderLayout.CENTER);
+                pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                pD.pack();
+                pD.setLocationRelativeTo(null);
+                pD.setVisible(true);
+        }
+    }//GEN-LAST:event_propertyListKeyPressed
+
+    private void methodListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_methodListKeyPressed
+        if(methodList.getSelectedIndex()==-1) return;
+        
+        if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
+            BusinessObjectMethod meth = (BusinessObjectMethod)((DefaultListModel)methodList.getModel()).getElementAt(methodList.getSelectedIndex());
+            BusinessObjectMethodComponent pComp = new BusinessObjectMethodComponent(meth);
+                
+                JDialog pD = new JDialog();
+                JButton pB = new JButton("OK");
+                pB.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        pComp.save();
+                        //((DefaultListModel)propertyList.getModel()).addElement(prop);
+                        pD.setVisible(false);
+                    }                    
+                });
+                
+                pD.getContentPane().add(pComp , BorderLayout.CENTER);
+                pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                pD.pack();
+                pD.setLocationRelativeTo(null);
+                pD.setVisible(true);
+        }
+    }//GEN-LAST:event_methodListKeyPressed
+
+    private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
+        if(jTable1.getSelectedRow()==-1)    return;
+        
+        if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
+            BusinessObject obj = entity.getBusinessObjects().get(jTable1.getSelectedRow());
+                        
+            JDialog d = new JDialog();
+        
+            nameTextField.setText(obj.getName());
+            ((DefaultListModel)propertyList.getModel()).removeAllElements();
+            ((DefaultListModel)methodList.getModel()).removeAllElements();
+
+            //((DefaultListModel)propertyList.getModel()).addAll(obj.getProperties());
+            //((DefaultListModel)methodList.getModel()).addAll(obj.getMethods());
+
+            for(Iterator i = obj.getProperties().iterator() ; i.hasNext();){
+                ((DefaultListModel)propertyList.getModel()).addElement(i.next());
+            }
+            
+            for(Iterator i = obj.getMethods().iterator() ; i.hasNext();){
+                ((DefaultListModel)methodList.getModel()).addElement(i.next());
+            }
+            
+            ActionListener addPropertyActionListner = new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BusinessObjectProperty prop = new BusinessObjectProperty();
+                    BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
+
+                    JDialog pD = new JDialog();
+                    JButton pB = new JButton("OK");
+                    pB.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            pComp.save();
+                            obj.getProperties().add(prop);
+                            ((DefaultListModel)propertyList.getModel()).addElement(prop);
+                            pD.setVisible(false);
+                        }                    
+                    });
+
+                    pD.getContentPane().add(pComp , BorderLayout.CENTER);
+                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                    pD.pack();
+                    pD.setLocationRelativeTo(null);
+                    pD.setVisible(true);
+                }            
+            };
+            addPropertyButton.addActionListener(addPropertyActionListner);
+
+
+            ActionListener addMethodActionListner = new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BusinessObjectMethod meth = new BusinessObjectMethod();
+                    BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
+
+                    JDialog pD = new JDialog();
+                    JButton pB = new JButton("OK");
+                    pB.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            mComp.save();
+                            obj.getMethods().add(meth);
+                            ((DefaultListModel)methodList.getModel()).addElement(meth);
+                            pD.setVisible(false);
+                        }                    
+                    });
+
+                    pD.getContentPane().add(mComp , BorderLayout.CENTER);
+                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                    pD.pack();
+                    pD.setLocationRelativeTo(null);
+                    pD.setVisible(true);
+                }            
+            };
+            addMethodButton.addActionListener(addMethodActionListner);
+
+            //save button
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    obj.setName(nameTextField.getText());
+
+                    jTable1.revalidate();
+                    d.setVisible(false);
+                    addPropertyButton.removeActionListener(addPropertyActionListner);
+                    addMethodButton.removeActionListener(addMethodActionListner);
+                }            
+            });
+
+
+
+
+            d.getContentPane().add(detailsPanel , BorderLayout.CENTER);
+            d.getContentPane().add(okButton , BorderLayout.SOUTH);
+            d.pack();
+            d.setLocationRelativeTo(null);
+            d.setVisible(true);
+            
+        }
+    }//GEN-LAST:event_jTable1KeyPressed
+
+   
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton addMethodButton;
+    private javax.swing.JButton addPropertyButton;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton deleteMethodButton;
+    private javax.swing.JButton deletePropertyButton;
+    private javax.swing.JPanel detailsPanel;
+    private javax.swing.JButton downButton;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JToolBar jToolBar3;
+    private javax.swing.JList<String> methodList;
+    private javax.swing.JTextField nameTextField;
+    private javax.swing.JList<String> propertyList;
+    private javax.swing.JButton upButton;
+    // End of variables declaration//GEN-END:variables
+}

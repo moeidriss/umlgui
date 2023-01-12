@@ -9,7 +9,7 @@ package moe.umlgui.model;
  * @author Moe
  */
 
-public class LogicalTest {
+public class LogicalTest  implements java.io.Serializable{
 
     public static String[] OPERATORS = {null,"=" , "!=" , ">" 
                                 , "<" , "IS" , "IS NOT"};

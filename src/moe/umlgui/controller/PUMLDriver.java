@@ -43,7 +43,7 @@ public class PUMLDriver {
 
 
         //TODO.. Need to do this after element declaration?
-        /*for(Iterator<UmlRelationship> i= umlDiagram.getRelationshipList().iterator(); i.hasNext();){
+        /*for(Iterator<UmlRelationship> i= diagram.getRelationshipList().iterator(); i.hasNext();){
             UmlRelationship el = i.next();
             el.setUmlCode(getCoreElementUmlCode(el));
             sb.append(el.getUmlCode());        

@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import moe.umlgui.model.Actor;
 import moe.umlgui.model.Association;
 import moe.umlgui.model.Include;
@@ -30,6 +31,15 @@ import moe.umlgui.model.UseCase;
  */
 public class Explorer extends javax.swing.JPanel implements PropertyChangeListener {
 
+    
+    
+    static int ELEMENT = 1;
+    static int DIAGRAM = 2;
+    static int PROJECT = 3;
+    static int MODEL = 4;
+    
+    int nowExploring = -1;
+    
     Project project;
     UmlModel model;
     UmlDiagram diagram;
@@ -41,25 +51,49 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     public Explorer(Project project) {
         initComponents();
         this.project = project;
+        nowExploring = PROJECT;
         loadDiagram();
+        setSelection(project);
+        
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Explorer selection", q, project);
     }
 
     public Explorer(UmlModel model) {
         initComponents();
         this.model = model;
+        nowExploring = MODEL;
         loadDiagram();
+        setSelection(model);
+        
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Explorer selection", q, model);
     }
 
     public Explorer(UmlDiagram diagram) {
         initComponents();
         this.diagram = diagram;
+        nowExploring = DIAGRAM;
         loadDiagram();
+        setSelection(diagram);
+        
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Explorer selection", q, diagram);
     }
 
     public Explorer(UmlElement element) {
         initComponents();
         this.element = element;
+        nowExploring = ELEMENT;
         loadDiagram();
+        setSelection(element);
+        
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Explorer selection", q, element);
     }
     
     ExplorerTreeModel treeModel = null;
@@ -84,15 +118,47 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         
         jTree.setModel(treeModel);
         jTree.setCellRenderer(new ExplorerTreeCellRenderer()); 
+        
+        
     }
     
     
     public void reload(){
         ((ExplorerTreeModel)jTree.getModel()).reload();
+        //if (selection==null)...
     }
 
-    public void setSelection(Object sel){
-        //TODO
+    Object selection;
+    
+    public void setSelection(Object selection){
+        this.selection = selection;
+        
+        if(nowExploring==PROJECT){
+            if(selection==project)
+                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getRoot())));
+            else if(UmlModel.class.isInstance(selection)){
+                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(selection)))));
+            }
+            else if(UmlDiagram.class.isInstance(selection)){
+                DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((UmlDiagram)selection).getUmlModel()));
+                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlDiagram)selection).getUmlModel().getDiagrams().indexOf(selection)))));
+            }
+            else if(UmlElement.class.isInstance(selection)){
+                DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((UmlElement)selection).getUmlDiagram().getUmlModel()));
+                DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
+                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)))));
+            }
+            else{ }
+        }
+        
+        if(nowExploring==DIAGRAM){
+            if(selection==diagram)
+                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getRoot())));
+            else if(UmlElement.class.isInstance(selection)){
+                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), diagram.getElementList().indexOf(selection)))));
+            }
+            else{ }
+        }
     }
     
     /**
@@ -136,6 +202,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         jToolBar1.setRollover(true);
 
         addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addButton.setEnabled(false);
         addButton.setFocusable(false);
         addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -147,6 +214,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         jToolBar1.add(addButton);
 
         removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        removeButton.setEnabled(false);
         removeButton.setFocusable(false);
         removeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         removeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -158,6 +226,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         jToolBar1.add(removeButton);
 
         upButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-up.png"))); // NOI18N
+        upButton.setEnabled(false);
         upButton.setFocusable(false);
         upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         upButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -169,6 +238,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         jToolBar1.add(upButton);
 
         downButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-down.png"))); // NOI18N
+        downButton.setEnabled(false);
         downButton.setFocusable(false);
         downButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         downButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -249,7 +319,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         ArrayList q =new ArrayList();
         q.add(this);
         firePropertyChange("Element inserted", q, newElement);
-        setSelection(newElement);
+        //setSelection(newElement);
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
@@ -281,8 +351,36 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     }//GEN-LAST:event_downButtonActionPerformed
 
     private void jTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTreeValueChanged
-        if(jTree.getLeadSelectionRow()==0)  upButton.setEnabled(false);
-        else upButton.setEnabled(true);
+        if(jTree.getLastSelectedPathComponent()==null)  return;
+        Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
+        
+        if(Project.class.isInstance(selection)){
+            upButton.setEnabled(false);
+            downButton.setEnabled(false);
+            addButton.setEnabled(true);//TODO model
+            removeButton.setEnabled(true);
+        }
+        else if(UmlModel.class.isInstance(selection)){
+            upButton.setEnabled(false);
+            downButton.setEnabled(false);
+            addButton.setEnabled(true);//TODO diagram
+            removeButton.setEnabled(true);
+        }
+        else if(UmlDiagram.class.isInstance(selection)){
+            upButton.setEnabled(false);
+            downButton.setEnabled(false);
+            addButton.setEnabled(true);
+            removeButton.setEnabled(true);
+        }        
+        else if(UmlElement.class.isInstance(selection)){
+            upButton.setEnabled(true);
+            downButton.setEnabled(true);
+            addButton.setEnabled(true);
+            removeButton.setEnabled(true);
+        }
+        else{
+            //upButton.setEnabled(true);
+        }
         
         //if(jTree.getLeadSelectionRow()==treeModel.)  upButton.setEnabled(false);
         //else upButton.setEnabled(true);

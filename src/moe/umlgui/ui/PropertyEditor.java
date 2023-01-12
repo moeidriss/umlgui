@@ -123,7 +123,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         if(UseCase.class.isInstance(umlCoreElement)){
             try {
                 gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
                 gridBagConstraints.gridy = yCounter;
                 editPanel.add(descriptionLabel, gridBagConstraints);
 
@@ -145,20 +145,17 @@ public class PropertyEditor extends javax.swing.JPanel {
             } catch (SecurityException ex) {
                 Logger.getLogger(PropertyEditor.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
         }
 
         else if(ConditionalBlock.class.isInstance(umlCoreElement)){
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints.gridy = yCounter;
-            editPanel.add(new JLabel(), gridBagConstraints);
-            
             LogicalTestPanel tPanel = 
                     new LogicalTestPanel((ConditionalBlock)umlCoreElement , context);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
             //gridBagConstraints.gridheight = 5;
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(tPanel, gridBagConstraints);
@@ -169,7 +166,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             LogicalTestComponent tComp = 
                     new LogicalTestComponent(((WhileLoop)umlCoreElement).getLogicalTest() );
             gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.weighty = 1.0;
@@ -267,7 +264,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             LogicalTestComponent tComp = 
                     new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() );
             gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.weighty = 1.0;
@@ -378,8 +375,8 @@ public class PropertyEditor extends javax.swing.JPanel {
         }
         
         
-        //TODO Note field
-        //note on relationships
+        
+        //NOTE
         //applies to:
         //does NOT apply to:association, include
         if( ! Association.class.isInstance(umlCoreElement)
@@ -388,7 +385,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         ){
                     
             gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.gridy = yCounter;
             editPanel.add(noteLabel, gridBagConstraints);
 
@@ -402,6 +399,30 @@ public class PropertyEditor extends javax.swing.JPanel {
             editPanel.add(noteMultilineTextComponent, gridBagConstraints);
         }
             
+        //BIZ OBJECTS
+        if( UseCase.class.isInstance(umlCoreElement)
+            ||
+            Actor.class.isInstance(umlCoreElement)
+            ||
+            Action.class.isInstance(umlCoreElement)
+            ||
+            Message.class.isInstance(umlCoreElement)
+        ){
+            
+
+            BusinessObjectPanel tPanel = 
+                    new BusinessObjectPanel((BusinessObjectOwner)umlCoreElement , context);
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
+            //gridBagConstraints.gridheight = 5;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(tPanel, gridBagConstraints);
+            
+        }
+        
         //filler
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = java.awt.GridBagConstraints.RELATIVE;

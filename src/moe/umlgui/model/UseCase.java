@@ -4,8 +4,10 @@
  */
 package moe.umlgui.model;
 
+import java.util.ArrayList;
 
-public class UseCase extends UmlElement  implements java.io.Serializable{
+
+public class UseCase extends UmlElement  implements java.io.Serializable , BusinessObjectOwner{
     public UseCase(){
         super("Use Case");
         setName("New Use Case");
@@ -29,6 +31,12 @@ public class UseCase extends UmlElement  implements java.io.Serializable{
 
     public void setDescriptionNumColumns(Integer descriptionNumColumns) {
         this.descriptionNumColumns = descriptionNumColumns;
+    }
+    
+    ArrayList<BusinessObject> businessObjects = new ArrayList();
+
+    public ArrayList<BusinessObject> getBusinessObjects() {
+        return businessObjects;
     }
     
     @Override

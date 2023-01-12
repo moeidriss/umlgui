@@ -4,14 +4,23 @@
  */
 package moe.umlgui.model;
 
+import java.util.ArrayList;
 
-public class Actor extends UmlElement  implements java.io.Serializable{
+
+public class Actor extends UmlElement  implements java.io.Serializable , BusinessObjectOwner{
 
     public Actor() {
         super("Actor");
         setName("New Actor");
     }
 
+    
+    ArrayList<BusinessObject> businessObjects = new ArrayList();
+
+    public ArrayList<BusinessObject> getBusinessObjects() {
+        return businessObjects;
+    }
+    
     @Override
     public UmlCoreElement clone() {
         Actor x = new Actor();
