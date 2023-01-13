@@ -209,6 +209,14 @@ public class PUMLDriver {
             sb.append(((Message)el).getTo().getId());
             sb.append(" : ").append(el.getName());
 
+            if(!((Message)el).getBusinessObjects().isEmpty()){
+                sb.append("(");
+                for(Iterator i = ((Message)el).getBusinessObjects().iterator() ; i.hasNext();){
+                    sb.append(i.next());
+                    if(i.hasNext()) sb.append(" , ");
+                }
+                sb.append(")");
+            }
             sb.append("\n");
         }
 
@@ -284,7 +292,7 @@ public class PUMLDriver {
                     &&
                 (test.getOperator().equals("IS") || test.getOperator().equals("="))
             ){
-                sb.append(" (").append(test.getOperandA()).append(") ");
+                sb.append(" (").append(test.getOperandA().getBusinessObject()).append(".").append(test.getOperandA()).append(") ");
                 sb.append(test.getOperator().replace("=", "equals"));
                 sb.append(" (").append(test.getOperandB()).append(") ");
 
@@ -308,7 +316,7 @@ public class PUMLDriver {
             }   
             //CASE#1 / 3
             else if((term1.equals("if") || term1.equals("elseif"))){
-                sb.append(" (").append(test.getOperandA()).append(" ").append(test.getOperator()).append(" ").append(test.getOperandB()).append(") ");
+                sb.append(" (").append(test.getOperandA().getBusinessObject()).append(".").append(test.getOperandA()).append(" ").append(test.getOperator()).append(" ").append(test.getOperandB()).append(") ");
                 sb.append(" then ");
                 sb.append("(").append(test.getLabel()).append(")\n");
 
@@ -372,13 +380,13 @@ public class PUMLDriver {
             if(el.getLogicalTest().getOperator().equals("IS") ||
                 el.getLogicalTest().getOperator().equals("=")
             ){
-                sb.append("(").append(el.getLogicalTest().getOperandA()).append(") ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(") ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append("(").append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");
             }
             else{
-                sb.append("(").append(el.getLogicalTest().getOperandA()).append(" ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(" ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");
@@ -439,13 +447,13 @@ public class PUMLDriver {
             if(el.getLogicalTest().getOperator().equals("IS") ||
                 el.getLogicalTest().getOperator().equals("=")
             ){
-                sb.append("(").append(el.getLogicalTest().getOperandA()).append(") ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(") ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append("(").append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");
             }
             else{
-                sb.append("(").append(el.getLogicalTest().getOperandA()).append(" ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(" ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");

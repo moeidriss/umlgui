@@ -330,7 +330,7 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
         ActionListener addPropertyActionListner = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                BusinessObjectProperty prop = new BusinessObjectProperty();
+                BusinessObjectProperty prop = new BusinessObjectProperty(obj);
                 BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
                 
                 JDialog pD = new JDialog();
@@ -358,7 +358,7 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
         ActionListener addMethodActionListner = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                BusinessObjectMethod meth = new BusinessObjectMethod();
+                BusinessObjectMethod meth = new BusinessObjectMethod(obj);
                 BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
                 
                 JDialog pD = new JDialog();
@@ -493,7 +493,7 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
             ActionListener addPropertyActionListner = new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BusinessObjectProperty prop = new BusinessObjectProperty();
+                    BusinessObjectProperty prop = new BusinessObjectProperty(obj);
                     BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
 
                     JDialog pD = new JDialog();
@@ -521,7 +521,7 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
             ActionListener addMethodActionListner = new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BusinessObjectMethod meth = new BusinessObjectMethod();
+                    BusinessObjectMethod meth = new BusinessObjectMethod(obj);
                     BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
 
                     JDialog pD = new JDialog();

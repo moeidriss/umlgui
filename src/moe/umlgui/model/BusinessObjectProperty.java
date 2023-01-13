@@ -53,9 +53,6 @@ public class BusinessObjectProperty implements java.io.Serializable{
         this.businessObject = businessObject;
     }
 
-    public BusinessObjectProperty(){
-        
-    }
     
     public BusinessObjectProperty(String name, String dataType, BusinessObject businessObject) {
         this.name = name;

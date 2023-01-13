@@ -113,7 +113,7 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         add(nameTextField, gridBagConstraints);
 
-        typeComboBox.setModel(new DefaultComboBoxModel(BusinessObjectProperty.DATA_TYPES));
+        typeComboBox.setModel(new DefaultComboBoxModel(BusinessObjectMethod.RETURN_TYPES));
         typeComboBox.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder("Return Type"), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
         typeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

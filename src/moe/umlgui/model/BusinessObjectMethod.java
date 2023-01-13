@@ -61,10 +61,6 @@ public class BusinessObjectMethod implements java.io.Serializable{
     public BusinessObjectMethod(BusinessObject businessObject) {
         this.businessObject = businessObject;
     }
-
-    public BusinessObjectMethod(){
-        
-    }
     
     public BusinessObjectMethod(String name, String returnType, BusinessObject businessObject) {
         this.name = name;

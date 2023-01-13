@@ -70,11 +70,7 @@ public abstract class UmlDiagram implements Serializable{
     
     
     HashMap<Long,UmlCoreElement> coreElementMap = new HashMap();
-    //ArrayList<UmlElement> elementList = new ArrayList();
     ArrayList<UmlCoreElement> coreElementList = new ArrayList();
-    /*ArrayList<Activity> activityList = new ArrayList();
-    ArrayList<UmlRelationship> relationshipList = new ArrayList();
-    ArrayList<ControlNode> controlNodeList = new ArrayList();*/
     
     public HashMap<Long,UmlCoreElement> getCoreElementMap() {
         return coreElementMap;

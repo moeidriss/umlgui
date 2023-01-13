@@ -164,7 +164,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         
         else if(WhileLoop.class.isInstance(umlCoreElement)){
             LogicalTestComponent tComp = 
-                    new LogicalTestComponent(((WhileLoop)umlCoreElement).getLogicalTest() );
+                    new LogicalTestComponent(((WhileLoop)umlCoreElement).getLogicalTest(),context );
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -262,7 +262,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             editPanel.add(pp, gridBagConstraints);
 
             LogicalTestComponent tComp = 
-                    new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() );
+                    new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() ,context);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import moe.umlgui.controller.PUMLDriver;
 
 /**
@@ -39,40 +40,64 @@ public class Project implements java.io.Serializable{
         return diagrams;
     }
 
+    
+    
+    
     HashMap<Long,UmlCoreElement> coreElementMap = new HashMap();
-    ArrayList<UmlElement> elementList = new ArrayList();
-    ArrayList<Activity> activityList = new ArrayList();
-    ArrayList<UmlRelationship> relationshipList = new ArrayList();
+    ArrayList<UmlCoreElement> coreElementList = new ArrayList();
     
     public HashMap<Long,UmlCoreElement> getCoreElementMap() {
         return coreElementMap;
     }
     
     public ArrayList<UmlElement> getElementList(){
+        ArrayList elementList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(UmlElement.class.isInstance(o))  elementList.add(o);
+        }
         return elementList;
     }
     
+    public ArrayList<UmlCoreElement> getCoreElementList(){
+        return coreElementList;
+    }
+    
     public ArrayList<Activity> getActivityList(){
+        ArrayList activityList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(Activity.class.isInstance(o))  activityList.add(o);
+        }
         return activityList;
     }
     
     
     public ArrayList<UmlRelationship> getRelationshipList(){
+        ArrayList relationshipList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(UmlRelationship.class.isInstance(o))  relationshipList.add(o);
+        }
         return relationshipList;
     }
     
+    public ArrayList<BusinessObject> getBusinessObjects(){
+        java.lang.System.out.println("coreElementList="+coreElementList.size());
+        ArrayList<BusinessObject> ar = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(BusinessObjectOwner.class.isInstance(o))
+                ar.addAll(((BusinessObjectOwner)o).getBusinessObjects());
+        }
+        return ar;
+    }
+    
+    
     //TODO update from UmlDiagram.add
     public void addCoreElement(UmlCoreElement umlCoreElement){
-        coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
-        
-        if(UmlElement.class.isInstance(umlCoreElement)){
-            elementList.add((UmlElement)umlCoreElement);
-            if(Activity.class.isInstance(umlCoreElement)){
-                activityList.add((Activity)umlCoreElement);
-            }
-        }
-        else if(UmlRelationship.class.isInstance(umlCoreElement)) 
-            relationshipList.add((UmlRelationship)umlCoreElement);
+        coreElementMap.put(umlCoreElement.getId(), umlCoreElement);        
+        coreElementList.add(umlCoreElement);
     }
     
     
