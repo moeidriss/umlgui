@@ -36,12 +36,13 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
         if(method.getReturnType()!=null) typeComboBox.setSelectedItem(method.getReturnType());
         if(method.getName()!=null)    nameTextField.setText(method.getName());
         
-        jTable1.getColumn("Return Type").setCellRenderer(new TableCellRenderer(){
+        jTable1.getColumn("Data Type").setCellRenderer(new TableCellRenderer(){
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JComboBox b = new JComboBox();
-                b.setModel(new DefaultComboBoxModel(BusinessObjectMethod.RETURN_TYPES));
+                b.setModel(new DefaultComboBoxModel(BusinessObjectProperty.DATA_TYPES));
                 if(value!=null) b.setSelectedItem(value);
+                //else b.setSelectedIndex(2);
                 return b;
             }
             
@@ -59,7 +60,7 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
         ((DefaultTableModel)jTable1.getModel()).addTableModelListener(new TableModelListener(){
             @Override
             public void tableChanged(TableModelEvent e) {
-                if(((DefaultTableModel)jTable1.getModel()).getValueAt(((DefaultTableModel)jTable1.getModel()).getRowCount()-1,0)==null){
+                if(((DefaultTableModel)jTable1.getModel()).getValueAt(((DefaultTableModel)jTable1.getModel()).getRowCount()-1,0)!=null){
                     ((DefaultTableModel)jTable1.getModel()).addRow(new Object[]{null,null});
                 }
             }            
@@ -71,19 +72,17 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
         method.setReturnType((String)typeComboBox.getSelectedItem());
         method.setName(nameTextField.getText());
         
+        
         for(int i=0 ; i<((DefaultTableModel)jTable1.getModel()).getRowCount() ; i++){
-            if(((DefaultTableModel)jTable1.getModel()).getValueAt(i,0)==null ||
-               ((DefaultTableModel)jTable1.getModel()).getValueAt(i,1)==null 
-            ){
-                continue;
-            }
-            
-            if(!method.getParameters().containsKey(((DefaultTableModel)jTable1.getModel()).getValueAt(i, 0))){
-                method.getParameters().put((String)((DefaultTableModel)jTable1.getModel()).getValueAt(i, 0), 
-                        (String)((DefaultTableModel)jTable1.getModel()).getValueAt(i, 1));
+            Object pN = ((DefaultTableModel)jTable1.getModel()).getValueAt(i,0);
+            Object pT = ((DefaultTableModel)jTable1.getModel()).getValueAt(i,1);
+            java.lang.System.out.println(pN +  ":" + pT);
+            if(pN!=null && pT!=null){
+                method.getParameters().put((String)pN, (String)pT);
             }
         }
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -135,7 +134,7 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Name", "Return Type"
+                "Name", "Data Type"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
