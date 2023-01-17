@@ -220,7 +220,13 @@ public class PUMLDriver {
             sb.append("\n");
         }
 
-        
+        else if(BusinessObject.class.isInstance(el)
+        ){
+            sb.append("entity ");
+            sb.append(el.getName());
+
+            sb.append("\n");
+        }
 
         //note
         //does NOT apply to:association, include

@@ -85,6 +85,16 @@ public abstract class UmlDiagram implements Serializable{
         return elementList;
     }
     
+    public ArrayList<AttachmentOwner> getAttachmentOwnerList(){
+        ArrayList elementList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(AttachmentOwner.class.isInstance(o))  elementList.add(o);
+        }
+        return elementList;
+    }
+    
+    
     public ArrayList<UmlCoreElement> getCoreElementList(){
         return coreElementList;
     }

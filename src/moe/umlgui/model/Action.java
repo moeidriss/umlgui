@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Moe
  */
-public class Action extends Activity implements java.io.Serializable , BusinessObjectOwner{
+public class Action extends Activity implements java.io.Serializable , BusinessObjectOwner, AttachmentOwner{
     
     public Action() {
         super("Action");
@@ -18,7 +18,11 @@ public class Action extends Activity implements java.io.Serializable , BusinessO
     }
     
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList();
+    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+        public String toString(){
+            return "Business Objects";
+        }
+    };
 
     public ArrayList<BusinessObject> getBusinessObjects() {
         return businessObjects;
@@ -29,5 +33,15 @@ public class Action extends Activity implements java.io.Serializable , BusinessO
         Action x = new Action();
         x.setName(name);
         return x;
+    }
+    
+    ArrayList<UmlDiagram> attachedDiagrams = new ArrayList(){
+        public String toString(){
+            return "Attached Diagrams";
+        }
+    };
+    
+    public ArrayList<UmlDiagram> getAttachedDiagrams(){
+        return attachedDiagrams;
     }
 }

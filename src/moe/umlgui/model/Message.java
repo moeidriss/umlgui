@@ -19,7 +19,11 @@ public class Message extends UmlCoreElement  implements java.io.Serializable , B
     
     
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList();
+    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+        public String toString(){
+            return "Business Objects";
+        }
+    };
 
     public ArrayList<BusinessObject> getBusinessObjects() {
         return businessObjects;

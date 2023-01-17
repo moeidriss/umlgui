@@ -7,7 +7,7 @@ package moe.umlgui.model;
 import java.util.ArrayList;
 
 
-public class UseCase extends UmlElement  implements java.io.Serializable , BusinessObjectOwner{
+public class UseCase extends UmlElement  implements java.io.Serializable , BusinessObjectOwner , AttachmentOwner{
     public UseCase(){
         super("Use Case");
         setName("New Use Case");
@@ -33,7 +33,11 @@ public class UseCase extends UmlElement  implements java.io.Serializable , Busin
         this.descriptionNumColumns = descriptionNumColumns;
     }
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList();
+    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+        public String toString(){
+            return "Business Objects";
+        }
+    };
 
     public ArrayList<BusinessObject> getBusinessObjects() {
         return businessObjects;
@@ -44,5 +48,15 @@ public class UseCase extends UmlElement  implements java.io.Serializable , Busin
         UseCase x = new UseCase();
         x.setName(name);
         return x;
+    }
+    
+    ArrayList<UmlDiagram> attachedDiagrams = new ArrayList(){
+        public String toString(){
+            return "Attached Diagrams";
+        }
+    };
+    
+    public ArrayList<UmlDiagram> getAttachedDiagrams(){
+        return attachedDiagrams;
     }
 }

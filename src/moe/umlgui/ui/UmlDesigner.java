@@ -14,11 +14,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 
 /**
@@ -43,7 +45,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     
     private void buildEditor(){ 
         //controlsTabbedPane.addTab("Palette", palette);
-        controlsTabbedPane.addTab("Library", libraryExplorer);
+        //controlsTabbedPane.addTab("Library", libraryExplorer);
         //controlsTabbedPane.addTab("Diagram", diagramExplorer);
         //controlsTabbedPane.addTab("Project", projectExplorer);
         
@@ -56,7 +58,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     
     //Palette palette = new Palette();
     //PropertyEditor propertyEditor = new PropertyEditor();
-    LibraryExplorer libraryExplorer = new LibraryExplorer();
+    //LibraryExplorer libraryExplorer = new LibraryExplorer();
     //DiagramExplorer diagramExplorer = new DiagramExplorer();    
     //ProjectExplorer projectExplorer = new ProjectExplorer(this);*/
     
@@ -74,10 +76,29 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     }
     */
     
+    JTabbedPane tp = null;
+    HashSet openDiagrams = new HashSet();
+    
     public void display(JPanel p){
         contentPanel.removeAll();
-        contentPanel.add(p , BorderLayout.CENTER);
-        revalidate();
+        
+        if(UmlDiagramPanel.class.isInstance(p)){
+            if(tp==null)    tp = new JTabbedPane();
+            if(!openDiagrams.contains(p)){
+                tp.addTab(((UmlDiagramPanel)p).getUmlDiagram().getName(), p);
+            }
+            openDiagrams.add(p);
+            
+            contentPanel.add(tp , BorderLayout.CENTER);
+            revalidate();
+            tp.setSelectedComponent(p);
+            revalidate();
+        }
+        else{
+            contentPanel.add(p , BorderLayout.CENTER);
+            revalidate();
+        }
+        
     }
     
     /**
@@ -97,6 +118,9 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         jProgressBar1 = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         jLabel1 = new javax.swing.JLabel();
+        controlsSplitPane = new javax.swing.JSplitPane();
+        paletteScrollPane = new javax.swing.JScrollPane();
+        palette = new moe.umlgui.ui.Palette();
         controlsTabbedPane = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -132,7 +156,6 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setDividerLocation(200);
         jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setOneTouchExpandable(true);
 
@@ -154,7 +177,16 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         contentPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setRightComponent(contentPanel);
-        jSplitPane1.setTopComponent(controlsTabbedPane);
+
+        controlsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        paletteScrollPane.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder("Palette"), new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
+        paletteScrollPane.setViewportView(palette);
+
+        controlsSplitPane.setTopComponent(paletteScrollPane);
+        controlsSplitPane.setBottomComponent(controlsTabbedPane);
+
+        jSplitPane1.setLeftComponent(controlsSplitPane);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -233,6 +265,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
+    private javax.swing.JSplitPane controlsSplitPane;
     private javax.swing.JTabbedPane controlsTabbedPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JProgressBar jProgressBar1;
@@ -241,6 +274,8 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton newProjectButton;
     private javax.swing.JButton openProjectButton;
+    private moe.umlgui.ui.Palette palette;
+    private javax.swing.JScrollPane paletteScrollPane;
     // End of variables declaration//GEN-END:variables
 
     
@@ -251,11 +286,6 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     @Override
     public void propertyChange(PropertyChangeEvent evt) {     
         if(!evt.getPropertyName().equals("Display"))    return;
-        
-        java.lang.System.out.println(evt.getPropertyName());
-        java.lang.System.out.println(evt.getOldValue());
-        java.lang.System.out.println(evt.getSource().getClass());
-        java.lang.System.out.println("---------------");
         
         String pn = evt.getPropertyName();
         if(pn.equals("Display") && !((ArrayList)evt.getOldValue()).contains(this)){

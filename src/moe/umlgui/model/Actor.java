@@ -15,7 +15,11 @@ public class Actor extends UmlElement  implements java.io.Serializable , Busines
     }
 
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList();
+    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+        public String toString(){
+            return "Business Objects";
+        }
+    };
 
     public ArrayList<BusinessObject> getBusinessObjects() {
         return businessObjects;

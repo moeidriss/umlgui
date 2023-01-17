@@ -34,7 +34,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     
     Project project;
     Explorer explorer;
-    HashMap<UmlDiagram, DiagramExplorer> openDiagrams = new HashMap();
+    HashMap<UmlDiagram, DiagramExplorer> openDiagramExplorers = new HashMap();
+    HashMap<UmlDiagram, UmlDiagramPanel> openDiagramPanels = new HashMap();
     
     public void explore(Project project){
         this.project = project;
@@ -42,14 +43,14 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     }
 
     private void loadProject(){        
-        setBorder(new TitledBorder(project.getName()));
+        //setBorder(new TitledBorder(project.getName()));
         
         propertyEditor.setContext(project);
-        palette.setProject(project);
+        //palette.setProject(project);
         
         explorer = new Explorer(project);      
         explorer.addPropertyChangeListener(this);
-        jTabbedPane1.addTab(project.getName(), explorer);
+        jSplitPane2.setTopComponent(explorer);
         propertyEditor.addPropertyChangeListener(this);
         
         revalidate();
@@ -68,9 +69,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jSplitPane1 = new javax.swing.JSplitPane();
+        jSplitPane2 = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        paletteScrollPane = new javax.swing.JScrollPane();
-        palette = new moe.umlgui.ui.Palette();
         propertyEditorScrollPane = new javax.swing.JScrollPane();
         propertyEditor = new moe.umlgui.ui.PropertyEditor();
 
@@ -82,7 +82,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         jLabel1.setText("New Diagram: ");
         jToolBar1.add(jLabel1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Use Case Diagram", "Activity Diagram", "Sequence Diagram" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Use Case Diagram", "Activity Diagram", "Sequence Diagram", "Package Diagram" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -90,15 +90,15 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         });
         jToolBar1.add(jComboBox1);
 
-        add(jToolBar1, java.awt.BorderLayout.PAGE_START);
+        add(jToolBar1, java.awt.BorderLayout.NORTH);
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        paletteScrollPane.setViewportView(palette);
+        jSplitPane2.setDividerLocation(100);
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane2.setBottomComponent(jTabbedPane1);
 
-        jTabbedPane1.addTab("Palette", paletteScrollPane);
-
-        jSplitPane1.setLeftComponent(jTabbedPane1);
+        jSplitPane1.setLeftComponent(jSplitPane2);
 
         propertyEditorScrollPane.setViewportView(propertyEditor);
 
@@ -119,6 +119,9 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         else if(jComboBox1.getSelectedItem().equals("Sequence Diagram")){
             ud = new SequenceDiagram(project.getModels().get(0));
         }
+        else if(jComboBox1.getSelectedItem().equals("Package Diagram")){
+            ud = new PackageDiagram(project.getModels().get(0));
+        }
         
         if(ud !=  null){
             project.getDiagrams().add(ud);
@@ -131,9 +134,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             diagramExplorer.exploreDiagram(ud);
             diagramExplorer.addPropertyChangeListener(this);
             addPropertyChangeListener(diagramExplorer);
-            openDiagrams.put(ud, diagramExplorer);
+            openDiagramExplorers.put(ud, diagramExplorer);
             
-            jTabbedPane1.setSelectedComponent(paletteScrollPane);
             jTabbedPane1.addTab(ud.getName(), diagramExplorer);
             
             UmlDiagramPanel dp = new UmlDiagramPanel(ud);
@@ -141,6 +143,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             dp.addPropertyChangeListener(diagramExplorer);
             addPropertyChangeListener(dp);
             diagramExplorer.addPropertyChangeListener(dp);
+            openDiagramPanels.put(ud, dp);
             
             ArrayList q =new ArrayList();
             q.add(this);
@@ -155,10 +158,9 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
-    private moe.umlgui.ui.Palette palette;
-    private javax.swing.JScrollPane paletteScrollPane;
     private moe.umlgui.ui.PropertyEditor propertyEditor;
     private javax.swing.JScrollPane propertyEditorScrollPane;
     // End of variables declaration//GEN-END:variables
@@ -179,11 +181,6 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         ){
             return;
         }
-        
-        java.lang.System.out.println(evt.getPropertyName());
-        java.lang.System.out.println(evt.getOldValue());
-        java.lang.System.out.println(evt.getSource().getClass());
-        java.lang.System.out.println("---------------");
         
         //PropertyEditor events
         if(evt.getPropertyName().equals("Element updated") && !((ArrayList)evt.getOldValue()).contains(this)){
@@ -221,27 +218,33 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
                 UmlDiagram ud = (UmlDiagram)evt.getNewValue();
                 propertyEditor.edit(ud);
                 
-                DiagramExplorer diagramExplorer = openDiagrams.get(ud);
+                DiagramExplorer diagramExplorer = openDiagramExplorers.get(ud);
                 if(diagramExplorer==null){
                     diagramExplorer = new DiagramExplorer();                
                     diagramExplorer.setProject(project);
                     diagramExplorer.exploreDiagram(ud);
                     diagramExplorer.addPropertyChangeListener(this);
                     addPropertyChangeListener(diagramExplorer);
-                    openDiagrams.put(ud, diagramExplorer);
+                    openDiagramExplorers.put(ud, diagramExplorer);
                     jTabbedPane1.addTab(ud.getName(), diagramExplorer);
                 }
-                        
-                UmlDiagramPanel dp = new UmlDiagramPanel(ud);
-                dp.addPropertyChangeListener(this);
-                dp.addPropertyChangeListener(diagramExplorer);
-                addPropertyChangeListener(dp);
-                diagramExplorer.addPropertyChangeListener(dp);
-
+                jTabbedPane1.setSelectedComponent(diagramExplorer);
+                
+                UmlDiagramPanel dp = openDiagramPanels.get(ud);
+                if(dp==null){
+                    dp = new UmlDiagramPanel(ud);
+                    dp.addPropertyChangeListener(this);
+                    dp.addPropertyChangeListener(diagramExplorer);
+                    addPropertyChangeListener(dp);
+                    diagramExplorer.addPropertyChangeListener(dp);
+                    openDiagramPanels.put(ud, dp);
+                }
+                
                 ArrayList q =new ArrayList();
                 q.add(this);
                 this.firePropertyChange("Display", q, dp);
 
+                explorer.reload();
                 revalidate();
             }
             else if(UmlCoreElement.class.isInstance(evt.getNewValue())){

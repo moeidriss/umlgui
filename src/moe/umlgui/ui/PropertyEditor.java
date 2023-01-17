@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -24,8 +25,11 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
 /**
  *
@@ -109,6 +113,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx=0;
         gridBagConstraints.gridy = yCounter;
         editPanel.add(nameLabel, gridBagConstraints);
 
@@ -122,21 +127,18 @@ public class PropertyEditor extends javax.swing.JPanel {
 
         if(UseCase.class.isInstance(umlCoreElement)){
             try {
-                gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-                gridBagConstraints.gridy = yCounter;
-                editPanel.add(descriptionLabel, gridBagConstraints);
-
                 Method m1 = UseCase.class.getDeclaredMethod("setDescription", String.class);
                 Method m2 = UseCase.class.getDeclaredMethod("getDescription");
                 Method m3 = UseCase.class.getDeclaredMethod("setDescriptionNumColumns", Integer.class);
                 Method m4 = UseCase.class.getDeclaredMethod("getDescriptionNumColumns");
                 descriptionMultilineTextComponent.setUmlCoreElement(umlCoreElement,m1,m2,m3,m4);
-
+                descriptionMultilineTextComponent.setBorder(BorderFactory.createTitledBorder("Description"));
+                
                 gridBagConstraints = new java.awt.GridBagConstraints();
                 gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
                 gridBagConstraints.weightx = 1.0;
                 gridBagConstraints.weighty = 1.0;
+                gridBagConstraints.gridwidth = 2;
                 //gridBagConstraints.gridheight = 5;
                 gridBagConstraints.gridy = yCounter;    yCounter++;
                 editPanel.add(descriptionMultilineTextComponent, gridBagConstraints);
@@ -374,7 +376,116 @@ public class PropertyEditor extends javax.swing.JPanel {
             editPanel.add(toComboBox, gridBagConstraints);
         }
         
+        else if(BusinessObject.class.isInstance(umlCoreElement)){
+            JList propertyList = new JList(new DefaultListModel());
+            //((DefaultListModel)propertyList.getModel()).
+            //((BusinessObject)umlCoreElement).getProperties())
+            JList methodList = new JList(new DefaultListModel());
+            
+            JToolBar propToolBar = new javax.swing.JToolBar();
+            JButton addPropertyButton = new javax.swing.JButton();
+            JButton deletePropertyButton = new javax.swing.JButton();
+            
+            JToolBar methToolBar = new javax.swing.JToolBar();
+            JButton addMethodButton = new javax.swing.JButton();
+            JButton deleteMethodButton = new javax.swing.JButton();
         
+            ActionListener addPropertyActionListner = new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BusinessObjectProperty prop = new BusinessObjectProperty((BusinessObject)umlCoreElement);
+                    BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
+
+                    JDialog pD = new JDialog();
+                    JButton pB = new JButton("OK");
+                    pB.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            pComp.save();
+                            ((BusinessObject)umlCoreElement).getProperties().add(prop);
+                            ((DefaultListModel)propertyList.getModel()).addElement(prop);
+                            pD.setVisible(false);
+                        }                    
+                    });
+
+                    pD.getContentPane().add(pComp , BorderLayout.CENTER);
+                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                    pD.pack();
+                    pD.setLocationRelativeTo(null);
+                    pD.setVisible(true);
+                }            
+            };
+            addPropertyButton.addActionListener(addPropertyActionListner);
+
+
+            ActionListener addMethodActionListner = new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BusinessObjectMethod meth = new BusinessObjectMethod((BusinessObject)umlCoreElement);
+                    BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
+
+                    JDialog pD = new JDialog();
+                    JButton pB = new JButton("OK");
+                    pB.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            mComp.save();
+                            ((BusinessObject)umlCoreElement).getMethods().add(meth);
+                            ((DefaultListModel)methodList.getModel()).addElement(meth);
+                            pD.setVisible(false);
+                        }                    
+                    });
+
+                    pD.getContentPane().add(mComp , BorderLayout.CENTER);
+                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
+                    pD.pack();
+                    pD.setLocationRelativeTo(null);
+                    pD.setVisible(true);
+                }            
+            };
+            addMethodButton.addActionListener(addMethodActionListner);
+
+            propToolBar.add(addPropertyButton);
+            propToolBar.add(deletePropertyButton);
+            methToolBar.add(addMethodButton);
+            methToolBar.add(deleteMethodButton);
+            
+            addPropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png")));
+            deletePropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png")));
+            addMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png")));
+            deleteMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png")));
+            
+            JPanel pPanel =  new JPanel();
+            pPanel.setLayout(new BorderLayout());
+            pPanel.setBorder(BorderFactory.createTitledBorder("Properties"));
+            pPanel.add(propToolBar , BorderLayout.NORTH);
+            pPanel.add(new JScrollPane(propertyList) , BorderLayout.CENTER);
+                        
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
+            //gridBagConstraints.gridheight = 5;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(pPanel, gridBagConstraints);
+            
+            JPanel mPanel =  new JPanel();
+            mPanel.setLayout(new BorderLayout());
+            mPanel.setBorder(BorderFactory.createTitledBorder("Methods"));
+            mPanel.add(methToolBar , BorderLayout.NORTH);
+            mPanel.add(new JScrollPane(methodList) , BorderLayout.CENTER);
+            
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
+            //gridBagConstraints.gridheight = 5;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(mPanel, gridBagConstraints);
+            
+        }
         
         //NOTE
         //applies to:
@@ -384,22 +495,21 @@ public class PropertyEditor extends javax.swing.JPanel {
             ! Include.class.isInstance(umlCoreElement)
         ){
                     
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-            gridBagConstraints.gridy = yCounter;
-            editPanel.add(noteLabel, gridBagConstraints);
-
+            
             noteMultilineTextComponent.setUmlCoreElement(umlCoreElement);
+            noteMultilineTextComponent.setBorder(BorderFactory.createTitledBorder("Note"));
+            
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
             //gridBagConstraints.gridheight = 5;
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(noteMultilineTextComponent, gridBagConstraints);
         }
             
-        //BIZ OBJECTS
+        //EMBEDDED BIZ OBJECTS
         if( UseCase.class.isInstance(umlCoreElement)
             ||
             Actor.class.isInstance(umlCoreElement)

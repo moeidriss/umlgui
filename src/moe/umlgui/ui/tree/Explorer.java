@@ -4,26 +4,50 @@
  */
 package moe.umlgui.ui.tree;
 
+import java.awt.datatransfer.Transferable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.TransferHandler;
+import static javax.swing.TransferHandler.COPY_OR_MOVE;
 import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import moe.umlgui.model.AcceptEvent;
+import moe.umlgui.model.AcceptTimeEvent;
+import moe.umlgui.model.Action;
+import moe.umlgui.model.ActivityDiagram;
+import moe.umlgui.model.ActivityFinalNode;
+import moe.umlgui.model.ActivityInitialNode;
 import moe.umlgui.model.Actor;
 import moe.umlgui.model.Association;
+import moe.umlgui.model.AttachmentOwner;
+import moe.umlgui.model.CallActivity;
+import moe.umlgui.model.ConditionalBlock;
+import moe.umlgui.model.FlowFinalNode;
 import moe.umlgui.model.Include;
 import moe.umlgui.model.ModelException;
+import moe.umlgui.model.PackageDiagram;
 import moe.umlgui.model.Project;
+import moe.umlgui.model.RepeatLoop;
+import moe.umlgui.model.SendSignal;
+import moe.umlgui.model.SequenceDiagram;
 import moe.umlgui.model.UmlCoreElement;
 import moe.umlgui.model.UmlDiagram;
 import moe.umlgui.model.UmlElement;
 import moe.umlgui.model.UmlModel;
 import moe.umlgui.model.UseCase;
+import moe.umlgui.model.UseCaseDiagram;
+import moe.umlgui.model.WhileLoop;
+import moe.umlgui.ui.DiagramExplorer;
+import moe.umlgui.ui.TransferrableImpl;
+import moe.umlgui.ui.UmlDiagramPanel;
+import moe.umlgui.ui.UmlElementLabel;
 
 /**
  *
@@ -33,17 +57,17 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
     
     
-    static int ELEMENT = 1;
+    //static int ELEMENT = 1;
     static int DIAGRAM = 2;
     static int PROJECT = 3;
-    static int MODEL = 4;
+    //static int MODEL = 4;
     
     int nowExploring = -1;
     
     Project project;
-    UmlModel model;
+    //UmlModel model;
     UmlDiagram diagram;
-    UmlElement element;
+    //UmlElement element;
     
     /**
      * Creates new form DiagramExplorer
@@ -60,17 +84,6 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         this.firePropertyChange("Explorer selection", q, project);
     }
 
-    public Explorer(UmlModel model) {
-        initComponents();
-        this.model = model;
-        nowExploring = MODEL;
-        loadDiagram();
-        setSelection(model);
-        
-        ArrayList q =new ArrayList();
-        q.add(this);
-        this.firePropertyChange("Explorer selection", q, model);
-    }
 
     public Explorer(UmlDiagram diagram) {
         initComponents();
@@ -84,6 +97,19 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         this.firePropertyChange("Explorer selection", q, diagram);
     }
 
+    /*
+    public Explorer(UmlModel model) {
+        initComponents();
+        this.model = model;
+        nowExploring = MODEL;
+        loadDiagram();
+        setSelection(model);
+        
+        ArrayList q =new ArrayList();
+        q.add(this);
+        this.firePropertyChange("Explorer selection", q, model);
+    }
+    
     public Explorer(UmlElement element) {
         initComponents();
         this.element = element;
@@ -95,30 +121,55 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         q.add(this);
         this.firePropertyChange("Explorer selection", q, element);
     }
+    */
     
     ExplorerTreeModel treeModel = null;
     
     private void loadDiagram(){    
         if(project!=null){
-            setBorder(new TitledBorder(project.getName()));  
+            //setBorder(new TitledBorder(project.getName()));  
             treeModel = new ExplorerTreeModel(project);
         }
-        else if(model!=null){
-            setBorder(new TitledBorder(model.getName()));        
-            treeModel = new ExplorerTreeModel(model);
-        }
         else if(diagram!=null){
-            setBorder(new TitledBorder(diagram.getName()));        
+            //setBorder(new TitledBorder(diagram.getName()));        
             treeModel = new ExplorerTreeModel(diagram);
         }
-        else if(element!=null){
-            setBorder(new TitledBorder(element.getName()));        
-            treeModel = new ExplorerTreeModel(element);
+        /*else if(model!=null){
+            //setBorder(new TitledBorder(model.getName()));        
+            treeModel = new ExplorerTreeModel(model);
         }
+        else if(element!=null){
+            //setBorder(new TitledBorder(element.getName()));        
+            treeModel = new ExplorerTreeModel(element);
+        }*/
         
         jTree.setModel(treeModel);
         jTree.setCellRenderer(new ExplorerTreeCellRenderer()); 
-        
+        jTree.setDragEnabled(true);
+        jTree.setTransferHandler(new TransferHandler(){
+            @Override
+            protected Transferable createTransferable(JComponent c){
+                System.out.println(c);
+                Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
+                if(UmlElement.class.isInstance(selection))
+                    return new TransferrableImpl((UmlElement)selection);
+                return null;
+            }
+
+            @Override
+            protected void exportDone(JComponent source,Transferable data, int action){
+                super.exportDone(source, data, action);
+            }
+            
+            /**
+             *
+             * @param c
+             * @return
+             */
+            public int getSourceActions(JComponent c){
+                return COPY_OR_MOVE;
+            }
+        });
         
     }
     
@@ -177,6 +228,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         removeButton = new javax.swing.JButton();
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
+        linkDiagramButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -249,6 +301,19 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         });
         jToolBar1.add(downButton);
 
+        linkDiagramButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/DiagramLinked.png"))); // NOI18N
+        linkDiagramButton.setToolTipText("Link Diagram");
+        linkDiagramButton.setEnabled(false);
+        linkDiagramButton.setFocusable(false);
+        linkDiagramButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        linkDiagramButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        linkDiagramButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkDiagramButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(linkDiagramButton);
+
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -258,8 +323,26 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         ArrayList options = new ArrayList();
         //module, diagram
         
+        //restrict options based on diagram
+        //TODO diagram is null (exploring project)
+            //selected node is diagram or element within
+        
+        
         //ucd
-        options.add("Actor");options.add("Use Case");
+        if(diagram!=null & UseCaseDiagram.class.isInstance(diagram)){
+            options.add("Actor");options.add("Use Case");
+        }
+        else if(diagram!=null & ActivityDiagram.class.isInstance(diagram)){
+            options.add("Action");options.add("Call Activity");
+            options.add("Accept Event");options.add("Accept Time Event");
+            options.add("Send Signal");options.add("Activity Initial Node");
+            options.add("Activity Final Node");options.add("Flow Final Node");
+            options.add("Conditional Block");options.add("While Loop");
+            options.add("Repeat Loop");
+        }
+        else if(diagram!=null & SequenceDiagram.class.isInstance(diagram)){
+            options.add("Actor");
+        }
         
         //context sensitive options
         if(selection != null && UmlElement.class.isInstance(selection)){
@@ -270,15 +353,17 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 options.add("Include");
             }
         }
-        String elType = (String)JOptionPane.showInputDialog(this, "Select element", "Insert", JOptionPane.INFORMATION_MESSAGE, null, options.toArray(), null);
+        
+        
+        String newElementType = (String)JOptionPane.showInputDialog(this, "Select element", "Insert", JOptionPane.INFORMATION_MESSAGE, null, options.toArray(), null);
         
         //if nothing or diagram is select (or multiple items), append element to end
         
         //if element is selected, prompt to insert before or after
         int newIndex = -1;
         if(UmlElement.class.isInstance(selection) &&
-            !elType.equals("Association")  &&
-            !elType.equals("Include") 
+            !newElementType.equals("Association")  &&
+            !newElementType.equals("Include") 
         ){
             String[] s = {"Before" , "After"};
             String ss = ((String)JOptionPane.showInputDialog(this, "Before or after", "Insert", JOptionPane.INFORMATION_MESSAGE, null, s, "After"));
@@ -289,20 +374,54 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         }
         
         UmlCoreElement newElement = null;
-        if(elType.equals("Actor")){
+        if(newElementType.equals("Actor")){
             newElement = new Actor();
         }
-        else if(elType.equals("Use Case")){
+        else if(newElementType.equals("Use Case")){
             newElement = new UseCase();
         }
-        else if(elType.equals("Association")){
+        else if(newElementType.equals("Association")){
             newElement = new Association();
             ((Association)newElement).setPartyA((UmlElement)selection);
         }
-        else if(elType.equals("Include")){
+        else if(newElementType.equals("Include")){
             newElement = new Include();
             ((Include)newElement).setPartyA((UmlElement)selection);
+        }    
+        else if(newElementType.equals("Action")){
+            newElement = new Action();
         }
+        else if(newElementType.equals("Call Activity")){
+            newElement = new CallActivity();
+        }
+        else if(newElementType.equals("Accept Event")){
+            newElement = new AcceptEvent();
+        }
+        else if(newElementType.equals("Accept Time Event")){
+            newElement = new AcceptTimeEvent();
+        }
+        else if(newElementType.equals("SendSignal")){
+            newElement = new SendSignal();
+        }
+        else if(newElementType.equals("Activity Initial Node")){
+            newElement = new ActivityInitialNode();
+        }
+        else if(newElementType.equals("Activity Final Node")){
+            newElement = new ActivityFinalNode();
+        }
+        else if(newElementType.equals("Flow Final Node")){
+            newElement = new FlowFinalNode();
+        }
+        else if(newElementType.equals("Conditional Block")){
+            newElement = new ConditionalBlock();
+        }
+        else if(newElementType.equals("While Loop")){
+            newElement = new WhileLoop();
+        }
+        else if(newElementType.equals("Repeat Loop")){
+            newElement = new RepeatLoop();
+        }
+        
         
         if(diagram!=null){
             try{
@@ -315,6 +434,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 e.printStackTrace();
             }
         }
+        
         
         ArrayList q =new ArrayList();
         q.add(this);
@@ -352,31 +472,39 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
     private void jTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTreeValueChanged
         if(jTree.getLastSelectedPathComponent()==null)  return;
-        Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
+        selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
         
         if(Project.class.isInstance(selection)){
             upButton.setEnabled(false);
             downButton.setEnabled(false);
             addButton.setEnabled(true);//TODO model
             removeButton.setEnabled(true);
+            linkDiagramButton.setEnabled(false);
         }
         else if(UmlModel.class.isInstance(selection)){
             upButton.setEnabled(false);
             downButton.setEnabled(false);
             addButton.setEnabled(true);//TODO diagram
             removeButton.setEnabled(true);
+            linkDiagramButton.setEnabled(false);
         }
         else if(UmlDiagram.class.isInstance(selection)){
             upButton.setEnabled(false);
             downButton.setEnabled(false);
             addButton.setEnabled(true);
             removeButton.setEnabled(true);
+            linkDiagramButton.setEnabled(false);
         }        
         else if(UmlElement.class.isInstance(selection)){
             upButton.setEnabled(true);
             downButton.setEnabled(true);
             addButton.setEnabled(true);
             removeButton.setEnabled(true);
+            
+            if( AttachmentOwner.class.isInstance(selection)){                    
+                linkDiagramButton.setEnabled(true);
+            }
+            else    linkDiagramButton.setEnabled(false);
         }
         else{
             //upButton.setEnabled(true);
@@ -407,6 +535,43 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         }
     }//GEN-LAST:event_jTreeKeyPressed
 
+    private void linkDiagramButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkDiagramButtonActionPerformed
+        if(AttachmentOwner.class.isInstance(selection)){
+            UmlDiagram ud = null;
+            String[] ld = {"Use Case Diagram","Activity Diagram",
+                        "Sequence Diagram" , "Package Diagram"};
+            String s = (String)JOptionPane.showInputDialog(this, "Select type of diagram", "Attach Diagram", JOptionPane.INFORMATION_MESSAGE, null, ld, null);
+            if(s.equals("Use Case Diagram")){
+                ud = new UseCaseDiagram(null);            
+            }
+            else if(s.equals("Activity Diagram")){
+                ud = new ActivityDiagram(null);
+            }
+            else if(s.equals("Sequence Diagram")){
+                ud = new SequenceDiagram(null);
+            }
+            else if(s.equals("Package Diagram")){
+                ud = new PackageDiagram(null);
+            }
+            
+            if(ud !=  null){                
+                String n = JOptionPane.showInputDialog(this, "Name it");
+                if(n!=null &&!n.isEmpty()) ud.setName(n);
+            
+                //TODO link to project other way
+                //project.getDiagrams().add(ud);
+                //project.getModels().get(0).getDiagrams().add(ud);
+                ((AttachmentOwner)selection).getAttachedDiagrams().add(ud);
+                
+
+                ArrayList q =new ArrayList();
+                q.add(this);
+                this.firePropertyChange("Explorer selection", q, ud);
+                revalidate();
+            }
+        }
+    }//GEN-LAST:event_linkDiagramButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
@@ -414,6 +579,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTree;
+    private javax.swing.JButton linkDiagramButton;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton upButton;
     // End of variables declaration//GEN-END:variables

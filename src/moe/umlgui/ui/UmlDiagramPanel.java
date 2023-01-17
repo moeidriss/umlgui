@@ -32,6 +32,11 @@ import moe.umlgui.controller.PUMLDriver;
 public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChangeListener{
 
     UmlDiagram umlDiagram;
+
+    public UmlDiagram getUmlDiagram() {
+        return umlDiagram;
+    }
+    
     
     /**
      * Creates new form UmlDiagramPanel
@@ -42,12 +47,12 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
         
         initComponents();
         loadDiagramPanel();
-        this.setTransferHandler(new UmlElementImportTransferHandler(umlDiagram));
+        this.setTransferHandler(new UmDiagramImportTransferHandler(umlDiagram));
     }
     
     private void loadDiagramPanel(){
         setName(umlDiagram.getName());        
-        this.setBorder(new TitledBorder(umlDiagram.getName()));   
+        //this.setBorder(new TitledBorder(umlDiagram.getName()));   
         
         JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         sp.setOneTouchExpandable(true);
@@ -131,11 +136,6 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
         ){
             return;
         }
-        
-        java.lang.System.out.println(evt.getPropertyName());
-        java.lang.System.out.println(evt.getOldValue());
-        java.lang.System.out.println(evt.getSource().getClass());
-        java.lang.System.out.println("---------------");
         
         if( (evt.getPropertyName().equals("Element updated") || evt.getPropertyName().equals("Element inserted") ) 
                 &&
