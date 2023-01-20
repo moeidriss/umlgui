@@ -32,17 +32,7 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
     
     @Override
     public boolean canImport(JComponent comp, DataFlavor[] transferFlavors){
-        //TODO restrict:
-        //use case: actor, use case, association, include
-        //activity: activity, 
-       /* if(transferFlavors[0].getMimeType().equals(DataFlavor.javaJVMLocalObjectMimeType)
-                &&
-            transferFlavors[0].getHumanPresentableName().equals("moebullshitting.model.UmlElement")   
-        ){
-            return true;
-        }
         
-        return false;*/
        java.lang.System.out.println(transferFlavors[0].getMimeType());
        java.lang.System.out.println(transferFlavors[0].getHumanPresentableName());
        java.lang.System.out.println(transferFlavors[0].getRepresentationClass());

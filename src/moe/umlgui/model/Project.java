@@ -83,7 +83,6 @@ public class Project implements java.io.Serializable{
     }
     
     public ArrayList<BusinessObject> getBusinessObjects(){
-        java.lang.System.out.println("coreElementList="+coreElementList.size());
         ArrayList<BusinessObject> ar = new ArrayList();
         for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
             Object o = i.next();
@@ -102,7 +101,6 @@ public class Project implements java.io.Serializable{
     
     
     public Project(){
-        models.add(new BusinessModel(this));
     }
     
     ArrayList<UmlModel> models =new ArrayList();

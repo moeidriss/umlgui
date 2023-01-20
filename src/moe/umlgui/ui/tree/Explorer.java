@@ -4,9 +4,12 @@
  */
 package moe.umlgui.ui.tree;
 
+import java.awt.Desktop;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.InputEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -18,6 +21,7 @@ import static javax.swing.TransferHandler.COPY_OR_MOVE;
 import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import moe.umlgui.controller.ReportEngine;
 import moe.umlgui.model.AcceptEvent;
 import moe.umlgui.model.AcceptTimeEvent;
 import moe.umlgui.model.Action;
@@ -76,7 +80,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         initComponents();
         this.project = project;
         nowExploring = PROJECT;
-        loadDiagram();
+        loadExplorer();
         setSelection(project);
         
         ArrayList q =new ArrayList();
@@ -89,7 +93,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         initComponents();
         this.diagram = diagram;
         nowExploring = DIAGRAM;
-        loadDiagram();
+        loadExplorer();
         setSelection(diagram);
         
         ArrayList q =new ArrayList();
@@ -125,7 +129,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     
     ExplorerTreeModel treeModel = null;
     
-    private void loadDiagram(){    
+    private void loadExplorer(){    
         if(project!=null){
             //setBorder(new TitledBorder(project.getName()));  
             treeModel = new ExplorerTreeModel(project);
@@ -146,33 +150,38 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         jTree.setModel(treeModel);
         jTree.setCellRenderer(new ExplorerTreeCellRenderer()); 
         jTree.setDragEnabled(true);
-        jTree.setTransferHandler(new TransferHandler(){
-            @Override
-            protected Transferable createTransferable(JComponent c){
-                System.out.println(c);
-                Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
-                if(UmlElement.class.isInstance(selection))
-                    return new TransferrableImpl((UmlElement)selection);
-                return null;
-            }
-
-            @Override
-            protected void exportDone(JComponent source,Transferable data, int action){
-                super.exportDone(source, data, action);
-            }
-            
-            /**
-             *
-             * @param c
-             * @return
-             */
-            public int getSourceActions(JComponent c){
-                return COPY_OR_MOVE;
-            }
-        });
+        jTree.setTransferHandler(new ElementExportHandler());
         
     }
     
+    class ElementExportHandler extends TransferHandler{
+        protected ElementExportHandler(){
+            super();
+        }
+        @Override
+        protected Transferable createTransferable(JComponent c){
+            System.out.println(c + ":" + c.getClass()+"-selection="+selection);
+           // Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
+            if(UmlElement.class.isInstance(selection))
+                return new TransferrableImpl((UmlElement)selection);
+            return null;
+        }
+
+        @Override
+        protected void exportDone(JComponent source,Transferable data, int action){
+            super.exportDone(source, data, action);
+        }
+
+        /**
+         *
+         * @param c
+         * @return
+         */
+        public int getSourceActions(JComponent c){
+            System.out.println("getSourceActions::"+c + ":" + c.getClass()+"-selection="+selection);
+            return COPY_OR_MOVE;
+        }
+    }
     
     public void reload(){
         ((ExplorerTreeModel)jTree.getModel()).reload();
@@ -229,9 +238,11 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
         linkDiagramButton = new javax.swing.JButton();
+        exportPptButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
+        jTree.setDragEnabled(true);
         jTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTreeMouseClicked(evt);
@@ -313,6 +324,17 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             }
         });
         jToolBar1.add(linkDiagramButton);
+
+        exportPptButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/application-vnd.ms-powerpoint.png"))); // NOI18N
+        exportPptButton.setFocusable(false);
+        exportPptButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        exportPptButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        exportPptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportPptButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(exportPptButton);
 
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
@@ -440,6 +462,8 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         q.add(this);
         firePropertyChange("Element inserted", q, newElement);
         //setSelection(newElement);
+        
+        //TODO model, diagram, element subnodes
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
@@ -480,6 +504,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             addButton.setEnabled(true);//TODO model
             removeButton.setEnabled(true);
             linkDiagramButton.setEnabled(false);
+            exportPptButton.setEnabled(false);
         }
         else if(UmlModel.class.isInstance(selection)){
             upButton.setEnabled(false);
@@ -487,6 +512,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             addButton.setEnabled(true);//TODO diagram
             removeButton.setEnabled(true);
             linkDiagramButton.setEnabled(false);
+            exportPptButton.setEnabled(true);
         }
         else if(UmlDiagram.class.isInstance(selection)){
             upButton.setEnabled(false);
@@ -494,20 +520,27 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             addButton.setEnabled(true);
             removeButton.setEnabled(true);
             linkDiagramButton.setEnabled(false);
+            exportPptButton.setEnabled(false);
         }        
         else if(UmlElement.class.isInstance(selection)){
             upButton.setEnabled(true);
             downButton.setEnabled(true);
             addButton.setEnabled(true);
             removeButton.setEnabled(true);
+            exportPptButton.setEnabled(false);
             
             if( AttachmentOwner.class.isInstance(selection)){                    
                 linkDiagramButton.setEnabled(true);
             }
             else    linkDiagramButton.setEnabled(false);
         }
-        else{
-            //upButton.setEnabled(true);
+        else{//TODO element members
+            upButton.setEnabled(false);
+            downButton.setEnabled(false);
+            addButton.setEnabled(false);
+            removeButton.setEnabled(false);
+            linkDiagramButton.setEnabled(false);
+            exportPptButton.setEnabled(false);
         }
         
         //if(jTree.getLeadSelectionRow()==treeModel.)  upButton.setEnabled(false);
@@ -555,7 +588,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             }
             
             if(ud !=  null){                
-                String n = JOptionPane.showInputDialog(this, "Name it");
+                String n = JOptionPane.showInputDialog(this, "Name it" , ud.getName());
                 if(n!=null &&!n.isEmpty()) ud.setName(n);
             
                 //TODO link to project other way
@@ -566,16 +599,29 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
                 ArrayList q =new ArrayList();
                 q.add(this);
-                this.firePropertyChange("Explorer selection", q, ud);
+                this.firePropertyChange("Diagram attached", q, ud);
                 revalidate();
             }
         }
     }//GEN-LAST:event_linkDiagramButtonActionPerformed
 
+    private void exportPptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPptButtonActionPerformed
+        if(UmlModel.class.isInstance(selection)){
+            try{
+                Desktop.getDesktop().edit(ReportEngine.pptReport(((UmlModel)selection)));
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        }
+        
+    }//GEN-LAST:event_exportPptButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton downButton;
+    private javax.swing.JButton exportPptButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTree;

@@ -76,7 +76,6 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
         for(int i=0 ; i<((DefaultTableModel)jTable1.getModel()).getRowCount() ; i++){
             Object pN = ((DefaultTableModel)jTable1.getModel()).getValueAt(i,0);
             Object pT = ((DefaultTableModel)jTable1.getModel()).getValueAt(i,1);
-            java.lang.System.out.println(pN +  ":" + pT);
             if(pN!=null && pT!=null){
                 method.getParameters().put((String)pN, (String)pT);
             }

@@ -8,6 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,25 +109,45 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        UmlModel model = null;
+        ArrayList a = new ArrayList();
+        a.addAll(project.getModels());
+        a.add("-- NEW MODEL --");
+        Object o = JOptionPane.showInputDialog(this, "Select Model", "New Diagram", JOptionPane.INFORMATION_MESSAGE, null, a.toArray(), a.get(0));
+        if(o!=null && o.equals("-- NEW MODEL --")){
+            String n = JOptionPane.showInputDialog("Name it", "New Business Model");
+            if(n!=null && !n.isEmpty()){
+                model = new BusinessModel(project);
+                model.setName(n);
+            }
+        }
+        else if(o!=null && UmlModel.class.isInstance(o))    
+            model = (UmlModel)o;
+
+        if(model==null){
+            model = new BusinessModel(project);
+            model.setName("New Business Model");
+        }
+
+        
         UmlDiagram ud = null;
         
         if(jComboBox1.getSelectedItem().equals("Use Case Diagram")){
-            ud = new UseCaseDiagram(project.getModels().get(0));            
+            ud = new UseCaseDiagram(model);            
         }
         else if(jComboBox1.getSelectedItem().equals("Activity Diagram")){
-            ud = new ActivityDiagram(project.getModels().get(0));
+            ud = new ActivityDiagram(model);
         }
         else if(jComboBox1.getSelectedItem().equals("Sequence Diagram")){
-            ud = new SequenceDiagram(project.getModels().get(0));
+            ud = new SequenceDiagram(model);
         }
         else if(jComboBox1.getSelectedItem().equals("Package Diagram")){
-            ud = new PackageDiagram(project.getModels().get(0));
+            ud = new PackageDiagram(model);
         }
         
         if(ud !=  null){
             project.getDiagrams().add(ud);
-            project.getModels().get(0).getDiagrams().add(ud);
-            
+            model.getDiagrams().add(ud);
             propertyEditor.edit(ud);
             
             DiagramExplorer diagramExplorer = new DiagramExplorer();
@@ -137,6 +158,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             openDiagramExplorers.put(ud, diagramExplorer);
             
             jTabbedPane1.addTab(ud.getName(), diagramExplorer);
+            jTabbedPane1.setSelectedComponent(diagramExplorer);
             
             UmlDiagramPanel dp = new UmlDiagramPanel(ud);
             dp.addPropertyChangeListener(this);
@@ -149,6 +171,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             q.add(this);
             this.firePropertyChange("Display", q, dp);
             
+            explorer.reload();
             revalidate();
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
@@ -177,6 +200,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             !evt.getPropertyName().equals("Diagram updated")  &&
             !evt.getPropertyName().equals("Project updated") &&
             !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Diagram attached")  &&
             !evt.getPropertyName().equals("Explorer selection") 
         ){
             return;
@@ -193,7 +217,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             explorer.reload();
         }
         else if(evt.getPropertyName().equals("Project updated") &&!((ArrayList)evt.getOldValue()).contains(this)){
-            
+            ((ArrayList)evt.getOldValue()).add(this);
+            explorer.reload();
         }
         
         //DiagramPanel / diagramExplorer events
@@ -204,6 +229,47 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             propertyEditor.edit(el);            
             explorer.reload();
         }
+        
+        else if(evt.getPropertyName().equals("Diagram attached") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            
+            UmlDiagram ud = (UmlDiagram)evt.getNewValue();
+            //project.getDiagrams().add(ud);
+            //project.getModels().get(0).getDiagrams().add(ud);
+            //TODO assoc attached diagrams to project (!) only for an inventory of diagrams in the project
+            //
+            propertyEditor.edit(ud);
+                
+            DiagramExplorer diagramExplorer = openDiagramExplorers.get(ud);
+            if(diagramExplorer==null){
+                diagramExplorer = new DiagramExplorer();                
+                diagramExplorer.setProject(project);
+                diagramExplorer.exploreDiagram(ud);
+                diagramExplorer.addPropertyChangeListener(this);
+                addPropertyChangeListener(diagramExplorer);
+                openDiagramExplorers.put(ud, diagramExplorer);
+                jTabbedPane1.addTab(ud.getName(), diagramExplorer);
+            }
+            jTabbedPane1.setSelectedComponent(diagramExplorer);
+
+            UmlDiagramPanel dp = openDiagramPanels.get(ud);
+            if(dp==null){
+                dp = new UmlDiagramPanel(ud);
+                dp.addPropertyChangeListener(this);
+                dp.addPropertyChangeListener(diagramExplorer);
+                addPropertyChangeListener(dp);
+                diagramExplorer.addPropertyChangeListener(dp);
+                openDiagramPanels.put(ud, dp);
+            }
+
+            ArrayList q =new ArrayList();
+            q.add(this);
+            this.firePropertyChange("Display", q, dp);
+
+            explorer.reload();
+            revalidate();
+        }
+        
         
         else if(evt.getPropertyName().equals("Explorer selection") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);

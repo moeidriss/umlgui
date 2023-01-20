@@ -12,6 +12,8 @@ public class BusinessModel extends UmlModel {
     
     public BusinessModel(Project project) {
         super(project);
+        setName("Business Model");
+        project.getModels().add(this);
     }
     
 }

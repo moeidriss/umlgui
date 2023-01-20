@@ -44,7 +44,6 @@ public class BusinessObjectPropertySelector extends javax.swing.JPanel {
     HashMap<String,BusinessObjectProperty> propMap = new HashMap();
     
     private void loadSelector(){
-        System.out.println("BO="+project.getBusinessObjects().size());
         for(Iterator<BusinessObject> i = project.getBusinessObjects().iterator() ; i.hasNext();){
             BusinessObject bo = i.next();
             for(Iterator<BusinessObjectProperty> j = bo.getProperties().iterator() ; j.hasNext() ; ){

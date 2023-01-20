@@ -40,6 +40,8 @@ public class Palette extends javax.swing.JPanel {
         
         add(new UmlElementLabel(new moe.umlgui.model.System() ));
         add(new UmlElementLabel(new Message() ));
+        
+        add(new UmlElementLabel(new BusinessObject() ));
     }
 
     /**

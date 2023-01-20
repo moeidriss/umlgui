@@ -83,6 +83,8 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
     public void propertyChange(PropertyChangeEvent evt) {
         if(!evt.getPropertyName().equals("Element updated") &&
             !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Diagram updated") &&
+            !evt.getPropertyName().equals("Diagram attached")  &&
             !evt.getPropertyName().equals("Explorer selection") 
         ){
             return;
@@ -92,10 +94,7 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
         if(evt.getPropertyName().equals("Element updated") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
-            //PropertyChangeEvent.oldValue stores array of event source/consumers
-            //to be copied by event propagators (overriders of PropertyChangeListener.propertyChange()
-            firePropertyChange("Element updated", evt.getOldValue(), evt.getNewValue());
-            
+            firePropertyChange("Element updated", evt.getOldValue(), evt.getNewValue());            
         }
         
         //events
@@ -107,6 +106,16 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
         else if(evt.getPropertyName().equals("Explorer selection") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             firePropertyChange("Explorer selection", evt.getOldValue(), evt.getNewValue());
+        }
+        else if(evt.getPropertyName().equals("Diagram attached") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            explorer.reload();
+            firePropertyChange("Diagram attached", evt.getOldValue(), evt.getNewValue());
+        }
+        if(evt.getPropertyName().equals("Diagram updated") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            explorer.reload();
+            firePropertyChange("Diagram updated", evt.getOldValue(), evt.getNewValue());            
         }
     }
 }
