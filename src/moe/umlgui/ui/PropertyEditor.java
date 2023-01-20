@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.border.BevelBorder;
 
 /**
  *
@@ -111,16 +112,14 @@ public class PropertyEditor extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
         int yCounter = 0;
         
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx=0;
-        gridBagConstraints.gridy = yCounter;
-        editPanel.add(nameLabel, gridBagConstraints);
-
         nameTextField.setText(umlCoreElement.getName());
+        nameTextField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("Name"), 
+                BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridy = yCounter;    yCounter++;
         editPanel.add(nameTextField, gridBagConstraints);
 

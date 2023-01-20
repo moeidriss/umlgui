@@ -9,6 +9,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.InputEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -608,7 +609,9 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     private void exportPptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPptButtonActionPerformed
         if(UmlModel.class.isInstance(selection)){
             try{
-                Desktop.getDesktop().edit(ReportEngine.pptReport(((UmlModel)selection)));
+                File f = ReportEngine.pptxReport(((UmlModel)selection));
+                Desktop.getDesktop().open(f);
+                System.out.println(f);
             }catch(IOException ex){
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
