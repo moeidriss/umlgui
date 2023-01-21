@@ -1,6 +1,6 @@
 # umlgui
 
-If you find this software useful and would likd to make a contribution, please do so by supporting any of the causes below. <br>
+If you find this software useful and would like to make a contribution, please do so by supporting any of the causes below. <br>
 
 
 Disobedience Sudan: A fundraiser for the continuing popular uprising of Sudan of December 2018. &nbsp;
