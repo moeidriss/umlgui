@@ -7,24 +7,24 @@ package moe.umlgui.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
-import moe.umlgui.model.BusinessObject;
-import moe.umlgui.model.BusinessObjectProperty;
+import moe.umlgui.model.CoreObject;
+import moe.umlgui.model.CoreObjectProperty;
 import moe.umlgui.model.Project;
 
 /**
  *
  * @author Moe
  */
-public class BusinessObjectPropertySelector extends javax.swing.JPanel {
+public class CoreObjectPropertySelector extends javax.swing.JPanel {
 
     Project project;
-    BusinessObjectProperty selectedProperty;
+    CoreObjectProperty selectedProperty;
     
     
     /**
      * Creates new form BusinessObjectPropertySelector
      */
-    public BusinessObjectPropertySelector(Project project) {
+    public CoreObjectPropertySelector(Project project) {
         this.project = project;
         initComponents();
         loadSelector();
@@ -34,20 +34,20 @@ public class BusinessObjectPropertySelector extends javax.swing.JPanel {
     /**
      * Creates new form BusinessObjectPropertySelector
      */
-    public BusinessObjectPropertySelector(Project project , BusinessObjectProperty property) {
+    public CoreObjectPropertySelector(Project project , CoreObjectProperty property) {
         this.project = project;
         this.selectedProperty = property;
         initComponents();
         loadSelector();
     }
     
-    HashMap<String,BusinessObjectProperty> propMap = new HashMap();
+    HashMap<String,CoreObjectProperty> propMap = new HashMap();
     
     private void loadSelector(){
-        for(Iterator<BusinessObject> i = project.getBusinessObjects().iterator() ; i.hasNext();){
-            BusinessObject bo = i.next();
-            for(Iterator<BusinessObjectProperty> j = bo.getProperties().iterator() ; j.hasNext() ; ){
-                BusinessObjectProperty prop = j.next();
+        for(Iterator<CoreObject> i = project.getCoreObjects().iterator() ; i.hasNext();){
+            CoreObject bo = i.next();
+            for(Iterator<CoreObjectProperty> j = bo.getProperties().iterator() ; j.hasNext() ; ){
+                CoreObjectProperty prop = j.next();
                 String fN = bo.getName() + "." + prop.getName() + ": " + prop.getDataType();
                 propMap.put(fN, prop);
                 ((DefaultComboBoxModel)jComboBox1.getModel()).addElement(fN);
@@ -56,11 +56,11 @@ public class BusinessObjectPropertySelector extends javax.swing.JPanel {
         }
     }
 
-    public BusinessObjectProperty getSelectedProperty() {
+    public CoreObjectProperty getSelectedProperty() {
         return selectedProperty;
     }
 
-    public void setSelectedProperty(BusinessObjectProperty selectedProperty) {
+    public void setSelectedProperty(CoreObjectProperty selectedProperty) {
         this.selectedProperty = selectedProperty;
         if(selectedProperty!=null){
             String fN = selectedProperty.getBusinessObject().getName() + "." + 

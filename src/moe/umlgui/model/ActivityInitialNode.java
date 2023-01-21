@@ -4,6 +4,8 @@
  */
 package moe.umlgui.model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Moe
@@ -14,6 +16,8 @@ public class ActivityInitialNode extends ActivityNode implements java.io.Seriali
         super("Activity Initial Node");
         setName("New Activity Initial Node");
     }
+    
+    
 
     @Override
     public UmlCoreElement clone() {

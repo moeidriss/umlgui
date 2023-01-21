@@ -5,6 +5,7 @@
 package moe.umlgui.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class Message extends UmlCoreElement  implements java.io.Serializable , BusinessObjectOwner{
@@ -19,13 +20,13 @@ public class Message extends UmlCoreElement  implements java.io.Serializable , B
     
     
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+    HashSet<CoreObject> businessObjects = new HashSet(){
         public String toString(){
             return "Business Objects";
         }
     };
 
-    public ArrayList<BusinessObject> getBusinessObjects() {
+    public HashSet<CoreObject> getBusinessObjects() {
         return businessObjects;
     }
 

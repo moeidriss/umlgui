@@ -5,12 +5,13 @@
 package moe.umlgui.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  *
  * @author Moe
  */
-public class Action extends Activity implements java.io.Serializable , BusinessObjectOwner, AttachmentOwner{
+public class Action extends Activity implements java.io.Serializable , BusinessObjectOwner, ControllerOwner , AttachmentOwner{
     
     public Action() {
         super("Action");
@@ -18,14 +19,26 @@ public class Action extends Activity implements java.io.Serializable , BusinessO
     }
     
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+    HashSet<CoreObject> businessObjects = new HashSet(){
         public String toString(){
             return "Business Objects";
         }
     };
 
-    public ArrayList<BusinessObject> getBusinessObjects() {
+    public HashSet<CoreObject> getBusinessObjects() {
         return businessObjects;
+    }
+    
+    
+    
+    HashSet<CoreObject> controllers = new HashSet(){
+        public String toString(){
+            return "Controllers";
+        }
+    };
+
+    public HashSet<CoreObject> getControllers() {
+        return controllers;
     }
 
     @Override

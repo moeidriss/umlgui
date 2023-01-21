@@ -5,9 +5,11 @@
 package moe.umlgui.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 
-public class Actor extends UmlElement  implements java.io.Serializable , BusinessObjectOwner{
+public class Actor extends UmlElement  implements java.io.Serializable , ControllerOwner{
 
     public Actor() {
         super("Actor");
@@ -15,14 +17,27 @@ public class Actor extends UmlElement  implements java.io.Serializable , Busines
     }
 
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+    /*
+    public static HashMap<String,Class> ACTORS = new HashMap();
+    static{
+        ACTORS.put("Actor" , Actor.class);
+        ACTORS.put("System" , System.class);
+        ACTORS.put("Business System" , BusinessSystem.class);
+        ACTORS.put("IT System" , ItSystem.class);
+        ACTORS.put("User" , User.class);
+    }
+    */
+    
+    
+    
+    HashSet<CoreObject> controllers = new HashSet(){
         public String toString(){
-            return "Business Objects";
+            return "Controllers";
         }
     };
 
-    public ArrayList<BusinessObject> getBusinessObjects() {
-        return businessObjects;
+    public HashSet<CoreObject> getControllers() {
+        return controllers;
     }
     
     @Override

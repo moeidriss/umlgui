@@ -11,7 +11,7 @@ import java.util.HashMap;
  *
  * @author Moe
  */
-public class BusinessObjectMethod implements java.io.Serializable{
+public class CoreObjectMethod implements java.io.Serializable{
     
     
     public static String VOID_RETURN_TYPE = "Void";
@@ -30,7 +30,11 @@ public class BusinessObjectMethod implements java.io.Serializable{
     
     String name;
     String returnType;
-    HashMap<String,String> parameters = new HashMap();
+    HashMap<String,String> parameters = new HashMap(){
+        public String toString(){
+            return "<params>";
+        }
+    };
 
     public String getName() {
         return name;
@@ -52,17 +56,17 @@ public class BusinessObjectMethod implements java.io.Serializable{
         return parameters;
     }
     
-    BusinessObject businessObject;
+    CoreObject businessObject;
 
-    public BusinessObject getBusinessObject() {
+    public CoreObject getBusinessObject() {
         return businessObject;
     }
 
-    public BusinessObjectMethod(BusinessObject businessObject) {
+    public CoreObjectMethod(CoreObject businessObject) {
         this.businessObject = businessObject;
     }
     
-    public BusinessObjectMethod(String name, String returnType, BusinessObject businessObject) {
+    public CoreObjectMethod(String name, String returnType, CoreObject businessObject) {
         this.name = name;
         this.returnType = returnType;
         this.businessObject = businessObject;

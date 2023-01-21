@@ -110,7 +110,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if(columnIndex == 1)    return BusinessObjectProperty.class;
+                if(columnIndex == 1)    return CoreObjectProperty.class;
                 else if(columnIndex == 4)    return ArrayList.class;//TODO ...
                 return String.class;
             }
@@ -130,7 +130,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
                     t.setCondition((String)aValue);
                 }
                 else if(columnIndex == 1){
-                    t.setOperandA((BusinessObjectProperty)aValue);
+                    t.setOperandA((CoreObjectProperty)aValue);
                 }                
                 else if(columnIndex == 2){
                     t.setOperator((String)aValue);

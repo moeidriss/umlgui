@@ -42,8 +42,15 @@ public class XSLFTest {
             for(XSLFSlideMaster master : ppt.getSlideMasters()){
                 for(XSLFSlideLayout layout : master.getSlideLayouts()){
                     System.out.println(layout.getType());
+                    XSLFSlide slide1 = ppt.createSlide(layout);
+                    if(slide1.getPlaceholders().length > 0){
+                        XSLFTextShape title1 = slide1.getPlaceholder(0);
+                        if(title1!=null)    title1.setText(layout.getType().name());  
+                    }
                 }
             }
+            
+            /*
             // blank slide
             XSLFSlide blankSlide = ppt.createSlide();
             // there can be multiple masters each referencing a number of layouts
@@ -65,6 +72,8 @@ public class XSLFTest {
             body2.addNewTextParagraph().addNewTextRun().setText("First paragraph");
             body2.addNewTextParagraph().addNewTextRun().setText("Second paragraph");
             body2.addNewTextParagraph().addNewTextRun().setText("Third paragraph");
+            */
+            
             ppt.write(fos);
             fos.close();
             

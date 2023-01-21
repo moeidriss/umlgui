@@ -20,54 +20,59 @@ import moe.umlgui.model.*;
  *
  * @author Moe
  */
-public class BusinessObjectPanel extends javax.swing.JPanel {
+public class CoreObjectPanel extends javax.swing.JPanel {
 
-    BusinessObjectOwner entity;
-    BusinessObjectTableModel tableModel;
+    UmlCoreElement entity;
+    CoreObjectTableModel tableModel;
     
     Project context;
+    
+    static int BUSINESS_OBJECT = 0;
+    static int CONTROLLER = 1;
+    
+    int type;
     
     /**
      * Creates new form LogicalTestPanel
      */
-    public BusinessObjectPanel(BusinessObjectOwner entity, Project context){
-        
-        
-        this.entity = entity;
+    public CoreObjectPanel(BusinessObjectOwner entity, Project context){
+        this.entity = (UmlCoreElement)entity;
+        type = BUSINESS_OBJECT;
         this.context = context;
-        tableModel = new BusinessObjectTableModel();
+        tableModel = new CoreObjectTableModel();
         initComponents();
         
-        this.setBorder(BorderFactory.createTitledBorder("Business Objects"));
-        /*
-        jTable1.getColumn("Operator").setCellRenderer(new TableCellRenderer(){
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JComboBox b = new JComboBox();
-                b.setModel(new DefaultComboBoxModel(LogicalTest.OPERATORS));
-                if(value!=null) b.setSelectedItem(value);
-                return b;
-            }
-            
-        });
-        
-        jTable1.getColumn("Activity").setCellRenderer(new TableCellRenderer(){
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JComboBox b = new JComboBox();
-                b.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
-                if(value!=null) b.setSelectedItem(value);
-                return b;
-            }
-            
-        });
-        */
+        this.setBorder(BorderFactory.createTitledBorder("Business Objects"));       
     }
 
-    class  BusinessObjectTableModel implements TableModel{
+    
+    
+    /**
+     * Creates new form LogicalTestPanel
+     */
+    public CoreObjectPanel(ControllerOwner entity, Project context){
+        this.entity = (UmlCoreElement)entity;
+        type = CONTROLLER;
+        this.context = context;
+        tableModel = new CoreObjectTableModel();
+        initComponents();
+        
+        if(type==BUSINESS_OBJECT){
+            setBorder(BorderFactory.createTitledBorder("Business Objects"));       
+        }
+        else if(type==CONTROLLER){
+            setBorder(BorderFactory.createTitledBorder("Controllers"));       
+        }
+    }
+
+    class  CoreObjectTableModel implements TableModel{
             @Override
             public int getRowCount() {
-                return entity.getBusinessObjects().size();
+                if(type==BUSINESS_OBJECT)   
+                    return ((BusinessObjectOwner)entity).getBusinessObjects().size();
+                else if(type==CONTROLLER)   
+                    return ((ControllerOwner)entity).getControllers().size();
+                return 0;
             }
             
             String[] colNames = {"Name"};
@@ -81,7 +86,10 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
             public Object getValueAt(int rowIndex, int columnIndex) {
                 
                 if(columnIndex == 0){
-                    return entity.getBusinessObjects().get(rowIndex);
+                    if(type==BUSINESS_OBJECT)   
+                        return ((BusinessObjectOwner)entity).getBusinessObjects().toArray()[rowIndex];
+                    else if(type==CONTROLLER)   
+                        return ((ControllerOwner)entity).getControllers().toArray()[rowIndex];
                     
                 }
                 
@@ -316,10 +324,99 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
+    class AddPropertyActionListener implements ActionListener{
+        CoreObject obj;
+        protected AddPropertyActionListener(CoreObject obj){
+            this.obj = obj;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            CoreObjectProperty prop = new CoreObjectProperty(obj);
+            CoreObjectPropertyComponent pComp = new CoreObjectPropertyComponent(prop);
+
+            JDialog pD = new JDialog();
+            JButton pB = new JButton("OK");
+            pB.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    pComp.save();
+                    obj.getProperties().add(prop);
+                    ((DefaultListModel)propertyList.getModel()).addElement(prop);
+                    pD.setVisible(false);
+                }                    
+            });
+
+            pD.getContentPane().add(pComp , BorderLayout.CENTER);
+            pD.getContentPane().add(pB , BorderLayout.SOUTH);
+            pD.pack();
+            pD.setLocationRelativeTo(null);
+            pD.setVisible(true);
+        }  
+    }
     //TODO implement logic control (a single 'if', single 'else') and testList order
     
+    class AddMethodActionListener implements ActionListener{
+        CoreObject obj = null;
+        public AddMethodActionListener(CoreObject obj){
+            this.obj = obj;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            CoreObjectMethod meth = new CoreObjectMethod(obj);
+            CoreObjectMethodComponent mComp = new CoreObjectMethodComponent(meth);
+
+            JDialog pD = new JDialog();
+            JButton pB = new JButton("OK");
+            pB.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mComp.save();
+                    obj.getMethods().add(meth);
+                    ((DefaultListModel)methodList.getModel()).addElement(meth);
+                    pD.setVisible(false);
+                }                    
+            });
+
+            pD.getContentPane().add(mComp , BorderLayout.CENTER);
+            pD.getContentPane().add(pB , BorderLayout.SOUTH);
+            pD.pack();
+            pD.setLocationRelativeTo(null);
+            pD.setVisible(true);
+        }    
+    }
+    
+    
+    class CoreObjectProxy{
+        CoreObject obj = null;
+        public CoreObjectProxy(CoreObject obj){
+            this.obj = obj;
+        }        
+        
+        boolean saveObj(){
+            obj.setName(nameTextField.getText());       
+                
+            if(type==BUSINESS_OBJECT){   
+                ((BusinessObjectOwner)entity).getBusinessObjects().add(((BusinessObject)obj));
+            }
+            else if(type==CONTROLLER){
+                ((ControllerOwner)entity).getControllers().add(((Controller)obj));
+            }
+            else    return false;
+            
+            return true;
+        }
+    }
+            
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        BusinessObject obj = new BusinessObject();
+        CoreObject obj = null;
+        
+        if(type==BUSINESS_OBJECT)   
+            obj = new BusinessObject();
+        else if(type==CONTROLLER)   
+            obj = new Controller();
+        else    return;
         
         JDialog d = new JDialog();
         
@@ -327,72 +424,26 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
         ((DefaultListModel)propertyList.getModel()).removeAllElements();
         ((DefaultListModel)methodList.getModel()).removeAllElements();
                 
-        ActionListener addPropertyActionListner = new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BusinessObjectProperty prop = new BusinessObjectProperty(obj);
-                BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
-                
-                JDialog pD = new JDialog();
-                JButton pB = new JButton("OK");
-                pB.addActionListener(new ActionListener(){
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        pComp.save();
-                        obj.getProperties().add(prop);
-                        ((DefaultListModel)propertyList.getModel()).addElement(prop);
-                        pD.setVisible(false);
-                    }                    
-                });
-                
-                pD.getContentPane().add(pComp , BorderLayout.CENTER);
-                pD.getContentPane().add(pB , BorderLayout.SOUTH);
-                pD.pack();
-                pD.setLocationRelativeTo(null);
-                pD.setVisible(true);
-            }            
-        };
+        AddPropertyActionListener addPropertyActionListner = new AddPropertyActionListener(obj);
         addPropertyButton.addActionListener(addPropertyActionListner);
         
-        
-        ActionListener addMethodActionListner = new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BusinessObjectMethod meth = new BusinessObjectMethod(obj);
-                BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
-                
-                JDialog pD = new JDialog();
-                JButton pB = new JButton("OK");
-                pB.addActionListener(new ActionListener(){
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        mComp.save();
-                        obj.getMethods().add(meth);
-                        ((DefaultListModel)methodList.getModel()).addElement(meth);
-                        pD.setVisible(false);
-                    }                    
-                });
-                
-                pD.getContentPane().add(mComp , BorderLayout.CENTER);
-                pD.getContentPane().add(pB , BorderLayout.SOUTH);
-                pD.pack();
-                pD.setLocationRelativeTo(null);
-                pD.setVisible(true);
-            }            
-        };
+        AddMethodActionListener addMethodActionListner = new AddMethodActionListener(obj);
         addMethodButton.addActionListener(addMethodActionListner);
+        
+        CoreObjectProxy proxy = new CoreObjectProxy(obj);
         
         //save button
         JButton okButton = new JButton("OK");
-        okButton.addActionListener(new ActionListener(){
+            okButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                obj.setName(nameTextField.getText());                
-                entity.getBusinessObjects().add(obj);
-                jTable1.revalidate();
-                d.setVisible(false);
-                addPropertyButton.removeActionListener(addPropertyActionListner);
-                addMethodButton.removeActionListener(addMethodActionListner);
+                if(proxy.saveObj()){                
+                    jTable1.revalidate();
+                    d.setVisible(false);
+                    addPropertyButton.removeActionListener(addPropertyActionListner);
+                    addMethodButton.removeActionListener(addMethodActionListner);
+                }
+                else{}//TODO
             }            
         });
         
@@ -419,8 +470,8 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
         if(propertyList.getSelectedIndex()==-1) return;
         
         if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
-            BusinessObjectProperty prop = (BusinessObjectProperty)((DefaultListModel)propertyList.getModel()).getElementAt(propertyList.getSelectedIndex());
-            BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
+            CoreObjectProperty prop = (CoreObjectProperty)((DefaultListModel)propertyList.getModel()).getElementAt(propertyList.getSelectedIndex());
+            CoreObjectPropertyComponent pComp = new CoreObjectPropertyComponent(prop);
                 
                 JDialog pD = new JDialog();
                 JButton pB = new JButton("OK");
@@ -428,7 +479,7 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         pComp.save();
-                        //((DefaultListModel)propertyList.getModel()).addElement(prop);
+                        ((DefaultListModel)propertyList.getModel()).addElement(prop);
                         pD.setVisible(false);
                     }                    
                 });
@@ -445,8 +496,8 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
         if(methodList.getSelectedIndex()==-1) return;
         
         if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
-            BusinessObjectMethod meth = (BusinessObjectMethod)((DefaultListModel)methodList.getModel()).getElementAt(methodList.getSelectedIndex());
-            BusinessObjectMethodComponent pComp = new BusinessObjectMethodComponent(meth);
+            CoreObjectMethod meth = (CoreObjectMethod)((DefaultListModel)methodList.getModel()).getElementAt(methodList.getSelectedIndex());
+            CoreObjectMethodComponent pComp = new CoreObjectMethodComponent(meth);
                 
                 JDialog pD = new JDialog();
                 JButton pB = new JButton("OK");
@@ -454,7 +505,7 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         pComp.save();
-                        //((DefaultListModel)propertyList.getModel()).addElement(prop);
+                        ((DefaultListModel)propertyList.getModel()).addElement(meth);
                         pD.setVisible(false);
                     }                    
                 });
@@ -469,96 +520,60 @@ public class BusinessObjectPanel extends javax.swing.JPanel {
 
     private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
         if(jTable1.getSelectedRow()==-1)    return;
+        int index= jTable1.getSelectedRow();
         
+        ((DefaultListModel)propertyList.getModel()).removeAllElements();
+        ((DefaultListModel)methodList.getModel()).removeAllElements();
+
         if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
-            BusinessObject obj = entity.getBusinessObjects().get(jTable1.getSelectedRow());
-                        
+            CoreObject obj = null;
+            if(type==BUSINESS_OBJECT){
+                obj = (CoreObject) ((BusinessObjectOwner)entity).getBusinessObjects().toArray()[index];
+                for(CoreObjectProperty prop : obj.getProperties()){
+                    ((DefaultListModel)propertyList.getModel()).addElement(prop);
+                }
+                for(CoreObjectMethod meth : obj.getMethods()){
+                    ((DefaultListModel)methodList.getModel()).addElement(meth);
+                }
+            }
+            else if(type==CONTROLLER){
+                obj = (CoreObject) ((ControllerOwner)entity).getControllers().toArray()[index];
+                for(CoreObjectProperty prop : obj.getProperties()){
+                    ((DefaultListModel)propertyList.getModel()).addElement(prop);
+                }
+                for(CoreObjectMethod meth : obj.getMethods()){
+                    ((DefaultListModel)methodList.getModel()).addElement(meth);
+                }
+            }
+            else    return;
+            
             JDialog d = new JDialog();
         
             nameTextField.setText(obj.getName());
-            ((DefaultListModel)propertyList.getModel()).removeAllElements();
-            ((DefaultListModel)methodList.getModel()).removeAllElements();
-
-            //((DefaultListModel)propertyList.getModel()).addAll(obj.getProperties());
-            //((DefaultListModel)methodList.getModel()).addAll(obj.getMethods());
-
-            for(Iterator i = obj.getProperties().iterator() ; i.hasNext();){
-                ((DefaultListModel)propertyList.getModel()).addElement(i.next());
-            }
             
-            for(Iterator i = obj.getMethods().iterator() ; i.hasNext();){
-                ((DefaultListModel)methodList.getModel()).addElement(i.next());
-            }
             
-            ActionListener addPropertyActionListner = new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    BusinessObjectProperty prop = new BusinessObjectProperty(obj);
-                    BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
-
-                    JDialog pD = new JDialog();
-                    JButton pB = new JButton("OK");
-                    pB.addActionListener(new ActionListener(){
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            pComp.save();
-                            obj.getProperties().add(prop);
-                            ((DefaultListModel)propertyList.getModel()).addElement(prop);
-                            pD.setVisible(false);
-                        }                    
-                    });
-
-                    pD.getContentPane().add(pComp , BorderLayout.CENTER);
-                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
-                    pD.pack();
-                    pD.setLocationRelativeTo(null);
-                    pD.setVisible(true);
-                }            
-            };
+            AddPropertyActionListener addPropertyActionListner = new AddPropertyActionListener(obj);
             addPropertyButton.addActionListener(addPropertyActionListner);
 
-
-            ActionListener addMethodActionListner = new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    BusinessObjectMethod meth = new BusinessObjectMethod(obj);
-                    BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
-
-                    JDialog pD = new JDialog();
-                    JButton pB = new JButton("OK");
-                    pB.addActionListener(new ActionListener(){
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            mComp.save();
-                            obj.getMethods().add(meth);
-                            ((DefaultListModel)methodList.getModel()).addElement(meth);
-                            pD.setVisible(false);
-                        }                    
-                    });
-
-                    pD.getContentPane().add(mComp , BorderLayout.CENTER);
-                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
-                    pD.pack();
-                    pD.setLocationRelativeTo(null);
-                    pD.setVisible(true);
-                }            
-            };
+            AddMethodActionListener addMethodActionListner = new AddMethodActionListener(obj);
             addMethodButton.addActionListener(addMethodActionListner);
+
+            CoreObjectProxy proxy = new CoreObjectProxy(obj);
 
             //save button
             JButton okButton = new JButton("OK");
             okButton.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    obj.setName(nameTextField.getText());
-
-                    jTable1.revalidate();
-                    d.setVisible(false);
-                    addPropertyButton.removeActionListener(addPropertyActionListner);
-                    addMethodButton.removeActionListener(addMethodActionListner);
+                    if(proxy.saveObj()){                
+                        jTable1.revalidate();
+                        d.setVisible(false);
+                        addPropertyButton.removeActionListener(addPropertyActionListner);
+                        addMethodButton.removeActionListener(addMethodActionListner);
+                    }
+                    else{}//TODO
                 }            
             });
-
 
 
 

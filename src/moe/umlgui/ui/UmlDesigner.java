@@ -21,6 +21,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 /**
@@ -76,22 +78,32 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     }
     */
     
-    JTabbedPane tp = null;
+    JTabbedPane contentTabbedPane = null;
     HashSet openDiagrams = new HashSet();
     
     public void display(JPanel p){
         contentPanel.removeAll();
         
         if(UmlDiagramPanel.class.isInstance(p)){
-            if(tp==null)    tp = new JTabbedPane();
+            if(contentTabbedPane==null){
+                contentTabbedPane = new JTabbedPane();
+                contentTabbedPane.addChangeListener(new ChangeListener(){
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        ArrayList q =new ArrayList();
+                        q.add(this);
+                        UmlDesigner.this.firePropertyChange("Tab selection", q, contentTabbedPane.getTitleAt(contentTabbedPane.getSelectedIndex()));
+                    }        
+                });
+            }
             if(!openDiagrams.contains(p)){
-                tp.addTab(((UmlDiagramPanel)p).getUmlDiagram().getName(), p);
+                contentTabbedPane.addTab(((UmlDiagramPanel)p).getUmlDiagram().getName(), p);
             }
             openDiagrams.add(p);
             
-            contentPanel.add(tp , BorderLayout.CENTER);
+            contentPanel.add(contentTabbedPane , BorderLayout.CENTER);
             revalidate();
-            tp.setSelectedComponent(p);
+            contentTabbedPane.setSelectedComponent(p);
             revalidate();
         }
         else{
@@ -205,6 +217,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
                 if(evt.getPropertyName().equals("Project updated")){
                     ProjectExplorer projectExplorer = new ProjectExplorer();
                     projectExplorer.addPropertyChangeListener(UmlDesigner.this);
+                    UmlDesigner.this.addPropertyChangeListener(projectExplorer);
                     projectExplorer.explore(project);
                     controlsTabbedPane.addTab(project.getName() , projectExplorer);
                     controlsTabbedPane.setSelectedComponent(projectExplorer);
@@ -285,13 +298,25 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {     
-        if(!evt.getPropertyName().equals("Display"))    return;
+        if(!evt.getPropertyName().equals("Display") &&
+            !evt.getPropertyName().equals("Tab selection")){
+            return;
+        }
         
         String pn = evt.getPropertyName();
         if(pn.equals("Display") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             display((JPanel)evt.getNewValue());
             revalidate();
+        }
+        else if(pn.equals("Tab selection") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            if(contentTabbedPane==null) return;
+            for(int i=0 ; i < contentTabbedPane.getTabCount() ; i++){
+                if(contentTabbedPane.getTitleAt(i).equals(evt.getNewValue())){
+                    contentTabbedPane.setSelectedIndex(i);
+                }
+            }
         }
     }
 }

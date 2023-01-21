@@ -11,14 +11,14 @@ import moe.umlgui.model.*;
  *
  * @author Moe
  */
-public class BusinessObjectPropertyComponent extends javax.swing.JPanel {
+public class CoreObjectPropertyComponent extends javax.swing.JPanel {
 
-    BusinessObjectProperty property;
+    CoreObjectProperty property;
     
     /**
      * Creates new form LogicalTestComponent
      */
-    public BusinessObjectPropertyComponent(BusinessObjectProperty property) {
+    public CoreObjectPropertyComponent(CoreObjectProperty property) {
         this.property = property;
         initComponents();
         load();
@@ -62,7 +62,7 @@ public class BusinessObjectPropertyComponent extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         add(nameTextField, gridBagConstraints);
 
-        typeComboBox.setModel(new DefaultComboBoxModel(BusinessObjectProperty.DATA_TYPES));
+        typeComboBox.setModel(new DefaultComboBoxModel(CoreObjectProperty.DATA_TYPES));
         typeComboBox.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder("Data Type"), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
         typeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

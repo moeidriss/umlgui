@@ -42,11 +42,7 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
        
        java.lang.System.out.println(elClass);
        
-       if(elClass.equals("Actor")){
-            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
-            else if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
-        }
-        else if(elClass.equals("UseCase")){
+       if(elClass.equals("UseCase")){
             if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
         }
         else if(elClass.equals("Association")){
@@ -91,11 +87,25 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
         else if(elClass.equals("Message")){
             if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
         }
+        
        
-        else if(elClass.equals("BusinessObject")){
+        else if(elClass.equals("Actor") ||
+                elClass.equals("System") ||
+                elClass.equals("BusinessSystem") ||
+                elClass.equals("ItSystem") ||
+                elClass.equals("User")
+        ){
+            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
+            else if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
+        }
+       
+        else if(elClass.equals("BusinessObject") ||
+                elClass.equals("Controller") 
+        ){
             if(PackageDiagram.class.isInstance(umlDiagram)) return true;
         }
        
+       JOptionPane.showMessageDialog(null, elClass + " not allowed in " + umlDiagram.getType());
         return false;
     }
     

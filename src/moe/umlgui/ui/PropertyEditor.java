@@ -375,10 +375,10 @@ public class PropertyEditor extends javax.swing.JPanel {
             editPanel.add(toComboBox, gridBagConstraints);
         }
         
-        else if(BusinessObject.class.isInstance(umlCoreElement)){
+        else if(CoreObject.class.isInstance(umlCoreElement)){
             JList propertyList = new JList(new DefaultListModel());
             //((DefaultListModel)propertyList.getModel()).
-            //((BusinessObject)umlCoreElement).getProperties())
+            //((CoreObject)umlCoreElement).getProperties())
             JList methodList = new JList(new DefaultListModel());
             
             JToolBar propToolBar = new javax.swing.JToolBar();
@@ -392,8 +392,8 @@ public class PropertyEditor extends javax.swing.JPanel {
             ActionListener addPropertyActionListner = new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BusinessObjectProperty prop = new BusinessObjectProperty((BusinessObject)umlCoreElement);
-                    BusinessObjectPropertyComponent pComp = new BusinessObjectPropertyComponent(prop);
+                    CoreObjectProperty prop = new CoreObjectProperty((CoreObject)umlCoreElement);
+                    CoreObjectPropertyComponent pComp = new CoreObjectPropertyComponent(prop);
 
                     JDialog pD = new JDialog();
                     JButton pB = new JButton("OK");
@@ -401,7 +401,7 @@ public class PropertyEditor extends javax.swing.JPanel {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             pComp.save();
-                            ((BusinessObject)umlCoreElement).getProperties().add(prop);
+                            ((CoreObject)umlCoreElement).getProperties().add(prop);
                             ((DefaultListModel)propertyList.getModel()).addElement(prop);
                             pD.setVisible(false);
                         }                    
@@ -420,8 +420,8 @@ public class PropertyEditor extends javax.swing.JPanel {
             ActionListener addMethodActionListner = new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BusinessObjectMethod meth = new BusinessObjectMethod((BusinessObject)umlCoreElement);
-                    BusinessObjectMethodComponent mComp = new BusinessObjectMethodComponent(meth);
+                    CoreObjectMethod meth = new CoreObjectMethod((CoreObject)umlCoreElement);
+                    CoreObjectMethodComponent mComp = new CoreObjectMethodComponent(meth);
 
                     JDialog pD = new JDialog();
                     JButton pB = new JButton("OK");
@@ -429,7 +429,7 @@ public class PropertyEditor extends javax.swing.JPanel {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             mComp.save();
-                            ((BusinessObject)umlCoreElement).getMethods().add(meth);
+                            ((CoreObject)umlCoreElement).getMethods().add(meth);
                             ((DefaultListModel)methodList.getModel()).addElement(meth);
                             pD.setVisible(false);
                         }                    
@@ -509,18 +509,33 @@ public class PropertyEditor extends javax.swing.JPanel {
         }
             
         //EMBEDDED BIZ OBJECTS
-        if( UseCase.class.isInstance(umlCoreElement)
+        /*if( UseCase.class.isInstance(umlCoreElement)
             ||
             Actor.class.isInstance(umlCoreElement)
             ||
             Action.class.isInstance(umlCoreElement)
             ||
             Message.class.isInstance(umlCoreElement)
-        ){
-            
+        ){*/
+        if(BusinessObjectOwner.class.isInstance(umlCoreElement)){
 
-            BusinessObjectPanel tPanel = 
-                    new BusinessObjectPanel((BusinessObjectOwner)umlCoreElement , context);
+            CoreObjectPanel tPanel = 
+                    new CoreObjectPanel((BusinessObjectOwner)umlCoreElement , context);
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
+            //gridBagConstraints.gridheight = 5;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(tPanel, gridBagConstraints);
+            
+        }
+        
+        if(ControllerOwner.class.isInstance(umlCoreElement)){
+
+            CoreObjectPanel tPanel = 
+                    new CoreObjectPanel((ControllerOwner)umlCoreElement , context);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;

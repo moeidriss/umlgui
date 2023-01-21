@@ -27,10 +27,10 @@ public class LogicalTestComponent extends javax.swing.JPanel {
         load();
     }
     
-    BusinessObjectPropertySelector propSelector;
+    CoreObjectPropertySelector propSelector;
 
     private void load(){
-        propSelector = new BusinessObjectPropertySelector(context);
+        propSelector = new CoreObjectPropertySelector(context);
         jPanel1.add(propSelector , BorderLayout.CENTER);
         
         if(test.getCondition()!=null) conditionComboBox.setSelectedItem(test.getCondition());

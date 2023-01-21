@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import moe.umlgui.model.*;
 import moe.umlgui.ui.tree.Explorer;
 import moe.umlgui.ui.tree.ExplorerTreeCellRenderer;
@@ -53,6 +55,15 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         explorer.addPropertyChangeListener(this);
         jSplitPane2.setTopComponent(explorer);
         propertyEditor.addPropertyChangeListener(this);
+        
+        jTabbedPane1.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                ArrayList q =new ArrayList();
+                q.add(this);
+                ProjectExplorer.this.firePropertyChange("Tab selection", q, jTabbedPane1.getTitleAt(jTabbedPane1.getSelectedIndex()));
+            }        
+        });
         
         revalidate();
     }
@@ -201,7 +212,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             !evt.getPropertyName().equals("Project updated") &&
             !evt.getPropertyName().equals("Element inserted")  &&
             !evt.getPropertyName().equals("Diagram attached")  &&
-            !evt.getPropertyName().equals("Explorer selection") 
+            !evt.getPropertyName().equals("Explorer selection")   &&
+            !evt.getPropertyName().equals("Tab selection") 
         ){
             return;
         }
@@ -209,16 +221,19 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         //PropertyEditor events
         if(evt.getPropertyName().equals("Element updated") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
-            this.firePropertyChange("Element updated", evt.getOldValue(), evt.getNewValue());
             explorer.reload();
+            explorer.setSelection(evt.getNewValue());
+            this.firePropertyChange("Element updated", evt.getOldValue(), evt.getNewValue());
         }
         else if(evt.getPropertyName().equals("Diagram updated") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
+            explorer.setSelection(evt.getNewValue());
         }
         else if(evt.getPropertyName().equals("Project updated") &&!((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
+            explorer.setSelection(evt.getNewValue());
         }
         
         //DiagramPanel / diagramExplorer events
@@ -226,8 +241,9 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             ((ArrayList)evt.getOldValue()).add(this);
             UmlCoreElement el = (UmlCoreElement)evt.getNewValue();
             project.addCoreElement(el);
-            propertyEditor.edit(el);            
+            propertyEditor.edit(el);        
             explorer.reload();
+            explorer.setSelection(el);    
         }
         
         else if(evt.getPropertyName().equals("Diagram attached") && !((ArrayList)evt.getOldValue()).contains(this)){
@@ -261,6 +277,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
                 diagramExplorer.addPropertyChangeListener(dp);
                 openDiagramPanels.put(ud, dp);
             }
+            
 
             ArrayList q =new ArrayList();
             q.add(this);
@@ -311,10 +328,19 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
                 this.firePropertyChange("Display", q, dp);
 
                 explorer.reload();
+                explorer.setSelection(evt.getNewValue());
                 revalidate();
             }
             else if(UmlCoreElement.class.isInstance(evt.getNewValue())){
                 propertyEditor.edit((UmlCoreElement)evt.getNewValue());
+            }
+        }
+        else if(evt.getPropertyName().equals("Tab selection") && !((ArrayList)evt.getOldValue()).contains(this)){
+            ((ArrayList)evt.getOldValue()).add(this);
+            for(int i=0 ; i < jTabbedPane1.getTabCount() ; i++){
+                if(jTabbedPane1.getTitleAt(i).equals(evt.getNewValue())){
+                    jTabbedPane1.setSelectedIndex(i);
+                }
             }
         }
     }

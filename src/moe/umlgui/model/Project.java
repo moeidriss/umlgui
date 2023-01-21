@@ -82,13 +82,30 @@ public class Project implements java.io.Serializable{
         return relationshipList;
     }
     
-    public ArrayList<BusinessObject> getBusinessObjects(){
-        ArrayList<BusinessObject> ar = new ArrayList();
+    public ArrayList<CoreObject> getBusinessObjects(){
+        ArrayList<CoreObject> ar = new ArrayList();
         for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
             Object o = i.next();
             if(BusinessObjectOwner.class.isInstance(o))
                 ar.addAll(((BusinessObjectOwner)o).getBusinessObjects());
         }
+        return ar;
+    }
+    
+    public ArrayList<CoreObject> getControllers(){
+        ArrayList<CoreObject> ar = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(ControllerOwner.class.isInstance(o))
+                ar.addAll(((ControllerOwner)o).getControllers());
+        }
+        return ar;
+    }
+    
+    public ArrayList<CoreObject> getCoreObjects(){
+        ArrayList<CoreObject> ar = new ArrayList();
+        ar.addAll(getBusinessObjects());
+        ar.addAll(getControllers());
         return ar;
     }
     

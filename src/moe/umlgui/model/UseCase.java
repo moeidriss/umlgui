@@ -5,6 +5,7 @@
 package moe.umlgui.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class UseCase extends UmlElement  implements java.io.Serializable , BusinessObjectOwner , AttachmentOwner{
@@ -33,13 +34,13 @@ public class UseCase extends UmlElement  implements java.io.Serializable , Busin
         this.descriptionNumColumns = descriptionNumColumns;
     }
     
-    ArrayList<BusinessObject> businessObjects = new ArrayList(){
+    HashSet<CoreObject> businessObjects = new HashSet(){
         public String toString(){
             return "Business Objects";
         }
     };
 
-    public ArrayList<BusinessObject> getBusinessObjects() {
+    public HashSet<CoreObject> getBusinessObjects() {
         return businessObjects;
     }
     

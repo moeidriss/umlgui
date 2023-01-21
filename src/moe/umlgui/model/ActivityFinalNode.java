@@ -14,6 +14,8 @@ public class ActivityFinalNode extends ActivityNode implements java.io.Serializa
         super("Activity Final Node");
         setName("New Activity Final Node");
     }
+    
+    
 
     @Override
     public UmlCoreElement clone() {

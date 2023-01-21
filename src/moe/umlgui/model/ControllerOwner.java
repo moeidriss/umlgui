@@ -11,6 +11,6 @@ import java.util.HashSet;
  *
  * @author Moe
  */
-public interface BusinessObjectOwner {
-    public HashSet<CoreObject> getBusinessObjects();
+public interface ControllerOwner {
+    public HashSet<CoreObject> getControllers();
 }

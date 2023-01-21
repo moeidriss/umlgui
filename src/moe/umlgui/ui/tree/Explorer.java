@@ -6,22 +6,16 @@ package moe.umlgui.ui.tree;
 
 import java.awt.Desktop;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.InputEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
 import static javax.swing.TransferHandler.COPY_OR_MOVE;
-import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import moe.umlgui.controller.ReportEngine;
 import moe.umlgui.model.AcceptEvent;
 import moe.umlgui.model.AcceptTimeEvent;
@@ -32,10 +26,12 @@ import moe.umlgui.model.ActivityInitialNode;
 import moe.umlgui.model.Actor;
 import moe.umlgui.model.Association;
 import moe.umlgui.model.AttachmentOwner;
+import moe.umlgui.model.BusinessSystem;
 import moe.umlgui.model.CallActivity;
 import moe.umlgui.model.ConditionalBlock;
 import moe.umlgui.model.FlowFinalNode;
 import moe.umlgui.model.Include;
+import moe.umlgui.model.ItSystem;
 import moe.umlgui.model.ModelException;
 import moe.umlgui.model.PackageDiagram;
 import moe.umlgui.model.Project;
@@ -48,11 +44,9 @@ import moe.umlgui.model.UmlElement;
 import moe.umlgui.model.UmlModel;
 import moe.umlgui.model.UseCase;
 import moe.umlgui.model.UseCaseDiagram;
+import moe.umlgui.model.User;
 import moe.umlgui.model.WhileLoop;
-import moe.umlgui.ui.DiagramExplorer;
 import moe.umlgui.ui.TransferrableImpl;
-import moe.umlgui.ui.UmlDiagramPanel;
-import moe.umlgui.ui.UmlElementLabel;
 
 /**
  *
@@ -186,14 +180,16 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     
     public void reload(){
         ((ExplorerTreeModel)jTree.getModel()).reload();
-        //if (selection==null)...
+        if (selection!=null){
+            setSelection(selection);
+        }
     }
 
     Object selection;
-    
+    //TODO fix::
     public void setSelection(Object selection){
         this.selection = selection;
-        
+        /*
         if(nowExploring==PROJECT){
             if(selection==project)
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getRoot())));
@@ -220,6 +216,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             }
             else{ }
         }
+        */
     }
     
     /**
@@ -353,7 +350,10 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         
         //ucd
         if(diagram!=null & UseCaseDiagram.class.isInstance(diagram)){
-            options.add("Actor");options.add("Use Case");
+            options.add("Actor");   options.add("System");
+            options.add("Business System");   options.add("IT System");
+            options.add("User");
+            options.add("Use Case");
         }
         else if(diagram!=null & ActivityDiagram.class.isInstance(diagram)){
             options.add("Action");options.add("Call Activity");
@@ -364,7 +364,9 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             options.add("Repeat Loop");
         }
         else if(diagram!=null & SequenceDiagram.class.isInstance(diagram)){
-            options.add("Actor");
+            options.add("Actor");   options.add("System");
+            options.add("Business System");   options.add("IT System");
+            options.add("User");    //options.add("Message");
         }
         
         //context sensitive options
@@ -400,6 +402,19 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         if(newElementType.equals("Actor")){
             newElement = new Actor();
         }
+        else if(newElementType.equals("System")){
+            newElement = new moe.umlgui.model.System();
+        }
+        else if(newElementType.equals("Business System")){
+            newElement = new BusinessSystem();
+        }
+        else if(newElementType.equals("IT System")){
+            newElement = new ItSystem();
+        }
+        else if(newElementType.equals("User")){
+            newElement = new User();
+        }
+        
         else if(newElementType.equals("Use Case")){
             newElement = new UseCase();
         }
@@ -411,6 +426,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             newElement = new Include();
             ((Include)newElement).setPartyA((UmlElement)selection);
         }    
+        
         else if(newElementType.equals("Action")){
             newElement = new Action();
         }
@@ -423,7 +439,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         else if(newElementType.equals("Accept Time Event")){
             newElement = new AcceptTimeEvent();
         }
-        else if(newElementType.equals("SendSignal")){
+        else if(newElementType.equals("Send Signal")){
             newElement = new SendSignal();
         }
         else if(newElementType.equals("Activity Initial Node")){
@@ -444,6 +460,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         else if(newElementType.equals("Repeat Loop")){
             newElement = new RepeatLoop();
         }
+        
         
         
         if(diagram!=null){

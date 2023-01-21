@@ -7,24 +7,13 @@ package moe.umlgui.model;
 import java.util.ArrayList;
 
 
-public class BusinessObject extends UmlElement  implements java.io.Serializable{
+public class BusinessObject extends CoreObject  implements java.io.Serializable{
 
     public BusinessObject() {
-        super("Business Object");
+        super();
         setName("New Business Object");
     }
 
-    ArrayList<BusinessObjectProperty> properties = new ArrayList();//TODO Property class
-    ArrayList<BusinessObjectProperty> methods = new ArrayList();//TODO Method class
-
-    public ArrayList getProperties() {
-        return properties;
-    }
-
-    public ArrayList getMethods() {
-        return methods;
-    }
-    
     
     
     @Override

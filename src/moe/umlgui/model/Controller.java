@@ -4,15 +4,21 @@
  */
 package moe.umlgui.model;
 
+import java.util.ArrayList;
 
-public class Classs extends UmlElement  implements java.io.Serializable{
-    public Classs(){
-        super("Class");
+
+public class Controller extends CoreObject  implements java.io.Serializable{
+
+    public Controller() {
+        super();
+        setName("New Controller");
     }
+
+    
     
     @Override
-    public UmlElement clone() {
-        Classs x = new Classs();
+    public UmlCoreElement clone() {
+        Controller x = new Controller();
         x.setName(name);
         return x;
     }

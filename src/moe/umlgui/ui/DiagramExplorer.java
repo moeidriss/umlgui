@@ -94,6 +94,7 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
         if(evt.getPropertyName().equals("Element updated") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
+            explorer.setSelection(evt.getNewValue());
             firePropertyChange("Element updated", evt.getOldValue(), evt.getNewValue());            
         }
         
@@ -101,20 +102,25 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
         else if(evt.getPropertyName().equals("Element inserted") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
+            explorer.setSelection(evt.getNewValue());
             firePropertyChange("Element inserted", evt.getOldValue(), evt.getNewValue());
         }
         else if(evt.getPropertyName().equals("Explorer selection") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
+            explorer.reload();
+            explorer.setSelection(evt.getNewValue());
             firePropertyChange("Explorer selection", evt.getOldValue(), evt.getNewValue());
         }
         else if(evt.getPropertyName().equals("Diagram attached") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
+            explorer.setSelection(evt.getNewValue());
             firePropertyChange("Diagram attached", evt.getOldValue(), evt.getNewValue());
         }
         if(evt.getPropertyName().equals("Diagram updated") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
+            explorer.setSelection(evt.getNewValue());
             firePropertyChange("Diagram updated", evt.getOldValue(), evt.getNewValue());            
         }
     }

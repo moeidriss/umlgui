@@ -39,7 +39,7 @@ public class UmlElementLabel extends JLabel {
         this.setBackground(Color.white);
         this.setHorizontalAlignment(SwingConstants.CENTER);
         
-        UmlElementExportTransferHandler newHandler = new UmlElementExportTransferHandler(umlCoreElement , ((ImageIcon)getIcon()).getImage());
+        UmlElementLabelExportTransferHandler newHandler = new UmlElementLabelExportTransferHandler(umlCoreElement , ((ImageIcon)getIcon()).getImage());
         this.setTransferHandler(newHandler);
         this.addMouseMotionListener(new MouseAdapter(){
             public void mouseDragged(MouseEvent ev){

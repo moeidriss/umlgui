@@ -19,14 +19,14 @@ import moe.umlgui.model.*;
  *
  * @author Moe
  */
-public class BusinessObjectMethodComponent extends javax.swing.JPanel {
+public class CoreObjectMethodComponent extends javax.swing.JPanel {
 
-    BusinessObjectMethod method;
+    CoreObjectMethod method;
     
     /**
      * Creates new form LogicalTestComponent
      */
-    public BusinessObjectMethodComponent(BusinessObjectMethod method) {
+    public CoreObjectMethodComponent(CoreObjectMethod method) {
         this.method = method;
         initComponents();
         load();
@@ -40,7 +40,7 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JComboBox b = new JComboBox();
-                b.setModel(new DefaultComboBoxModel(BusinessObjectProperty.DATA_TYPES));
+                b.setModel(new DefaultComboBoxModel(CoreObjectProperty.DATA_TYPES));
                 if(value!=null) b.setSelectedItem(value);
                 //else b.setSelectedIndex(2);
                 return b;
@@ -65,7 +65,7 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
                 }
             }            
         });
-    }
+    } 
     
     //TODO VALIDATE
     public void save(){
@@ -112,7 +112,7 @@ public class BusinessObjectMethodComponent extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         add(nameTextField, gridBagConstraints);
 
-        typeComboBox.setModel(new DefaultComboBoxModel(BusinessObjectMethod.RETURN_TYPES));
+        typeComboBox.setModel(new DefaultComboBoxModel(moe.umlgui.model.CoreObjectMethod.RETURN_TYPES));
         typeComboBox.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder("Return Type"), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
         typeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

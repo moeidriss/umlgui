@@ -123,7 +123,7 @@ public class ExplorerTreeModel extends DefaultTreeModel {
     UmlEntity
     case1: nowExploring==PROJECT; parent:case#1 D, ch: case#2 D
     case2: nowExploring==DIAGRAM; parent:case#3 D, ch: various
-        case2.1: BusinessObjectOwner ch:ArrayList[BusinessObject]
+        case2.1: BusinessObjectOwner ch:ArrayList[CoreObject]
         case2.2: AttachmentOwnerOwner ch:case#4 D ArrayList[UmlDiagram]
         case2.3: WorkerClassOwner ch:ArrayList[WorkerClass]
         case2.4: ConditionalBlock ch:ArrayList[LogicalTest]
@@ -142,18 +142,19 @@ public class ExplorerTreeModel extends DefaultTreeModel {
     private void buildElementNode(DefaultMutableTreeNode eN){
         UmlElement e = (UmlElement)eN.getUserObject();
         
-        /*if(nowExploring==PROJECT){//&& is AttachmentOwner
-            for(Iterator<UmlDiagram> i = ((AttachmentOwner)e).getAttachedDiagrams().iterator() ; i.hasNext();){
-                UmlDiagram d = i.next();
-                
-            }
-        }
-        else*/ if(nowExploring==DIAGRAM){
+        if(nowExploring==DIAGRAM){
             if(UmlDiagram.class.isInstance(((DefaultMutableTreeNode)eN.getParent()).getUserObject())){
                 if(BusinessObjectOwner.class.isInstance(e)){
                     DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((BusinessObjectOwner)e).getBusinessObjects());
                     eN.add(aN);
-                    for(Iterator<BusinessObject> i = ((BusinessObjectOwner)e).getBusinessObjects().iterator() ; i.hasNext() ;){
+                    for(Iterator<CoreObject> i = ((BusinessObjectOwner)e).getBusinessObjects().iterator() ; i.hasNext() ;){
+                        aN.add(new DefaultMutableTreeNode(i.next()));
+                    }
+                }
+                if(ControllerOwner.class.isInstance(e)){
+                    DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((ControllerOwner)e).getControllers());
+                    eN.add(aN);
+                    for(Iterator<CoreObject> i = ((ControllerOwner)e).getControllers().iterator() ; i.hasNext() ;){
                         aN.add(new DefaultMutableTreeNode(i.next()));
                     }
                 }
@@ -164,11 +165,12 @@ public class ExplorerTreeModel extends DefaultTreeModel {
                         aN.add(new DefaultMutableTreeNode(i.next()));
                     }
                 }
-            }
-            /*else if(ArrayList.class.isInstance(((DefaultMutableTreeNode)eN.getParent()).getUserObject())){
                 
-            }*/
+                //TODO Message - seq diagrams
+            }
         }
+        
+        
     }
     
     public void reload(){

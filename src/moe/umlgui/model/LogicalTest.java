@@ -16,7 +16,7 @@ public class LogicalTest  implements java.io.Serializable{
 
     //TODO Operand, Operator classes
     String condition;//NA for while loop
-    BusinessObjectProperty operandA ;
+    CoreObjectProperty operandA ;
     String operandB;
     String operator;
     String label;
@@ -26,18 +26,18 @@ public class LogicalTest  implements java.io.Serializable{
     }
 
 
-    public LogicalTest(BusinessObjectProperty operandA, String operandB, String operator){
+    public LogicalTest(CoreObjectProperty operandA, String operandB, String operator){
         this.operandA = operandA;
         this.operandB = operandB;
         this.operator = operator;
     }
 
 
-    public BusinessObjectProperty getOperandA() {
+    public CoreObjectProperty getOperandA() {
         return operandA;
     }
 
-    public void setOperandA(BusinessObjectProperty operandA) {
+    public void setOperandA(CoreObjectProperty operandA) {
         this.operandA = operandA;
     }
 

@@ -8,7 +8,7 @@ package moe.umlgui.model;
  *
  * @author Moe
  */
-public class BusinessObjectProperty implements java.io.Serializable{
+public class CoreObjectProperty implements java.io.Serializable{
  
     public static String INTEGER_DATA_TYPE = "Integer";
     public static String NUMBER_DATA_TYPE = "Number";
@@ -43,18 +43,18 @@ public class BusinessObjectProperty implements java.io.Serializable{
     }
     
     
-    BusinessObject businessObject;
+    CoreObject businessObject;
 
-    public BusinessObject getBusinessObject() {
+    public CoreObject getBusinessObject() {
         return businessObject;
     }
 
-    public BusinessObjectProperty(BusinessObject businessObject) {
+    public CoreObjectProperty(CoreObject businessObject) {
         this.businessObject = businessObject;
     }
 
     
-    public BusinessObjectProperty(String name, String dataType, BusinessObject businessObject) {
+    public CoreObjectProperty(String name, String dataType, CoreObject businessObject) {
         this.name = name;
         this.dataType = dataType;
         this.businessObject = businessObject;

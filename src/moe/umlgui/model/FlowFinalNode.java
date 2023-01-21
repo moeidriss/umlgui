@@ -14,6 +14,8 @@ public class FlowFinalNode extends ActivityNode implements java.io.Serializable{
         super("Flow Final Node");
         setName("New Flow Final Node");
     }
+    
+    
 
     @Override
     public UmlCoreElement clone() {
