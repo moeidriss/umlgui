@@ -14,7 +14,7 @@ public class LogicalTest  implements java.io.Serializable{
     public static String[] OPERATORS = {null,"=" , "!=" , ">" 
                                 , "<" , "IS" , "IS NOT"};
 
-    //TODO Operand, Operator classes
+
     String condition;//NA for while loop
     CoreObjectProperty operandA ;
     String operandB;

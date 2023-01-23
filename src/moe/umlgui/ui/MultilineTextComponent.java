@@ -42,7 +42,7 @@ public class MultilineTextComponent extends javax.swing.JPanel {
         try{
             loadComponent();
         }catch( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex){
-            JOptionPane.showMessageDialog(this, "Unable to load", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Unable to load", "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }

@@ -133,5 +133,28 @@ String type;
     
     //TODO validate implementations 
     public abstract UmlCoreElement clone();
+    
+    
+    public String dump(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("!!! Dumping " + name + " !!!\n");
+        if(BusinessObjectOwner.class.isInstance(this)){
+            sb.append("\t Business Objects\n");
+            for(CoreObject o : ((BusinessObjectOwner)this).getBusinessObjects()){
+                sb.append(o.dump());
+            }
+        }
+        
+        if(ControllerOwner.class.isInstance(this)){
+            sb.append("\t Controllers\n");
+            for(CoreObject o : ((ControllerOwner)this).getControllers()){
+                sb.append(o.dump());
+            }
+        }
+        
+        sb.append("==========================================");
+        
+        return sb.toString();
+    }
 
 }

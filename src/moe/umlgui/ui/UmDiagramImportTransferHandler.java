@@ -33,14 +33,14 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
     @Override
     public boolean canImport(JComponent comp, DataFlavor[] transferFlavors){
         
-       java.lang.System.out.println(transferFlavors[0].getMimeType());
+       /*java.lang.System.out.println(transferFlavors[0].getMimeType());
        java.lang.System.out.println(transferFlavors[0].getHumanPresentableName());
        java.lang.System.out.println(transferFlavors[0].getRepresentationClass());
-       java.lang.System.out.println(comp);
+       java.lang.System.out.println(comp);*/
        
        String elClass = transferFlavors[0].getMimeType().substring(transferFlavors[0].getMimeType().lastIndexOf(".")+1);
        
-       java.lang.System.out.println(elClass);
+       //java.lang.System.out.println(elClass);
        
        if(elClass.equals("UseCase")){
             if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;

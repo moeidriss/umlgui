@@ -73,6 +73,21 @@ public class ExplorerTreeModel extends DefaultTreeModel {
         }
     }
     
+    /*
+    PROJECT
+        Project
+            Model
+                Diagram
+                    AttOwner
+    DIAGRAM
+        Element
+            Diagram
+            BO List
+                BO
+            CN List
+                CN
+    */
+    
     
     /*
     UmlDiagram

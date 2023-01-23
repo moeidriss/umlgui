@@ -1,0 +1,3 @@
+In its first release, w4g is an UML modelling tool designed with the purpose of producing business analyzes of software systems that are intuitive to make and agree upon. Hence, it also embodies an approach more influenced by <UML-2.0-in-Action_-A-project-based-tutorial> than the original Grady, Allen & Boosche <Unified Modeling Language>...
+
+

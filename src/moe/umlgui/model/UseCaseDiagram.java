@@ -11,5 +11,5 @@ public class UseCaseDiagram extends UmlDiagram implements java.io.Serializable {
         setName("New Use Case Diagram");
     }
     
-    //TODO override addCoreElement...
+
 }

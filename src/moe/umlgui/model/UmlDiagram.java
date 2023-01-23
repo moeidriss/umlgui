@@ -133,7 +133,7 @@ public abstract class UmlDiagram implements Serializable{
     }
     
     
-    //TODO throw ModelException instead
+
     /**
     override to enforce biz rules (element allowed, biz vs it model)
     */
@@ -150,7 +150,7 @@ public abstract class UmlDiagram implements Serializable{
     }
     
     
-    //TODO throw ModelException instead
+
     /**
     override to enforce biz rules (element allowed, biz vs it model)
     */

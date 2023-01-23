@@ -30,9 +30,10 @@ public class CoreObjectPropertyComponent extends javax.swing.JPanel {
     }
     
     //TODO VALIDATE
-    public void save(){
+    public boolean save(){
         property.setDataType((String)typeComboBox.getSelectedItem());
         property.setName(nameTextField.getText());
+        return true;
     }
     /**
      * This method is called from within the constructor to initialize the form.

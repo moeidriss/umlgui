@@ -32,7 +32,6 @@ public class RepeatLoop extends ControlNode implements java.io.Serializable{
         }
     };
     
-    //TODO convert Activity to Activity Ordered/Linked set/map
 
     public LogicalTest getLogicalTest() {
         return logicalTest;

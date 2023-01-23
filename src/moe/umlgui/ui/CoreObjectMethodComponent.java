@@ -42,7 +42,7 @@ public class CoreObjectMethodComponent extends javax.swing.JPanel {
                 JComboBox b = new JComboBox();
                 b.setModel(new DefaultComboBoxModel(CoreObjectProperty.DATA_TYPES));
                 if(value!=null) b.setSelectedItem(value);
-                //else b.setSelectedIndex(2);
+                else b.setSelectedIndex(2);
                 return b;
             }
             
@@ -68,7 +68,7 @@ public class CoreObjectMethodComponent extends javax.swing.JPanel {
     } 
     
     //TODO VALIDATE
-    public void save(){
+    public boolean save(){
         method.setReturnType((String)typeComboBox.getSelectedItem());
         method.setName(nameTextField.getText());
         
@@ -76,10 +76,12 @@ public class CoreObjectMethodComponent extends javax.swing.JPanel {
         for(int i=0 ; i<((DefaultTableModel)jTable1.getModel()).getRowCount() ; i++){
             Object pN = ((DefaultTableModel)jTable1.getModel()).getValueAt(i,0);
             Object pT = ((DefaultTableModel)jTable1.getModel()).getValueAt(i,1);
+            java.lang.System.out.println("i:"+pN+"::"+pT);
             if(pN!=null && pT!=null){
                 method.getParameters().put((String)pN, (String)pT);
             }
         }
+        return true;
     }
     
     /**

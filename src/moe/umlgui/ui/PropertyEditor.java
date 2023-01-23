@@ -375,91 +375,8 @@ public class PropertyEditor extends javax.swing.JPanel {
             editPanel.add(toComboBox, gridBagConstraints);
         }
         
-        else if(CoreObject.class.isInstance(umlCoreElement)){
-            JList propertyList = new JList(new DefaultListModel());
-            //((DefaultListModel)propertyList.getModel()).
-            //((CoreObject)umlCoreElement).getProperties())
-            JList methodList = new JList(new DefaultListModel());
-            
-            JToolBar propToolBar = new javax.swing.JToolBar();
-            JButton addPropertyButton = new javax.swing.JButton();
-            JButton deletePropertyButton = new javax.swing.JButton();
-            
-            JToolBar methToolBar = new javax.swing.JToolBar();
-            JButton addMethodButton = new javax.swing.JButton();
-            JButton deleteMethodButton = new javax.swing.JButton();
-        
-            ActionListener addPropertyActionListner = new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    CoreObjectProperty prop = new CoreObjectProperty((CoreObject)umlCoreElement);
-                    CoreObjectPropertyComponent pComp = new CoreObjectPropertyComponent(prop);
-
-                    JDialog pD = new JDialog();
-                    JButton pB = new JButton("OK");
-                    pB.addActionListener(new ActionListener(){
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            pComp.save();
-                            ((CoreObject)umlCoreElement).getProperties().add(prop);
-                            ((DefaultListModel)propertyList.getModel()).addElement(prop);
-                            pD.setVisible(false);
-                        }                    
-                    });
-
-                    pD.getContentPane().add(pComp , BorderLayout.CENTER);
-                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
-                    pD.pack();
-                    pD.setLocationRelativeTo(null);
-                    pD.setVisible(true);
-                }            
-            };
-            addPropertyButton.addActionListener(addPropertyActionListner);
-
-
-            ActionListener addMethodActionListner = new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    CoreObjectMethod meth = new CoreObjectMethod((CoreObject)umlCoreElement);
-                    CoreObjectMethodComponent mComp = new CoreObjectMethodComponent(meth);
-
-                    JDialog pD = new JDialog();
-                    JButton pB = new JButton("OK");
-                    pB.addActionListener(new ActionListener(){
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            mComp.save();
-                            ((CoreObject)umlCoreElement).getMethods().add(meth);
-                            ((DefaultListModel)methodList.getModel()).addElement(meth);
-                            pD.setVisible(false);
-                        }                    
-                    });
-
-                    pD.getContentPane().add(mComp , BorderLayout.CENTER);
-                    pD.getContentPane().add(pB , BorderLayout.SOUTH);
-                    pD.pack();
-                    pD.setLocationRelativeTo(null);
-                    pD.setVisible(true);
-                }            
-            };
-            addMethodButton.addActionListener(addMethodActionListner);
-
-            propToolBar.add(addPropertyButton);
-            propToolBar.add(deletePropertyButton);
-            methToolBar.add(addMethodButton);
-            methToolBar.add(deleteMethodButton);
-            
-            addPropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png")));
-            deletePropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png")));
-            addMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png")));
-            deleteMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png")));
-            
-            JPanel pPanel =  new JPanel();
-            pPanel.setLayout(new BorderLayout());
-            pPanel.setBorder(BorderFactory.createTitledBorder("Properties"));
-            pPanel.add(propToolBar , BorderLayout.NORTH);
-            pPanel.add(new JScrollPane(propertyList) , BorderLayout.CENTER);
-                        
+        /*else if(CoreObject.class.isInstance(umlCoreElement)){            
+            CoreObjectComponent comp = new CoreObjectComponent(obj , type);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
@@ -467,24 +384,9 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.gridwidth = 2;
             //gridBagConstraints.gridheight = 5;
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(pPanel, gridBagConstraints);
+            editPanel.add(comp, gridBagConstraints);
             
-            JPanel mPanel =  new JPanel();
-            mPanel.setLayout(new BorderLayout());
-            mPanel.setBorder(BorderFactory.createTitledBorder("Methods"));
-            mPanel.add(methToolBar , BorderLayout.NORTH);
-            mPanel.add(new JScrollPane(methodList) , BorderLayout.CENTER);
-            
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 1.0;
-            gridBagConstraints.gridwidth = 2;
-            //gridBagConstraints.gridheight = 5;
-            gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(mPanel, gridBagConstraints);
-            
-        }
+        }*/
         
         //NOTE
         //applies to:

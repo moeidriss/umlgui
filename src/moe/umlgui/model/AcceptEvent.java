@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * TODO RENAME BACK (!) TO AcceptEvent 
+ * 
  * @author Moe
  */
 public class AcceptEvent extends Activity implements java.io.Serializable , BusinessObjectOwner, ControllerOwner , AttachmentOwner{

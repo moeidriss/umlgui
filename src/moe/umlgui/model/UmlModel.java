@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Moe
  */
-public abstract class UmlModel {
+public abstract class UmlModel implements java.io.Serializable{
     
     String name = "model";
 

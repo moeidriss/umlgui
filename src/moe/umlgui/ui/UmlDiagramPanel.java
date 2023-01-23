@@ -50,6 +50,9 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
         this.setTransferHandler(new UmDiagramImportTransferHandler(umlDiagram));
     }
     
+    
+    //TODO ImageRaster to replace jlabel
+    
     private void loadDiagramPanel(){
         setName(umlDiagram.getName());        
         //this.setBorder(new TitledBorder(umlDiagram.getName()));   
@@ -71,13 +74,16 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
                 try {
                     PUMLDriver.updateImage(umlDiagram);
                 } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(UmlDiagramPanel.this, ex, "PUMLDriver Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, ex, "PUMLDriver Error", JOptionPane.ERROR_MESSAGE);
                     Logger.getLogger(UmlDiagramPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 updateImage();
             }
             
         });
+        
+        if(umlDiagram.getImage() != null)   
+                    label.setIcon(new ImageIcon(umlDiagram.getImage()));
         
         add(updateImgButton, BorderLayout.SOUTH);
         

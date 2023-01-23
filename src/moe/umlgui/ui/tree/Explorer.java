@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
 import static javax.swing.TransferHandler.COPY_OR_MOVE;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import moe.umlgui.controller.ReportEngine;
 import moe.umlgui.model.AcceptEvent;
 import moe.umlgui.model.AcceptTimeEvent;
@@ -155,7 +156,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         }
         @Override
         protected Transferable createTransferable(JComponent c){
-            System.out.println(c + ":" + c.getClass()+"-selection="+selection);
+            //System.out.println(c + ":" + c.getClass()+"-selection="+selection);
            // Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
             if(UmlElement.class.isInstance(selection))
                 return new TransferrableImpl((UmlElement)selection);
@@ -173,7 +174,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
          * @return
          */
         public int getSourceActions(JComponent c){
-            System.out.println("getSourceActions::"+c + ":" + c.getClass()+"-selection="+selection);
+            System.out.println("Explorer.getSourceActions::"+c + ":" + c.getClass()+"-selection="+selection);
             return COPY_OR_MOVE;
         }
     }
@@ -183,13 +184,37 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         if (selection!=null){
             setSelection(selection);
         }
+        
+        //TODO REMOVE
+        if(nowExploring==PROJECT){
+            for(UmlElement el : project.getElementList()){
+                System.out.println(el.dump());
+            }
+        }
     }
 
+    
+    /*
+    PROJECT
+        Project
+            Model
+                Diagram
+                    AttOwner
+    DIAGRAM
+        Diagram
+            Element
+                AttachedDiagram
+                BO List
+                    BO
+                CN List
+                    CN
+    */
+    
     Object selection;
     //TODO fix::
     public void setSelection(Object selection){
         this.selection = selection;
-        /*
+        
         if(nowExploring==PROJECT){
             if(selection==project)
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getRoot())));
@@ -205,6 +230,8 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)))));
             }
+            //TODO SELECTION
+            //diagramNode =... will throw exception if selection is 
             else{ }
         }
         
@@ -216,7 +243,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             }
             else{ }
         }
-        */
+        
     }
     
     /**
@@ -235,7 +262,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         removeButton = new javax.swing.JButton();
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
-        linkDiagramButton = new javax.swing.JButton();
+        attachDiagramButton = new javax.swing.JButton();
         exportPptButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
@@ -310,18 +337,18 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         });
         jToolBar1.add(downButton);
 
-        linkDiagramButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/DiagramLinked.png"))); // NOI18N
-        linkDiagramButton.setToolTipText("Link Diagram");
-        linkDiagramButton.setEnabled(false);
-        linkDiagramButton.setFocusable(false);
-        linkDiagramButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkDiagramButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linkDiagramButton.addActionListener(new java.awt.event.ActionListener() {
+        attachDiagramButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/DiagramLinked.png"))); // NOI18N
+        attachDiagramButton.setToolTipText("Attach Diagram");
+        attachDiagramButton.setEnabled(false);
+        attachDiagramButton.setFocusable(false);
+        attachDiagramButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        attachDiagramButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        attachDiagramButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linkDiagramButtonActionPerformed(evt);
+                attachDiagramButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(linkDiagramButton);
+        jToolBar1.add(attachDiagramButton);
 
         exportPptButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/application-vnd.ms-powerpoint.png"))); // NOI18N
         exportPptButton.setFocusable(false);
@@ -338,149 +365,150 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
+        selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
         
-        ArrayList options = new ArrayList();
-        //module, diagram
-        
-        //restrict options based on diagram
-        //TODO diagram is null (exploring project)
-            //selected node is diagram or element within
-        
-        
-        //ucd
-        if(diagram!=null & UseCaseDiagram.class.isInstance(diagram)){
-            options.add("Actor");   options.add("System");
-            options.add("Business System");   options.add("IT System");
-            options.add("User");
-            options.add("Use Case");
-        }
-        else if(diagram!=null & ActivityDiagram.class.isInstance(diagram)){
-            options.add("Action");options.add("Call Activity");
-            options.add("Accept Event");options.add("Accept Time Event");
-            options.add("Send Signal");options.add("Activity Initial Node");
-            options.add("Activity Final Node");options.add("Flow Final Node");
-            options.add("Conditional Block");options.add("While Loop");
-            options.add("Repeat Loop");
-        }
-        else if(diagram!=null & SequenceDiagram.class.isInstance(diagram)){
-            options.add("Actor");   options.add("System");
-            options.add("Business System");   options.add("IT System");
-            options.add("User");    //options.add("Message");
-        }
-        
-        //context sensitive options
-        if(selection != null && UmlElement.class.isInstance(selection)){
-            if(UseCase.class.isInstance(selection) || Actor.class.isInstance(selection)){
-                options.add("Association");
+        //elements only in D mode
+        if(nowExploring==DIAGRAM){
+            ArrayList options = new ArrayList();
+            //module, diagram
+
+            //restrict options based on diagram
+            //TODO diagram is null (exploring project)
+                //selected node is diagram or element within
+
+
+            //ucd
+            if(diagram!=null & UseCaseDiagram.class.isInstance(diagram)){
+                options.add("Actor");   options.add("System");
+                options.add("Business System");   options.add("IT System");
+                options.add("User");
+                options.add("Use Case");
             }
-            if(UseCase.class.isInstance(selection)){
-                options.add("Include");
+            else if(diagram!=null & ActivityDiagram.class.isInstance(diagram)){
+                options.add("Action");options.add("Call Activity");
+                options.add("Accept Event");options.add("Accept Time Event");
+                options.add("Send Signal");options.add("Activity Initial Node");
+                options.add("Activity Final Node");options.add("Flow Final Node");
+                options.add("Conditional Block");options.add("While Loop");
+                options.add("Repeat Loop");
             }
-        }
-        
-        
-        String newElementType = (String)JOptionPane.showInputDialog(this, "Select element", "Insert", JOptionPane.INFORMATION_MESSAGE, null, options.toArray(), null);
-        
-        //if nothing or diagram is select (or multiple items), append element to end
-        
-        //if element is selected, prompt to insert before or after
-        int newIndex = -1;
-        if(UmlElement.class.isInstance(selection) &&
-            !newElementType.equals("Association")  &&
-            !newElementType.equals("Include") 
-        ){
-            String[] s = {"Before" , "After"};
-            String ss = ((String)JOptionPane.showInputDialog(this, "Before or after", "Insert", JOptionPane.INFORMATION_MESSAGE, null, s, "After"));
-            if(ss .equals("Before"))
-                newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection);
-            else
-                newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)+1;
-        }
-        
-        UmlCoreElement newElement = null;
-        if(newElementType.equals("Actor")){
-            newElement = new Actor();
-        }
-        else if(newElementType.equals("System")){
-            newElement = new moe.umlgui.model.System();
-        }
-        else if(newElementType.equals("Business System")){
-            newElement = new BusinessSystem();
-        }
-        else if(newElementType.equals("IT System")){
-            newElement = new ItSystem();
-        }
-        else if(newElementType.equals("User")){
-            newElement = new User();
-        }
-        
-        else if(newElementType.equals("Use Case")){
-            newElement = new UseCase();
-        }
-        else if(newElementType.equals("Association")){
-            newElement = new Association();
-            ((Association)newElement).setPartyA((UmlElement)selection);
-        }
-        else if(newElementType.equals("Include")){
-            newElement = new Include();
-            ((Include)newElement).setPartyA((UmlElement)selection);
-        }    
-        
-        else if(newElementType.equals("Action")){
-            newElement = new Action();
-        }
-        else if(newElementType.equals("Call Activity")){
-            newElement = new CallActivity();
-        }
-        else if(newElementType.equals("Accept Event")){
-            newElement = new AcceptEvent();
-        }
-        else if(newElementType.equals("Accept Time Event")){
-            newElement = new AcceptTimeEvent();
-        }
-        else if(newElementType.equals("Send Signal")){
-            newElement = new SendSignal();
-        }
-        else if(newElementType.equals("Activity Initial Node")){
-            newElement = new ActivityInitialNode();
-        }
-        else if(newElementType.equals("Activity Final Node")){
-            newElement = new ActivityFinalNode();
-        }
-        else if(newElementType.equals("Flow Final Node")){
-            newElement = new FlowFinalNode();
-        }
-        else if(newElementType.equals("Conditional Block")){
-            newElement = new ConditionalBlock();
-        }
-        else if(newElementType.equals("While Loop")){
-            newElement = new WhileLoop();
-        }
-        else if(newElementType.equals("Repeat Loop")){
-            newElement = new RepeatLoop();
-        }
-        
-        
-        
-        if(diagram!=null){
-            try{
-                if(newIndex !=-1 )
-                    diagram.insertCoreElement(newIndex,newElement);            
-                else 
-                    diagram.addCoreElement(newElement);            
-            }catch(ModelException e){
-                JOptionPane.showMessageDialog(this, e);
-                e.printStackTrace();
+            else if(diagram!=null & SequenceDiagram.class.isInstance(diagram)){
+                options.add("Actor");   options.add("System");
+                options.add("Business System");   options.add("IT System");
+                options.add("User");    //options.add("Message");
             }
+
+            //context sensitive options
+            if(selection != null && UmlElement.class.isInstance(selection)){
+                if(UseCase.class.isInstance(selection) || Actor.class.isInstance(selection)){
+                    options.add("Association");
+                }
+                if(UseCase.class.isInstance(selection)){
+                    options.add("Include");
+                }
+            }
+
+
+            String newElementType = (String)JOptionPane.showInputDialog(null, "Select element", "Insert", JOptionPane.INFORMATION_MESSAGE, null, options.toArray(), null);
+
+            //if nothing or diagram is select (or multiple items), append element to end
+
+            //if element is selected, prompt to insert before or after
+            int newIndex = -1;
+            if(UmlElement.class.isInstance(selection) &&
+                !newElementType.equals("Association")  &&
+                !newElementType.equals("Include") 
+            ){
+                String[] s = {"Before" , "After"};
+                String ss = ((String)JOptionPane.showInputDialog(this, "Before or after", "Insert", JOptionPane.INFORMATION_MESSAGE, null, s, "After"));
+                if(ss .equals("Before"))
+                    newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection);
+                else
+                    newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)+1;
+            }
+
+            UmlCoreElement newElement = null;
+            if(newElementType.equals("Actor")){
+                newElement = new Actor();
+            }
+            else if(newElementType.equals("System")){
+                newElement = new moe.umlgui.model.System();
+            }
+            else if(newElementType.equals("Business System")){
+                newElement = new BusinessSystem();
+            }
+            else if(newElementType.equals("IT System")){
+                newElement = new ItSystem();
+            }
+            else if(newElementType.equals("User")){
+                newElement = new User();
+            }
+
+            else if(newElementType.equals("Use Case")){
+                newElement = new UseCase();
+            }
+            else if(newElementType.equals("Association")){
+                newElement = new Association();
+                ((Association)newElement).setPartyA((UmlElement)selection);
+            }
+            else if(newElementType.equals("Include")){
+                newElement = new Include();
+                ((Include)newElement).setPartyA((UmlElement)selection);
+            }    
+
+            else if(newElementType.equals("Action")){
+                newElement = new Action();
+            }
+            else if(newElementType.equals("Call Activity")){
+                newElement = new CallActivity();
+            }
+            else if(newElementType.equals("Accept Event")){
+                newElement = new AcceptEvent();
+            }
+            else if(newElementType.equals("Accept Time Event")){
+                newElement = new AcceptTimeEvent();
+            }
+            else if(newElementType.equals("Send Signal")){
+                newElement = new SendSignal();
+            }
+            else if(newElementType.equals("Activity Initial Node")){
+                newElement = new ActivityInitialNode();
+            }
+            else if(newElementType.equals("Activity Final Node")){
+                newElement = new ActivityFinalNode();
+            }
+            else if(newElementType.equals("Flow Final Node")){
+                newElement = new FlowFinalNode();
+            }
+            else if(newElementType.equals("Conditional Block")){
+                newElement = new ConditionalBlock();
+            }
+            else if(newElementType.equals("While Loop")){
+                newElement = new WhileLoop();
+            }
+            else if(newElementType.equals("Repeat Loop")){
+                newElement = new RepeatLoop();
+            }
+
+
+
+            if(diagram!=null){
+                try{
+                    if(newIndex !=-1 )
+                        diagram.insertCoreElement(newIndex,newElement);            
+                    else 
+                        diagram.addCoreElement(newElement);            
+                }catch(ModelException e){
+                    JOptionPane.showMessageDialog(this, e);
+                    e.printStackTrace();
+                }
+            }
+
+
+            ArrayList q =new ArrayList();
+            q.add(this);
+            firePropertyChange("Element inserted", q, newElement);
         }
-        
-        
-        ArrayList q =new ArrayList();
-        q.add(this);
-        firePropertyChange("Element inserted", q, newElement);
-        //setSelection(newElement);
-        
         //TODO model, diagram, element subnodes
     }//GEN-LAST:event_addButtonActionPerformed
 
@@ -521,7 +549,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             downButton.setEnabled(false);
             addButton.setEnabled(true);//TODO model
             removeButton.setEnabled(true);
-            linkDiagramButton.setEnabled(false);
+            attachDiagramButton.setEnabled(false);
             exportPptButton.setEnabled(false);
         }
         else if(UmlModel.class.isInstance(selection)){
@@ -529,7 +557,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             downButton.setEnabled(false);
             addButton.setEnabled(true);//TODO diagram
             removeButton.setEnabled(true);
-            linkDiagramButton.setEnabled(false);
+            attachDiagramButton.setEnabled(false);
             exportPptButton.setEnabled(true);
         }
         else if(UmlDiagram.class.isInstance(selection)){
@@ -537,7 +565,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             downButton.setEnabled(false);
             addButton.setEnabled(true);
             removeButton.setEnabled(true);
-            linkDiagramButton.setEnabled(false);
+            attachDiagramButton.setEnabled(false);
             exportPptButton.setEnabled(false);
         }        
         else if(UmlElement.class.isInstance(selection)){
@@ -548,24 +576,20 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             exportPptButton.setEnabled(false);
             
             if( AttachmentOwner.class.isInstance(selection)){                    
-                linkDiagramButton.setEnabled(true);
+                attachDiagramButton.setEnabled(true);
             }
-            else    linkDiagramButton.setEnabled(false);
+            else    attachDiagramButton.setEnabled(false);
         }
         else{//TODO element members
             upButton.setEnabled(false);
             downButton.setEnabled(false);
             addButton.setEnabled(false);
             removeButton.setEnabled(false);
-            linkDiagramButton.setEnabled(false);
+            attachDiagramButton.setEnabled(false);
             exportPptButton.setEnabled(false);
         }
         
-        //if(jTree.getLeadSelectionRow()==treeModel.)  upButton.setEnabled(false);
-        //else upButton.setEnabled(true);
-        
-        
-//        Object selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
+
         
     }//GEN-LAST:event_jTreeValueChanged
 
@@ -586,12 +610,12 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         }
     }//GEN-LAST:event_jTreeKeyPressed
 
-    private void linkDiagramButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkDiagramButtonActionPerformed
+    private void attachDiagramButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attachDiagramButtonActionPerformed
         if(AttachmentOwner.class.isInstance(selection)){
             UmlDiagram ud = null;
             String[] ld = {"Use Case Diagram","Activity Diagram",
                         "Sequence Diagram" , "Package Diagram"};
-            String s = (String)JOptionPane.showInputDialog(this, "Select type of diagram", "Attach Diagram", JOptionPane.INFORMATION_MESSAGE, null, ld, null);
+            String s = (String)JOptionPane.showInputDialog(null, "Select type of diagram", "Attach Diagram", JOptionPane.INFORMATION_MESSAGE, null, ld, null);
             if(s.equals("Use Case Diagram")){
                 ud = new UseCaseDiagram(null);            
             }
@@ -621,7 +645,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 revalidate();
             }
         }
-    }//GEN-LAST:event_linkDiagramButtonActionPerformed
+    }//GEN-LAST:event_attachDiagramButtonActionPerformed
 
     private void exportPptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPptButtonActionPerformed
         if(UmlModel.class.isInstance(selection)){
@@ -640,19 +664,19 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JButton attachDiagramButton;
     private javax.swing.JButton downButton;
     private javax.swing.JButton exportPptButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTree;
-    private javax.swing.JButton linkDiagramButton;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton upButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        //TODO this or reload()?
+        
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

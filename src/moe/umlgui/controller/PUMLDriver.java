@@ -41,14 +41,6 @@ public class PUMLDriver {
 
         //TODO Package
 
-
-        //TODO.. Need to do this after element declaration?
-        /*for(Iterator<UmlRelationship> i= diagram.getRelationshipList().iterator(); i.hasNext();){
-            UmlRelationship el = i.next();
-            el.setUmlCode(getCoreElementUmlCode(el));
-            sb.append(el.getUmlCode());        
-        }*/
-        
         
         sb.append("@enduml");
         
@@ -160,7 +152,6 @@ public class PUMLDriver {
         }
 
 
-        //TODO this assumes testList order is maintained in entity
         else if(ConditionalBlock.class.isInstance(el)){
             ConditionalBlock cn = (ConditionalBlock)el;
             sb.append(getConditionalBlockUmlCode(cn));

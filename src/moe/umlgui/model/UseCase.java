@@ -38,6 +38,11 @@ public class UseCase extends UmlElement  implements java.io.Serializable , Busin
         public String toString(){
             return "Business Objects";
         }
+        @Override
+        public boolean add(Object e) {
+            return super.add(e);
+        }
+        
     };
 
     public HashSet<CoreObject> getBusinessObjects() {

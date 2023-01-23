@@ -27,14 +27,13 @@ public class ConditionalBlock extends ControlNode implements java.io.Serializabl
     
     
     
-    //TODO convert Activity to Activity set
     
-    //TODO implement logic control (a single 'if', single 'else') and testList order
+    //TODO implement logic control/validation (a single 'if', single 'else') and testList order
 
     public HashMap<LogicalTest, ArrayList<Activity>> getTestMap() {
         return testMap;
     }
-    //TODO Ordered/linked set/may
+
     public ArrayList<LogicalTest> getTestList(){
         return testList;
     }

@@ -11,5 +11,5 @@ public class PackageDiagram extends UmlDiagram implements java.io.Serializable{
         setName("New Package Diagram");
     }
     
-    //TODO override addCoreElement...
+
 }

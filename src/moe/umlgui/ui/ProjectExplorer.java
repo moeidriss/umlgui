@@ -6,16 +6,21 @@ package moe.umlgui.ui;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import moe.umlgui.model.*;
 import moe.umlgui.ui.tree.Explorer;
 import moe.umlgui.ui.tree.ExplorerTreeCellRenderer;
@@ -61,7 +66,9 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             public void stateChanged(ChangeEvent e) {
                 ArrayList q =new ArrayList();
                 q.add(this);
-                ProjectExplorer.this.firePropertyChange("Tab selection", q, jTabbedPane1.getTitleAt(jTabbedPane1.getSelectedIndex()));
+                //TODO firing this will make explorer and diagramPanel tab selections tally each other (nice to have)
+                //but will it make it impossible to drag an element from a diagram's explorer into another's diagramPanel
+                //ProjectExplorer.this.firePropertyChange("Tab selection", q, jTabbedPane1.getTitleAt(jTabbedPane1.getSelectedIndex()));
             }        
         });
         
@@ -77,6 +84,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        saveProjectButton = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -87,6 +96,20 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         propertyEditor = new moe.umlgui.ui.PropertyEditor();
 
         setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setLayout(new java.awt.GridLayout(2, 0));
+
+        saveProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/24x24/media-floppy.png"))); // NOI18N
+        saveProjectButton.setText("Save Project");
+        saveProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        saveProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        saveProjectButton.setIconTextGap(200);
+        saveProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveProjectButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(saveProjectButton);
 
         jToolBar1.setRollover(true);
 
@@ -102,12 +125,16 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         });
         jToolBar1.add(jComboBox1);
 
-        add(jToolBar1, java.awt.BorderLayout.NORTH);
+        jPanel1.add(jToolBar1);
+
+        add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setOneTouchExpandable(true);
 
         jSplitPane2.setDividerLocation(100);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane2.setOneTouchExpandable(true);
         jSplitPane2.setBottomComponent(jTabbedPane1);
 
         jSplitPane1.setLeftComponent(jSplitPane2);
@@ -126,7 +153,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         a.add("-- NEW MODEL --");
         Object o = JOptionPane.showInputDialog(this, "Select Model", "New Diagram", JOptionPane.INFORMATION_MESSAGE, null, a.toArray(), a.get(0));
         if(o!=null && o.equals("-- NEW MODEL --")){
-            String n = JOptionPane.showInputDialog("Name it", "New Business Model");
+            String n = JOptionPane.showInputDialog(this,"Name it", "New Business Model");
             if(n!=null && !n.isEmpty()){
                 model = new BusinessModel(project);
                 model.setName(n);
@@ -187,16 +214,33 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void saveProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectButtonActionPerformed
+        try{
+            JFileChooser fc = new JFileChooser(new File(project.getFolder(),project.getName()));
+            fc.setFileFilter(new FileNameExtensionFilter("Waiting4Godot files","w4g"));
+            int i = fc.showSaveDialog(null);
+            FileOutputStream out = new FileOutputStream(new File(project.getFolder()+"/"+project.getName())+".wfg");
+            ObjectOutputStream s = new ObjectOutputStream(out);
+            s.writeObject(project);
+            s.flush();
+        } catch (java.io.IOException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error saving", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_saveProjectButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private moe.umlgui.ui.PropertyEditor propertyEditor;
     private javax.swing.JScrollPane propertyEditorScrollPane;
+    private javax.swing.JButton saveProjectButton;
     // End of variables declaration//GEN-END:variables
 
     
@@ -243,6 +287,9 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             project.addCoreElement(el);
             propertyEditor.edit(el);        
             explorer.reload();
+            
+            //TODO SELECTION
+            //only if element is displayable: attOwner with parent diagram inserted
             explorer.setSelection(el);    
         }
         

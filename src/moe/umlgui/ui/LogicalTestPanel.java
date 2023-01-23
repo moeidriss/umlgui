@@ -111,7 +111,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if(columnIndex == 1)    return CoreObjectProperty.class;
-                else if(columnIndex == 4)    return ArrayList.class;//TODO ...
+                else if(columnIndex == 4)    return ArrayList.class;
                 return String.class;
             }
 

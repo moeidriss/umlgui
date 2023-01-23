@@ -8,7 +8,7 @@ package moe.umlgui.model;
  *
  * @author Moe
  */
-public class BusinessModel extends UmlModel {
+public class BusinessModel extends UmlModel  implements java.io.Serializable{
     
     public BusinessModel(Project project) {
         super(project);

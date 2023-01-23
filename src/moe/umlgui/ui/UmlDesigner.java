@@ -13,16 +13,24 @@ import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.ObjectInputStream;
+import java.io.OptionalDataException;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 /**
@@ -43,7 +51,8 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     }
 
     
-    
+    //TODO BizObjs as method parameters and return types...
+    //TODO Model.visibility INTERNAL EXTERNAL
     
     private void buildEditor(){ 
         //controlsTabbedPane.addTab("Palette", palette);
@@ -92,7 +101,9 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
                     public void stateChanged(ChangeEvent e) {
                         ArrayList q =new ArrayList();
                         q.add(this);
-                        UmlDesigner.this.firePropertyChange("Tab selection", q, contentTabbedPane.getTitleAt(contentTabbedPane.getSelectedIndex()));
+                        //TODO firing this will make explorer and diagramPanel tab selections tally each other (nice to have)
+                        //but will it make it impossible to drag an element from a diagram's explorer into another's diagramPanel
+                        //UmlDesigner.this.firePropertyChange("Tab selection", q, contentTabbedPane.getTitleAt(contentTabbedPane.getSelectedIndex()));
                     }        
                 });
             }
@@ -191,6 +202,7 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         jSplitPane1.setRightComponent(contentPanel);
 
         controlsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        controlsSplitPane.setOneTouchExpandable(true);
 
         paletteScrollPane.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder("Palette"), new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
         paletteScrollPane.setViewportView(palette);
@@ -235,9 +247,27 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     }//GEN-LAST:event_newProjectButtonActionPerformed
 
     private void openProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openProjectButtonActionPerformed
-        // TODO add your handling code here:
-        
-        //setupProject();
+        try{
+            JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(new FileNameExtensionFilter("Waiting4Godot files","w4g"));
+            int i = fc.showOpenDialog(null);
+            if(i==JFileChooser.APPROVE_OPTION){
+                FileInputStream in = new FileInputStream(fc.getSelectedFile());
+                ObjectInputStream s = new ObjectInputStream(in);
+                Project project = (Project)s.readObject();
+                
+                ProjectExplorer projectExplorer = new ProjectExplorer();
+                projectExplorer.addPropertyChangeListener(UmlDesigner.this);
+                UmlDesigner.this.addPropertyChangeListener(projectExplorer);
+                projectExplorer.explore(project);
+                controlsTabbedPane.addTab(project.getName() , projectExplorer);
+                controlsTabbedPane.setSelectedComponent(projectExplorer);
+                revalidate();
+            }
+        } catch(ClassNotFoundException | IOException ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error saving", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }//StreamCorruptedException | OptionalDataException  | InvalidClassException  | 
     }//GEN-LAST:event_openProjectButtonActionPerformed
 
     /**

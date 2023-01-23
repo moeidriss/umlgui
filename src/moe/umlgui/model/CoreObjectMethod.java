@@ -78,4 +78,11 @@ public class CoreObjectMethod implements java.io.Serializable{
         return name + "()";
     }
     
+     public String dump(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(name ).append(":").append(returnType);
+        
+        return sb.toString();
+    }
+    
 }

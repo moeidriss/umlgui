@@ -72,7 +72,6 @@ public class ReportEngine {
             XSLFSlide ts = ppt.createSlide(defaultMaster.getLayout(SlideLayout.SECTION_HEADER));
             ts.getPlaceholder(0).setText("Business Objects");
             
-            //TODO BO in model??
             for(CoreObject bo : model.getProject().getBusinessObjects()){
                 pptAddBusinessObjectSlide(bo , ppt);
             }

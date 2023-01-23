@@ -63,4 +63,10 @@ public class CoreObjectProperty implements java.io.Serializable{
     public String toString(){
         return name;
     }
+    
+    public String dump(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(name ).append(":").append(dataType);
+        return sb.toString();
+    }
 }

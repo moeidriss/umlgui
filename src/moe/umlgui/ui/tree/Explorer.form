@@ -105,19 +105,19 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="downButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="linkDiagramButton">
+        <Component class="javax.swing.JButton" name="attachDiagramButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/moe/umlgui/img/16x16/DiagramLinked.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Link Diagram"/>
+            <Property name="toolTipText" type="java.lang.String" value="Attach Diagram"/>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="linkDiagramButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="attachDiagramButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="exportPptButton">

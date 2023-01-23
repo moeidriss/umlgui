@@ -14,8 +14,8 @@ public class CoreObject extends UmlElement  implements java.io.Serializable{
         setName("New Business Object");
     }
 
-    ArrayList<CoreObjectProperty> properties = new ArrayList();//TODO Property class
-    ArrayList<CoreObjectMethod> methods = new ArrayList();//TODO Method class
+    ArrayList<CoreObjectProperty> properties = new ArrayList();
+    ArrayList<CoreObjectMethod> methods = new ArrayList();
 
     public ArrayList<CoreObjectProperty> getProperties() {
         return properties;
@@ -32,5 +32,21 @@ public class CoreObject extends UmlElement  implements java.io.Serializable{
         CoreObject x = new CoreObject();
         x.setName(name);
         return x;
+    }
+     public String dump(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(name ).append("::\n");
+        sb.append("\tprops\n");
+                
+        for(CoreObjectProperty p : getProperties()){
+            sb.append("\t\t").append(p.dump()).append("\n");
+        }
+        
+        sb.append("\tmethods\n");
+        for(CoreObjectMethod m : getMethods()){
+            sb.append("\t\t").append(m.dump()).append("\n");
+        }
+        
+        return sb.toString();
     }
 }

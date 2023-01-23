@@ -11,5 +11,5 @@ public class ActivityDiagram extends UmlDiagram implements java.io.Serializable{
         setName("New Activity Diagram");
     }
     
-    //TODO override addCoreElement...
+    
 }

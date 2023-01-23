@@ -11,5 +11,5 @@ public class SequenceDiagram extends UmlDiagram implements java.io.Serializable{
         setName("New Sequence Diagram");
     }
     
-    //TODO override addCoreElement...
+
 }
