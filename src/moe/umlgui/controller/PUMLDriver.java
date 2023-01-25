@@ -89,12 +89,23 @@ public class PUMLDriver {
             sb.append("\n");
         }
 
-        else if(Actor.class.isInstance(el) ){
-            if(moe.umlgui.model.System.class.isInstance(el)){
+        else if(Actor.class.isInstance(el) ){            
+            if(moe.umlgui.model.ItSystem.class.isInstance(el)){
                 sb.append("participant ").append(el.getName().replace(" ", "")).append(" as ").append(el.getId());
                 sb.append("\n");
             }
-            
+            else if(moe.umlgui.model.BusinessSystem.class.isInstance(el)){
+                sb.append("participant ").append(el.getName().replace(" ", "")).append(" as ").append(el.getId());
+                sb.append("\n");
+            }
+            else if(moe.umlgui.model.User.class.isInstance(el)){
+                sb.append("participant ").append(el.getName().replace(" ", "")).append(" as ").append(el.getId());
+                sb.append("\n");
+            }    
+            else if(moe.umlgui.model.System.class.isInstance(el)){
+                sb.append("participant ").append(el.getName().replace(" ", "")).append(" as ").append(el.getId());
+                sb.append("\n");
+            }
             else{
                 sb.append("actor ").append(el.getName().replace(" ", "")).append(" as ").append(el.getId());
                 sb.append("\n");
@@ -211,9 +222,17 @@ public class PUMLDriver {
             sb.append("\n");
         }
 
-        else if(CoreObject.class.isInstance(el)
+        else if(BusinessObject.class.isInstance(el)
         ){
             sb.append("entity ");
+            sb.append(el.getName());
+
+            sb.append("\n");
+        }
+
+        else if(Controller.class.isInstance(el)
+        ){
+            sb.append("control ");
             sb.append(el.getName());
 
             sb.append("\n");

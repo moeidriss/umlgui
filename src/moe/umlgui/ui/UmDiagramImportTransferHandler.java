@@ -89,14 +89,17 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
         }
         
        
-        else if(elClass.equals("Actor") ||
-                elClass.equals("System") ||
+        else if(elClass.equals("Actor")
+        ){
+            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
+            else if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
+        }
+        else if(elClass.equals("System") ||
                 elClass.equals("BusinessSystem") ||
                 elClass.equals("ItSystem") ||
                 elClass.equals("User")
         ){
-            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
-            else if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
+            if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
         }
        
         else if(elClass.equals("BusinessObject") ||

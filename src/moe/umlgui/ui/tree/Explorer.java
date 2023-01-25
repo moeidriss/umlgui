@@ -33,6 +33,7 @@ import moe.umlgui.model.ConditionalBlock;
 import moe.umlgui.model.FlowFinalNode;
 import moe.umlgui.model.Include;
 import moe.umlgui.model.ItSystem;
+import moe.umlgui.model.Message;
 import moe.umlgui.model.ModelException;
 import moe.umlgui.model.PackageDiagram;
 import moe.umlgui.model.Project;
@@ -227,19 +228,22 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             }
             else if(UmlElement.class.isInstance(selection)){
                 DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((UmlElement)selection).getUmlDiagram().getUmlModel()));
-                DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
-                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)))));
+                if(((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection)!= -1){
+                    DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
+                    jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)))));
+                }
             }
             //TODO SELECTION
             //diagramNode =... will throw exception if selection is 
             else{ }
         }
         
-        if(nowExploring==DIAGRAM){
+        else if(nowExploring==DIAGRAM){
             if(selection==diagram)
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getRoot())));
             else if(UmlElement.class.isInstance(selection)){
-                jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), diagram.getElementList().indexOf(selection)))));
+                if(diagram.getElementList().indexOf(selection) != -1)
+                    jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), diagram.getElementList().indexOf(selection)))));
             }
             else{ }
         }
@@ -379,9 +383,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
             //ucd
             if(diagram!=null & UseCaseDiagram.class.isInstance(diagram)){
-                options.add("Actor");   options.add("System");
-                options.add("Business System");   options.add("IT System");
-                options.add("User");
+                options.add("Actor");   
                 options.add("Use Case");
             }
             else if(diagram!=null & ActivityDiagram.class.isInstance(diagram)){
@@ -395,16 +397,17 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             else if(diagram!=null & SequenceDiagram.class.isInstance(diagram)){
                 options.add("Actor");   options.add("System");
                 options.add("Business System");   options.add("IT System");
-                options.add("User");    //options.add("Message");
+                options.add("User");    options.add("Message");
             }
 
             //context sensitive options
             if(selection != null && UmlElement.class.isInstance(selection)){
-                if(UseCase.class.isInstance(selection) || Actor.class.isInstance(selection)){
-                    options.add("Association");
-                }
                 if(UseCase.class.isInstance(selection)){
+                    options.add("Association");
                     options.add("Include");
+                }
+                if(Actor.class.isInstance(selection) && UseCaseDiagram.class.isInstance(diagram)){
+                    options.add("Association");
                 }
             }
 
@@ -491,6 +494,10 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             }
 
 
+            
+            else if(newElementType.equals("Message")){
+                newElement = new Message();
+            }
 
             if(diagram!=null){
                 try{
