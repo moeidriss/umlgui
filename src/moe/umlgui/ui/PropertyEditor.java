@@ -150,8 +150,8 @@ public class PropertyEditor extends javax.swing.JPanel {
         }
 
         else if(ConditionalBlock.class.isInstance(umlCoreElement)){
-            LogicalTestPanel tPanel = 
-                    new LogicalTestPanel((ConditionalBlock)umlCoreElement , context);
+            ConditionalBlockPanel tPanel = 
+                    new ConditionalBlockPanel((ConditionalBlock)umlCoreElement , context);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
@@ -176,83 +176,19 @@ public class PropertyEditor extends javax.swing.JPanel {
             editPanel.add(tComp, gridBagConstraints);
             
             
-            Activity ac = new Action();
-            JComboBox cb = new JComboBox();
-            cb.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
-            
-            JButton newActivityButton = new JButton("New ...");
-            newActivityButton.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Object sel = JOptionPane.showInputDialog(null, "Select Actvity Type" , 
-                            "Actvity Type", JOptionPane.INFORMATION_MESSAGE, null, 
-                            new String[] {"Action","Flow End","Stop"}, "Action");
-                    Activity ac = null;
-                    if(sel.equals("Action")){
-                        ac = new Action();
-                    }
-                    else if(sel.equals("Flow End")){
-                        ac = new FlowFinalNode();
-                    }
-                    else if(sel.equals("Stop")){
-                        ac = new ActivityFinalNode();
-                    }                
-
-                    if(ac!=null){
-                        editNewActivity(ac,cb);
-                    }
-                }            
-            });
-
-            JPanel pp = new JPanel();
-            pp.add(new JLabel("Action: "));
-            pp.add(cb);
-            pp.add(newActivityButton);
-            
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.weighty = 1.0;
             gridBagConstraints.gridwidth = 2;
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(pp, gridBagConstraints);
+            editPanel.add(new ActivityFlowComponent(((WhileLoop)umlCoreElement).getActivityFlow()), gridBagConstraints);
 
         }
         
         
         else if(RepeatLoop.class.isInstance(umlCoreElement)){
-            Activity ac = new Action();
-            JComboBox cb = new JComboBox();
-            cb.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
             
-            JButton newActivityButton = new JButton("New ...");
-            newActivityButton.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Object sel = JOptionPane.showInputDialog(null, "Select Actvity Type" , 
-                            "Actvity Type", JOptionPane.INFORMATION_MESSAGE, null, 
-                            new String[] {"Action","Flow End","Stop"}, "Action");
-                    Activity ac = null;
-                    if(sel.equals("Action")){
-                        ac = new Action();
-                    }
-                    else if(sel.equals("Flow End")){
-                        ac = new FlowFinalNode();
-                    }
-                    else if(sel.equals("Stop")){
-                        ac = new ActivityFinalNode();
-                    }                
-
-                    if(ac!=null){
-                        editNewActivity(ac,cb);
-                    }
-                }            
-            });
-
-            JPanel pp = new JPanel();
-            pp.add(new JLabel("Action: "));
-            pp.add(cb);
-            pp.add(newActivityButton);
             
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -260,7 +196,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             gridBagConstraints.gridwidth = 2;
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(pp, gridBagConstraints);
+            editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow()), gridBagConstraints);
 
             LogicalTestComponent tComp = 
                     new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() ,context);
@@ -587,14 +523,6 @@ public class PropertyEditor extends javax.swing.JPanel {
                     LogicalTestComponent comp = (LogicalTestComponent)editPanel.getComponent(i);
                     comp.save();
                 }
-                else if(JPanel.class.isInstance(editPanel.getComponent(i))){
-                    for(int j=0 ; j <((JPanel)editPanel.getComponent(i)).getComponentCount() ; j++){
-                        if(JComboBox.class.isInstance(((JPanel)editPanel.getComponent(i)).getComponent(j))){
-                            JComboBox cb = (JComboBox)((JPanel)editPanel.getComponent(i)).getComponent(j);
-                            ((WhileLoop)umlCoreElement).getActivityFlow().add((Activity)cb.getSelectedItem());
-                        }
-                    }
-                }
             }
         }
         
@@ -604,14 +532,6 @@ public class PropertyEditor extends javax.swing.JPanel {
                 if(LogicalTestComponent.class.isInstance(editPanel.getComponent(i))){
                     LogicalTestComponent comp = (LogicalTestComponent)editPanel.getComponent(i);
                     comp.save();
-                }
-                else if(JPanel.class.isInstance(editPanel.getComponent(i))){
-                    for(int j=0 ; j <((JPanel)editPanel.getComponent(i)).getComponentCount() ; j++){
-                        if(JComboBox.class.isInstance(((JPanel)editPanel.getComponent(i)).getComponent(j))){
-                            JComboBox cb = (JComboBox)((JPanel)editPanel.getComponent(i)).getComponent(j);
-                            ((RepeatLoop)umlCoreElement).getActivityFlow().add((Activity)cb.getSelectedItem());
-                        }
-                    }
                 }
             }
         }
@@ -718,40 +638,6 @@ public class PropertyEditor extends javax.swing.JPanel {
             folderButton.revalidate();
         }
     }//GEN-LAST:event_folderButtonActionPerformed
-
-    
-    
-    private void editNewActivity(Activity ac ,JComboBox cb ){
-        PropertyEditor pe = new PropertyEditor();
-        pe.setContext(context);
-        pe.edit(ac);
-        pe.showToolbar(false);
-        
-        JDialog acDialog = new JDialog();
-        acDialog.getContentPane().add(pe , BorderLayout.CENTER);
-        
-        JPanel buttonsP = new JPanel();
-        JButton okButton = new JButton("OK");
-        okButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pe.save();
-                context.addCoreElement(ac);
-                cb.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
-                cb.setSelectedItem(ac);
-                cb.revalidate();
-                acDialog.setVisible(false);
-            }            
-        });
-        buttonsP.add(okButton);
-        
-        acDialog.getContentPane().add(buttonsP , BorderLayout.SOUTH);
-        acDialog.pack();
-        acDialog.setSize(600 , acDialog.getSize().height);
-        acDialog.setLocationRelativeTo(null);
-        
-        acDialog.setVisible(true);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel descriptionLabel;

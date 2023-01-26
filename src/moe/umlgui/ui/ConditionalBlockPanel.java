@@ -27,8 +27,14 @@ import moe.umlgui.model.*;
  *
  * @author Moe
  */
-public class LogicalTestPanel extends javax.swing.JPanel {
+public class ConditionalBlockPanel extends javax.swing.JPanel {
 
+    //TODO CANCELATION
+    
+    //TODO JXTreeTable, nesting conditions
+    
+    //TODO Action list, join, split, fork
+    
     ConditionalBlock entity;
     TestTableModel testTableModel;
     
@@ -37,7 +43,7 @@ public class LogicalTestPanel extends javax.swing.JPanel {
     /**
      * Creates new form LogicalTestPanel
      */
-    public LogicalTestPanel(ConditionalBlock entity, Project context) {
+    public ConditionalBlockPanel(ConditionalBlock entity, Project context) {
         this.entity = entity;
         this.context = context;
         testTableModel = new TestTableModel();
@@ -201,18 +207,33 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         deleteButton.setFocusable(false);
         deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
         jToolBar1.add(deleteButton);
 
         upButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-up.png"))); // NOI18N
         upButton.setFocusable(false);
         upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         upButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        upButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                upButtonActionPerformed(evt);
+            }
+        });
         jToolBar1.add(upButton);
 
         downButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-down.png"))); // NOI18N
         downButton.setFocusable(false);
         downButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         downButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        downButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downButtonActionPerformed(evt);
+            }
+        });
         jToolBar1.add(downButton);
 
         add(jToolBar1, java.awt.BorderLayout.PAGE_START);
@@ -224,49 +245,14 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         LogicalTest t = entity.newTest();
         if(entity.getTestList().isEmpty())  t.setCondition("IF");
         
-        Activity ac = new Action();
+        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t));
         
         LogicalTestComponent tComp = new LogicalTestComponent(t,context);
         
         JPanel p = new JPanel();
         p.setLayout(new GridLayout(0,1));
         p.add(tComp);
-        
-        //NewActivityButton'
-        
-        
-        JComboBox cb = new JComboBox();
-        cb.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
-        
-        JButton newActivityButton = new JButton("New ...");
-        newActivityButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object sel = JOptionPane.showInputDialog(null, "Select Actvity Type" , 
-                        "Actvity Type", JOptionPane.INFORMATION_MESSAGE, null, 
-                        new String[] {"Action","Flow End","Stop"}, "Action");
-                Activity ac = null;
-                if(sel.equals("Action")){
-                    ac = new Action();
-                }
-                else if(sel.equals("Flow End")){
-                    ac = new FlowFinalNode();
-                }
-                else if(sel.equals("Stop")){
-                    ac = new ActivityFinalNode();
-                }                
-                
-                if(ac!=null){
-                    editNewActivity(ac,cb);
-                }
-            }            
-        });
-        
-        JPanel pp = new JPanel();
-        pp.add(new JLabel("Action: "));
-        pp.add(cb);
-        pp.add(newActivityButton);
-        p.add(pp);
+        p.add(fComp);
         
         JDialog d = new JDialog();
         d.getContentPane().add(p , BorderLayout.CENTER);
@@ -276,8 +262,6 @@ public class LogicalTestPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tComp.save();
-                entity.getTestMap().get(t).add((Activity)cb.getSelectedItem());
-                //entity.newTest();//new 'else'
                 jTable1.revalidate();
                 d.setVisible(false);
             }            
@@ -290,6 +274,18 @@ public class LogicalTestPanel extends javax.swing.JPanel {
         d.setVisible(true);
         
     }//GEN-LAST:event_addButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void upButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_upButtonActionPerformed
+
+    private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_downButtonActionPerformed
 
     private void editNewActivity(Activity ac ,JComboBox cb ){
         PropertyEditor pe = new PropertyEditor();

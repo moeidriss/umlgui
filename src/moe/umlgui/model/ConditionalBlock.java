@@ -21,7 +21,7 @@ public class ConditionalBlock extends ControlNode implements java.io.Serializabl
         setName("New Conditional Block");
     }
 
-    HashMap<LogicalTest,ArrayList<Activity>> testMap = new HashMap();
+    HashMap<LogicalTest,ActivityFlow> testMap = new HashMap();
     ArrayList<LogicalTest> testList = new ArrayList();
     
     
@@ -30,7 +30,7 @@ public class ConditionalBlock extends ControlNode implements java.io.Serializabl
     
     //TODO implement logic control/validation (a single 'if', single 'else') and testList order
 
-    public HashMap<LogicalTest, ArrayList<Activity>> getTestMap() {
+    public HashMap<LogicalTest, ActivityFlow> getTestMap() {
         return testMap;
     }
 
@@ -40,18 +40,7 @@ public class ConditionalBlock extends ControlNode implements java.io.Serializabl
     
     public LogicalTest newTest(){
         LogicalTest t = new LogicalTest();
-        
-        ArrayList<Activity> activityFlow =  new ArrayList(){
-            public String toString(){
-                StringBuffer sb = new StringBuffer();
-                for(Iterator<Activity> i = iterator() ; i.hasNext() ; ){
-                    sb.append(i.next());
-                    if(i.hasNext()) sb.append("->");
-                }
-                return sb.toString();
-            }
-        };
-        testMap.put(t, activityFlow);
+        testMap.put(t, new ActivityFlow());
         testList.add(t);
         return t;
     }

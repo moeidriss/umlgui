@@ -15,6 +15,9 @@ public class LogicalTest  implements java.io.Serializable{
                                 , "<" , "IS" , "IS NOT"};
 
 
+    public static String[] CONDITIONS = {"ELSE","ELSE IF" , "ELSE" };
+    
+    
     String condition;//NA for while loop
     CoreObjectProperty operandA ;
     String operandB;
@@ -74,7 +77,11 @@ public class LogicalTest  implements java.io.Serializable{
     }
 
     
-    
+    public String toString(){
+        if(!condition.equals("ELSE"))
+            return new StringBuffer(condition).append("(").append(operandA.getFqName()).append(operator).append(operandB).append(")").toString();
+        else return new StringBuffer(condition).toString();
+    }
 
     public boolean equals(Object another){
         try{

@@ -5,6 +5,7 @@
 package moe.umlgui.ui.tree;
 
 import java.awt.Component;
+import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -75,6 +76,19 @@ public class ExplorerTreeCellRenderer extends DefaultTreeCellRenderer {
         else if(UmlElement.class.isInstance(uObj)) 
             l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Element.png")));
         
+        else if(ActivityFlow.class.isInstance(uObj)) 
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/ActivityFlow.png")));
+            
+        
+        //TODO Arrays
+        else if(ArrayList.class.isInstance(uObj)) {
+        
+            //BO Array
+
+            //BO Array
+
+            
+        }
         
         return l;
     }

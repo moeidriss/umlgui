@@ -12,24 +12,18 @@ import java.util.Iterator;
  *TODO backward repeat, break
  * @author Moe
  */
-public class RepeatLoop extends ControlNode implements java.io.Serializable{
+public class ActivityFlowJoin extends ControlNode implements java.io.Serializable{
     
-    public RepeatLoop() {
-        super("Repeat Loop");
-        setName("New Repeat Loop");
+    public ActivityFlowJoin() {
+        super("Join");
+        setName("New Join");
     }
 
-    LogicalTest logicalTest = new LogicalTest();
-    
-    ActivityFlow activityFlow =  new ActivityFlow();
+    ArrayList<ActivityFlow> activityFlows =  new ArrayList();
     
 
-    public LogicalTest getLogicalTest() {
-        return logicalTest;
-    }
-
-    public ActivityFlow getActivityFlow() {
-        return activityFlow;
+    public ArrayList<ActivityFlow> getActivityFlows() {
+        return activityFlows;
     }
 
     
@@ -39,7 +33,7 @@ public class RepeatLoop extends ControlNode implements java.io.Serializable{
     
     @Override
     public UmlCoreElement clone() {
-        RepeatLoop x = new RepeatLoop();
+        ActivityFlowJoin x = new ActivityFlowJoin();
         x.setName(name);
         return x;
     }

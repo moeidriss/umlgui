@@ -30,6 +30,7 @@ import moe.umlgui.model.AttachmentOwner;
 import moe.umlgui.model.BusinessSystem;
 import moe.umlgui.model.CallActivity;
 import moe.umlgui.model.ConditionalBlock;
+import moe.umlgui.model.ControlNode;
 import moe.umlgui.model.FlowFinalNode;
 import moe.umlgui.model.Include;
 import moe.umlgui.model.ItSystem;
@@ -231,6 +232,13 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 if(((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection)!= -1){
                     DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
                     jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)))));
+                }
+            }
+            else if(ControlNode.class.isInstance(selection)){
+                DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((ControlNode)selection).getUmlDiagram().getUmlModel()));
+                if(((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection)!= -1){
+                    DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
+                    jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((ControlNode)selection).getUmlDiagram().getCoreElementList().indexOf(selection)))));
                 }
             }
             //TODO SELECTION
@@ -576,6 +584,18 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             exportPptButton.setEnabled(false);
         }        
         else if(UmlElement.class.isInstance(selection)){
+            upButton.setEnabled(true);
+            downButton.setEnabled(true);
+            addButton.setEnabled(true);
+            removeButton.setEnabled(true);
+            exportPptButton.setEnabled(false);
+            
+            if( AttachmentOwner.class.isInstance(selection)){                    
+                attachDiagramButton.setEnabled(true);
+            }
+            else    attachDiagramButton.setEnabled(false);
+        }      
+        else if(ControlNode.class.isInstance(selection)){
             upButton.setEnabled(true);
             downButton.setEnabled(true);
             addButton.setEnabled(true);

@@ -86,6 +86,11 @@ public class ExplorerTreeModel extends DefaultTreeModel {
                 BO
             CN List
                 CN
+    
+        ConditionalBlock:
+            LogicalTest / Action
+        WhileLoop
+            
     */
     
     
@@ -120,8 +125,8 @@ public class ExplorerTreeModel extends DefaultTreeModel {
         }
         else if(nowExploring==DIAGRAM){
             if(d.equals(diagram)){//OR if parent is null
-                for(Iterator<UmlElement> i = d.getElementList().iterator() ; i.hasNext() ;){
-                    UmlElement e = i.next();
+                for(Iterator<UmlCoreElement> i = d.getCoreElementList().iterator() ; i.hasNext() ;){
+                    UmlCoreElement e = i.next();
                     DefaultMutableTreeNode eN = new DefaultMutableTreeNode(e);
                     dN.add(eN);
                     buildElementNode(eN);
@@ -155,33 +160,73 @@ public class ExplorerTreeModel extends DefaultTreeModel {
     
     */
     private void buildElementNode(DefaultMutableTreeNode eN){
-        UmlElement e = (UmlElement)eN.getUserObject();
+        UmlCoreElement e = (UmlCoreElement)eN.getUserObject();
         
         if(nowExploring==DIAGRAM){
             if(UmlDiagram.class.isInstance(((DefaultMutableTreeNode)eN.getParent()).getUserObject())){
-                if(BusinessObjectOwner.class.isInstance(e)){
-                    DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((BusinessObjectOwner)e).getBusinessObjects());
-                    eN.add(aN);
-                    for(Iterator<CoreObject> i = ((BusinessObjectOwner)e).getBusinessObjects().iterator() ; i.hasNext() ;){
-                        aN.add(new DefaultMutableTreeNode(i.next()));
+                if(UmlElement.class.isInstance(e)){
+                    if(BusinessObjectOwner.class.isInstance(e)){
+                        DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((BusinessObjectOwner)e).getBusinessObjects());
+                        eN.add(aN);
+                        for(Iterator<CoreObject> i = ((BusinessObjectOwner)e).getBusinessObjects().iterator() ; i.hasNext() ;){
+                            aN.add(new DefaultMutableTreeNode(i.next()));
+                        }
                     }
-                }
-                if(ControllerOwner.class.isInstance(e)){
-                    DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((ControllerOwner)e).getControllers());
-                    eN.add(aN);
-                    for(Iterator<CoreObject> i = ((ControllerOwner)e).getControllers().iterator() ; i.hasNext() ;){
-                        aN.add(new DefaultMutableTreeNode(i.next()));
+                    if(ControllerOwner.class.isInstance(e)){
+                        DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((ControllerOwner)e).getControllers());
+                        eN.add(aN);
+                        for(Iterator<CoreObject> i = ((ControllerOwner)e).getControllers().iterator() ; i.hasNext() ;){
+                            aN.add(new DefaultMutableTreeNode(i.next()));
+                        }
                     }
+                    if(AttachmentOwner.class.isInstance(e)){
+                        DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((AttachmentOwner)e).getAttachedDiagrams());
+                        eN.add(aN);
+                        for(Iterator<UmlDiagram> i = ((AttachmentOwner)e).getAttachedDiagrams().iterator() ; i.hasNext() ;){
+                            aN.add(new DefaultMutableTreeNode(i.next()));
+                        }
+                    }
+
+                    //TODO Message - seq diagrams
                 }
-                if(AttachmentOwner.class.isInstance(e)){
-                    DefaultMutableTreeNode aN = new DefaultMutableTreeNode(((AttachmentOwner)e).getAttachedDiagrams());
-                    eN.add(aN);
-                    for(Iterator<UmlDiagram> i = ((AttachmentOwner)e).getAttachedDiagrams().iterator() ; i.hasNext() ;){
-                        aN.add(new DefaultMutableTreeNode(i.next()));
+                else if(ConditionalBlock.class.isInstance(e)){
+                    ConditionalBlock cb = (ConditionalBlock)e;
+                    for(Iterator<LogicalTest> i = ((ConditionalBlock)e).getTestList().iterator() ; i.hasNext() ;){
+                        LogicalTest t = i.next();
+                        DefaultMutableTreeNode tN = new DefaultMutableTreeNode(t);
+                        eN.add(tN);
+                        DefaultMutableTreeNode aN = new DefaultMutableTreeNode(cb.getTestMap().get(t));
+                        tN.add(aN);
+                        for(Iterator j = cb.getTestMap().get(t).iterator() ; j.hasNext() ;){
+                            aN.add(new DefaultMutableTreeNode(j.next()));
+                        }
                     }
                 }
                 
-                //TODO Message - seq diagrams
+                if(RepeatLoop.class.isInstance(e)){
+                    RepeatLoop rl = (RepeatLoop)e;
+                    LogicalTest t = rl.getLogicalTest();
+                    DefaultMutableTreeNode tN = new DefaultMutableTreeNode(t);
+                    eN.add(tN);
+                    DefaultMutableTreeNode aN = new DefaultMutableTreeNode(rl.getActivityFlow());
+                    tN.add(aN);
+                    for(Iterator j = rl.getActivityFlow().iterator() ; j.hasNext() ;){
+                        aN.add(new DefaultMutableTreeNode(j.next()));
+                    }
+                }
+                
+                if(WhileLoop.class.isInstance(e)){
+                    WhileLoop rl = (WhileLoop)e;
+                    LogicalTest t = rl.getLogicalTest();
+                    DefaultMutableTreeNode tN = new DefaultMutableTreeNode(t);
+                    eN.add(tN);
+                    DefaultMutableTreeNode aN = new DefaultMutableTreeNode(rl.getActivityFlow());
+                    tN.add(aN);
+                    for(Iterator j = rl.getActivityFlow().iterator() ; j.hasNext() ;){
+                        aN.add(new DefaultMutableTreeNode(j.next()));
+                    }
+                }
+                
             }
         }
         

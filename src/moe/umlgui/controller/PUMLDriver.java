@@ -299,7 +299,7 @@ public class PUMLDriver {
 
             LogicalTest test = it.next();
             String term1 = test.getCondition().toLowerCase().replace(" ", "");
-            ArrayList<Activity> testActivityFlow = cn.getTestMap().get(test);
+            ActivityFlow testActivityFlow = cn.getTestMap().get(test);
 
             sb.append(term1);
 
@@ -308,7 +308,7 @@ public class PUMLDriver {
                     &&
                 (test.getOperator().equals("IS") || test.getOperator().equals("="))
             ){
-                sb.append(" (").append(test.getOperandA().getBusinessObject()).append(".").append(test.getOperandA()).append(") ");
+                sb.append(" (").append(test.getOperandA().getFqName()).append(") ");
                 sb.append(test.getOperator().replace("=", "equals"));
                 sb.append(" (").append(test.getOperandB()).append(") ");
 
@@ -332,7 +332,7 @@ public class PUMLDriver {
             }   
             //CASE#1 / 3
             else if((term1.equals("if") || term1.equals("elseif"))){
-                sb.append(" (").append(test.getOperandA().getBusinessObject()).append(".").append(test.getOperandA()).append(" ").append(test.getOperator()).append(" ").append(test.getOperandB()).append(") ");
+                sb.append(" (").append(test.getOperandA().getFqName()).append(" ").append(test.getOperator()).append(" ").append(test.getOperandB()).append(") ");
                 sb.append(" then ");
                 sb.append("(").append(test.getLabel()).append(")\n");
 
@@ -396,13 +396,13 @@ public class PUMLDriver {
             if(el.getLogicalTest().getOperator().equals("IS") ||
                 el.getLogicalTest().getOperator().equals("=")
             ){
-                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(") ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getFqName()).append(") ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append("(").append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");
             }
             else{
-                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(" ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getFqName()).append(" ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");
@@ -463,13 +463,13 @@ public class PUMLDriver {
             if(el.getLogicalTest().getOperator().equals("IS") ||
                 el.getLogicalTest().getOperator().equals("=")
             ){
-                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(") ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getFqName()).append(") ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append("(").append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");
             }
             else{
-                sb.append("(").append(el.getLogicalTest().getOperandA().getBusinessObject()).append(".").append(el.getLogicalTest().getOperandA()).append(" ");
+                sb.append("(").append(el.getLogicalTest().getOperandA().getFqName()).append(" ");
                 sb.append(el.getLogicalTest().getOperator().toLowerCase().replace("=", "equals")).append(" ");
                 sb.append(el.getLogicalTest().getOperandB()).append(")");
                 sb.append("\n");

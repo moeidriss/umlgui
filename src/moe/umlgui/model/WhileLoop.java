@@ -21,16 +21,7 @@ public class WhileLoop extends ControlNode implements java.io.Serializable{
 
     LogicalTest logicalTest = new LogicalTest();
     
-    ArrayList<Activity> activityFlow =  new ArrayList(){
-        public String toString(){
-            StringBuffer sb = new StringBuffer();
-            for(Iterator<Activity> i = iterator() ; i.hasNext() ; ){
-                sb.append(i.next());
-                if(i.hasNext()) sb.append("->");
-            }
-            return sb.toString();
-        }
-    };
+    ActivityFlow activityFlow =  new ActivityFlow();
     
     //TODO convert Activity to Activity Ordered/Linked set/map
 
@@ -38,7 +29,7 @@ public class WhileLoop extends ControlNode implements java.io.Serializable{
         return logicalTest;
     }
 
-    public ArrayList<Activity> getActivityFlow() {
+    public ActivityFlow getActivityFlow() {
         return activityFlow;
     }
 

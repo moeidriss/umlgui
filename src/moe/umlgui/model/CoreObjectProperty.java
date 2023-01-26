@@ -64,6 +64,10 @@ public class CoreObjectProperty implements java.io.Serializable{
         return name;
     }
     
+    public String getFqName(){
+        return businessObject.name +"." + name;
+    }
+    
     public String dump(){
         StringBuffer sb = new StringBuffer();
         sb.append(name ).append(":").append(dataType);

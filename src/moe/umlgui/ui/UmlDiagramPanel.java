@@ -146,7 +146,7 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
                                     evt.getPropertyName() + "(" +
                                     evt.getNewValue() + ") -- " +
                                     ((ArrayList)evt.getOldValue()).size() +
-                                    "consumers so far"
+                                    " consumers so far"
                 
                 );
         
