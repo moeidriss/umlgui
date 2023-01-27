@@ -12,9 +12,9 @@ import java.util.Iterator;
  *TODO backward repeat, break
  * @author Moe
  */
-public class ActivityFlowFork extends ControlNode implements java.io.Serializable{
+public class Fork extends ControlNode implements java.io.Serializable{
     
-    public ActivityFlowFork() {
+    public Fork() {
         super("Fork");
         setName("New Fork");
     }
@@ -33,7 +33,7 @@ public class ActivityFlowFork extends ControlNode implements java.io.Serializabl
     
     @Override
     public UmlCoreElement clone() {
-        ActivityFlowFork x = new ActivityFlowFork();
+        Fork x = new Fork();
         x.setName(name);
         return x;
     }

@@ -401,6 +401,8 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 options.add("Activity Final Node");options.add("Flow Final Node");
                 options.add("Conditional Block");options.add("While Loop");
                 options.add("Repeat Loop");
+                options.add("Split");   options.add("Fork"); 
+
             }
             else if(diagram!=null & SequenceDiagram.class.isInstance(diagram)){
                 options.add("Actor");   options.add("System");

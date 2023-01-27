@@ -72,6 +72,10 @@ public class ExplorerTreeCellRenderer extends DefaultTreeCellRenderer {
             //l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/WorkerClass.png")));
         else if(WhileLoop.class.isInstance(uObj)) 
             l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/WhileLoop.png")));
+        else if(Split.class.isInstance(uObj)) 
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Split.png")));
+        else if(Fork.class.isInstance(uObj)) 
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Fork.png")));
         
         else if(UmlElement.class.isInstance(uObj)) 
             l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Element.png")));

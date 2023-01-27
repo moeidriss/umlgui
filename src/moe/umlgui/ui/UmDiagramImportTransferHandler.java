@@ -84,6 +84,16 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
         else if(elClass.equals("RepeatLoop")){
             if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
         }
+        else if(elClass.equals("Split")){
+            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+        }
+        else if(elClass.equals("Join")){
+            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+        }
+        else if(elClass.equals("Fork")){
+            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+        }
+        
         else if(elClass.equals("Message")){
             if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
         }

@@ -227,6 +227,30 @@ public class ExplorerTreeModel extends DefaultTreeModel {
                     }
                 }
                 
+                if(Split.class.isInstance(e)){
+                    Split s = (Split)e;            
+                    for(Iterator<ActivityFlow> i = s.getActivityFlows().iterator(); i.hasNext() ;){
+                        ActivityFlow f = i.next();
+                        DefaultMutableTreeNode tN = new DefaultMutableTreeNode(f);
+                        eN.add(tN);
+                        for(Iterator<UmlCoreElement> ii = f.iterator() ;ii.hasNext() ; ){
+                            tN.add(new DefaultMutableTreeNode(ii.next()));
+                        }
+                    }
+                }
+                
+                if(Fork.class.isInstance(e)){
+                    Fork s = (Fork)e;            
+                    for(Iterator<ActivityFlow> i = s.getActivityFlows().iterator(); i.hasNext() ;){
+                        ActivityFlow f = i.next();
+                        DefaultMutableTreeNode tN = new DefaultMutableTreeNode(f);
+                        eN.add(tN);
+                        for(Iterator<UmlCoreElement> ii = f.iterator() ;ii.hasNext() ; ){
+                            tN.add(new DefaultMutableTreeNode(ii.next()));
+                        }
+                    }
+                }
+                
             }
         }
         

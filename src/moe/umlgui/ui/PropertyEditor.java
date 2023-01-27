@@ -182,21 +182,18 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             gridBagConstraints.gridwidth = 2;
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ActivityFlowComponent(((WhileLoop)umlCoreElement).getActivityFlow()), gridBagConstraints);
-
+            editPanel.add(new ActivityFlowComponent(((WhileLoop)umlCoreElement).getActivityFlow(),context), gridBagConstraints);
         }
         
         
         else if(RepeatLoop.class.isInstance(umlCoreElement)){
-            
-            
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.weighty = 1.0;
             gridBagConstraints.gridwidth = 2;
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow()), gridBagConstraints);
+            editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow(),context), gridBagConstraints);
 
             LogicalTestComponent tComp = 
                     new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() ,context);
@@ -209,6 +206,27 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(tComp, gridBagConstraints);
         }
+        
+        else if(Split.class.isInstance(umlCoreElement)){
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(new ParallelFlowsComponent(((Split)umlCoreElement).getActivityFlows(),context), gridBagConstraints);
+        }
+        
+        else if(Fork.class.isInstance(umlCoreElement)){
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridwidth = 2;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(new ParallelFlowsComponent(((Fork)umlCoreElement).getActivityFlows(),context), gridBagConstraints);
+        }
+        
         
         else if(Message.class.isInstance(umlCoreElement)){
             gridBagConstraints = new java.awt.GridBagConstraints();

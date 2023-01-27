@@ -63,9 +63,30 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
         jTable1.getColumn("Activity").setCellRenderer(new TableCellRenderer(){
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JComboBox b = new JComboBox();
-                b.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
-                if(value!=null) b.setSelectedItem(value);
+                JButton b = new JButton("Activity Flow");
+                b.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ActivityFlowComponent fComp = new ActivityFlowComponent((ActivityFlow)value,context);
+                        JDialog d = new JDialog();
+                        d.getContentPane().add(fComp , BorderLayout.CENTER);
+
+                        JButton okButton = new JButton("OK");
+                        okButton.addActionListener(new ActionListener(){
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                d.setVisible(false);
+                            }            
+                        });
+                        d.getContentPane().add(okButton , BorderLayout.SOUTH);
+
+                        d.pack();
+                        //d.setSize(600 , d.getSize().height);
+                        d.setLocationRelativeTo(null);
+                        d.setVisible(true);
+                    }                    
+                });
+                if(value!=null) b.setText(value.toString());
                 return b;
             }
             
@@ -245,7 +266,7 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
         LogicalTest t = entity.newTest();
         if(entity.getTestList().isEmpty())  t.setCondition("IF");
         
-        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t));
+        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t),context);
         
         LogicalTestComponent tComp = new LogicalTestComponent(t,context);
         
@@ -287,37 +308,6 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_downButtonActionPerformed
 
-    private void editNewActivity(Activity ac ,JComboBox cb ){
-        PropertyEditor pe = new PropertyEditor();
-        pe.setContext(context);
-        pe.edit(ac);
-        pe.showToolbar(false);
-        
-        JDialog acDialog = new JDialog();
-        acDialog.getContentPane().add(pe , BorderLayout.CENTER);
-        
-        JPanel buttonsP = new JPanel();
-        JButton okButton = new JButton("OK");
-        okButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pe.save();
-                context.addCoreElement(ac);
-                cb.setModel(new DefaultComboBoxModel(context.getActivityList().toArray()));
-                cb.setSelectedItem(ac);
-                cb.revalidate();
-                acDialog.setVisible(false);
-            }            
-        });
-        buttonsP.add(okButton);
-        
-        acDialog.getContentPane().add(buttonsP , BorderLayout.SOUTH);
-        acDialog.pack();
-        acDialog.setSize(600 , acDialog.getSize().height);
-        acDialog.setLocationRelativeTo(null);
-        
-        acDialog.setVisible(true);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

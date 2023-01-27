@@ -5,6 +5,11 @@
 package moe.umlgui.model;
 
 
+/*TODO 
+    Extending Activity fitter but plan to use this in seq diag too.
+    impact: ActivityFlow changed from ActivityFlow<Activity> to ActivityFlow<UmlCoreElement>
+    to accomodate ControlNode in ActivityFlow
+*/
 public abstract class ControlNode extends UmlCoreElement  implements java.io.Serializable{
 
     public ControlNode() {

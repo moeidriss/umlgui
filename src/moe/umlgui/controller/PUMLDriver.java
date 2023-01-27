@@ -178,6 +178,16 @@ public class PUMLDriver {
             sb.append(getRepeatLoopUmlCode(cn));
         }
 
+        else if(Split.class.isInstance(el)){
+            Split cn = (Split)el;
+            sb.append(getSplitUmlCode(cn));
+        }
+
+        else if(Fork.class.isInstance(el)){
+            Fork cn = (Fork)el;
+            sb.append(getForkUmlCode(cn));
+        }
+
         
         else if(Association.class.isInstance(el) &&
             ((Association)el).getPartyA() != null &&
@@ -314,20 +324,9 @@ public class PUMLDriver {
 
                 sb.append(" then\n");
 
-                for(Iterator<Activity> i = testActivityFlow.iterator() ;i.hasNext() ; ){
-                    Activity ac = i.next();
-                    
-                    if(ActivityFinalNode.class.isInstance(ac)){
-                        sb.append("stop");                
-                    }
-                    else if(FlowFinalNode.class.isInstance(ac)){
-                        sb.append("end");
-                    }
-                    else if(Action.class.isInstance(ac)){
-                        sb.append(":").append(ac).append(";");//TODO customize box per activity subclass
-                    }
-                    
-                    sb.append("\n");
+                for(Iterator<UmlCoreElement> i = testActivityFlow.iterator() ;i.hasNext() ; ){
+                    UmlCoreElement ac = i.next();
+                    sb.append(getCoreElementUmlCode(ac));
                 }
             }   
             //CASE#1 / 3
@@ -336,20 +335,9 @@ public class PUMLDriver {
                 sb.append(" then ");
                 sb.append("(").append(test.getLabel()).append(")\n");
 
-                for(Iterator<Activity> i = testActivityFlow.iterator() ;i.hasNext() ; ){
-                    Activity ac = i.next();
-                    
-                    if(ActivityFinalNode.class.isInstance(ac)){
-                        sb.append("stop");                
-                    }
-                    else if(FlowFinalNode.class.isInstance(ac)){
-                        sb.append("end");
-                    }
-                    else if(Action.class.isInstance(ac)){
-                        sb.append(":").append(ac).append(";");//TODO customize box per activity subclass
-                    }
-                    
-                    sb.append("\n");
+                for(Iterator<UmlCoreElement> i = testActivityFlow.iterator() ;i.hasNext() ; ){
+                    UmlCoreElement ac = i.next();
+                    sb.append(getCoreElementUmlCode(ac));
                 }
             }
 
@@ -358,19 +346,9 @@ public class PUMLDriver {
             else{
                 sb.append(" (").append(test.getLabel()).append(")").append("\n");
 
-                for(Iterator<Activity> i = testActivityFlow.iterator() ;i.hasNext() ; ){
-                    Activity ac = i.next();
-                    
-                    if(ActivityFinalNode.class.isInstance(ac)){
-                        sb.append("stop");                
-                    }
-                    else if(FlowFinalNode.class.isInstance(ac)){
-                        sb.append("end");
-                    }
-                    else if(Action.class.isInstance(ac)){
-                        sb.append(":").append(ac).append(";");//TODO customize box per activity subclass
-                    }
-                    
+                for(Iterator<UmlCoreElement> i = testActivityFlow.iterator() ;i.hasNext() ; ){
+                    UmlCoreElement ac = i.next();
+                    sb.append(getCoreElementUmlCode(ac));
                     sb.append("\n");
                 }
             }
@@ -408,20 +386,9 @@ public class PUMLDriver {
                 sb.append("\n");
             }
 
-            for(Iterator<Activity> i = el.getActivityFlow().iterator() ;i.hasNext() ; ){
-                Activity ac = i.next();
-
-                if(ActivityFinalNode.class.isInstance(ac)){
-                    sb.append("stop");                
-                }
-                else if(FlowFinalNode.class.isInstance(ac)){
-                    sb.append("end");
-                }
-                else if(Action.class.isInstance(ac)){
-                    sb.append(":").append(ac).append(";");//TODO customize box per activity subclass
-                }
-
-                sb.append("\n");
+            for(Iterator<UmlCoreElement> i = el.getActivityFlow().iterator() ;i.hasNext() ; ){
+                UmlCoreElement ac = i.next();
+                sb.append(getCoreElementUmlCode(ac));
             }
         }
         
@@ -442,20 +409,9 @@ public class PUMLDriver {
         ){
             sb.append("repeat\n");
 
-            for(Iterator<Activity> i = el.getActivityFlow().iterator() ;i.hasNext() ; ){
-                Activity ac = i.next();
-
-                if(ActivityFinalNode.class.isInstance(ac)){
-                    sb.append("stop");                
-                }
-                else if(FlowFinalNode.class.isInstance(ac)){
-                    sb.append("end");
-                }
-                else if(Action.class.isInstance(ac)){
-                    sb.append(":").append(ac).append(";");//TODO customize box per activity subclass
-                }
-
-                sb.append("\n");
+            for(Iterator<UmlCoreElement> i = el.getActivityFlow().iterator() ;i.hasNext() ; ){
+                UmlCoreElement ac = i.next();
+                sb.append(getCoreElementUmlCode(ac));
             }
             
             sb.append("repeat while ");
@@ -479,5 +435,47 @@ public class PUMLDriver {
         return sb.toString();
     }
     
+    //TODO if split is first diagram element -> hidden
+    public static String getSplitUmlCode(Split el){
+        StringBuffer sb = new StringBuffer();
+        
+        if(el.getActivityFlows().size() > 0){
+            for(ListIterator<ActivityFlow> i = el.getActivityFlows().listIterator(); i.hasNext() ;){
+                if(!i.hasPrevious())    sb.append("split\n");
+                else    sb.append("split again\n");
+                
+                ActivityFlow f = i.next();
+                for(Iterator<UmlCoreElement> ii = f.iterator() ;ii.hasNext() ; ){
+                    UmlCoreElement ac = ii.next();
+                    sb.append(getCoreElementUmlCode(ac));
+                }
+            }
+            
+            sb.append("end split\n");
+        }
+        
+        return sb.toString();
+    }
+    
+    public static String getForkUmlCode(Fork el){
+        StringBuffer sb = new StringBuffer();
+        
+        if(el.getActivityFlows().size() > 0){
+            for(ListIterator<ActivityFlow> i = el.getActivityFlows().listIterator(); i.hasNext() ;){
+                if(!i.hasPrevious())    sb.append("fork\n");
+                else    sb.append("fork again\n");
+                
+                ActivityFlow f = i.next();
+                for(Iterator<UmlCoreElement> ii = f.iterator() ;ii.hasNext() ; ){
+                    UmlCoreElement ac = ii.next();
+                    sb.append(getCoreElementUmlCode(ac));
+                }
+            }
+            
+            sb.append("end fork\n");
+        }
+        
+        return sb.toString();
+    }
     
 }

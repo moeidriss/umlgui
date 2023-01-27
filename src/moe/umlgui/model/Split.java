@@ -12,11 +12,11 @@ import java.util.Iterator;
  *TODO backward repeat, break
  * @author Moe
  */
-public class ActivityFlowJoin extends ControlNode implements java.io.Serializable{
+public class Split extends ControlNode implements java.io.Serializable{
     
-    public ActivityFlowJoin() {
-        super("Join");
-        setName("New Join");
+    public Split() {
+        super("Split");
+        setName("New Split");
     }
 
     ArrayList<ActivityFlow> activityFlows =  new ArrayList();
@@ -33,7 +33,7 @@ public class ActivityFlowJoin extends ControlNode implements java.io.Serializabl
     
     @Override
     public UmlCoreElement clone() {
-        ActivityFlowJoin x = new ActivityFlowJoin();
+        Split x = new Split();
         x.setName(name);
         return x;
     }
