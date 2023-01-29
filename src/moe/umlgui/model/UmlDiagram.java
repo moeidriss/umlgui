@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +68,12 @@ public abstract class UmlDiagram implements Serializable{
 
     public void setUmlCode(String umlCode) {
         this.umlCode = umlCode;
+    }
+    
+    ArrayList<Package> packages = new ArrayList();
+
+    public ArrayList<Package> getPackages() {
+        return packages;
     }
     
     

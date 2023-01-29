@@ -31,12 +31,18 @@ public class PUMLDriver {
         sb.append("@startuml");
         sb.append("\n");
         
+        //definitions
+        sb.append(getDefinitions(umlDiagram));
+        
+        //interactins
+        sb.append(getInteractions(umlDiagram));
+        
+        
+        
+        
+        
         //define elements
-        for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
-            UmlCoreElement el = i.next();
-            el.setUmlCode(getCoreElementUmlCode(el));
-            sb.append(el.getUmlCode());        
-        }
+        
         //TODO Note Element
 
         //TODO Package
@@ -50,13 +56,65 @@ public class PUMLDriver {
     
     
     
-    public static void updateImage(UmlDiagram umlDiagram) throws IOException{        
-        SourceStringReader reader = new SourceStringReader(umlDiagram.getUmlCode());
-        final ByteArrayOutputStream os = new ByteArrayOutputStream();
-        reader.outputImage(os);
-        os.flush();os.close();
-        umlDiagram.setImage(os.toByteArray());
+    public static String getDefinitions(UmlDiagram umlDiagram){
+        StringBuffer sb = new StringBuffer();
+        
+        if(UseCaseDiagram.class.isInstance(umlDiagram) && 
+                                    !umlDiagram.getPackages().isEmpty()){    
+            ArrayList processed = new ArrayList();
+            for(Iterator<moe.umlgui.model.Package> i =umlDiagram.getPackages().iterator() ; i.hasNext() ; ){
+                sb.append(getPackageDefinition(i.next() , processed));
+            }
+            
+        }
+        else{
+            for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
+                UmlCoreElement el = i.next();
+                el.setUmlCode(getElementDefinition(el));
+                sb.append(el.getUmlCode());        
+            }
+        }
+        
+        return sb.toString();
     }
+    
+    
+    public static String getInteractions(UmlDiagram umlDiagram){
+        StringBuffer sb =  new StringBuffer();
+        
+        
+            for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
+                UmlCoreElement el = i.next();
+                el.setUmlCode(getInteractionDefinition(el));
+                sb.append(el.getUmlCode());        
+            }
+        
+        
+        return sb.toString();
+    }
+    
+    
+    
+    public static String getPackageDefinition(moe.umlgui.model.Package o , ArrayList processed){
+        StringBuffer sb =  new StringBuffer();
+        if(!processed.contains(o)){
+            sb.append("package ").append(o.getName()).append("{\n");
+
+            for(Iterator<moe.umlgui.model.Package> i = o.getChildren().iterator() ; i.hasNext() ; ){
+                sb.append(getPackageDefinition(i.next() , processed));
+            }
+
+            for(Iterator<UmlCoreElement> i= o.getCoreElements().iterator(); i.hasNext();){
+                UmlCoreElement el = i.next();
+                el.setUmlCode(getElementDefinition(el));
+                sb.append(el.getUmlCode());  
+            }
+            sb.append("}\n");
+            processed.add(o);
+        }
+        return sb.toString();
+    }
+    
     
     
     /*
@@ -75,7 +133,7 @@ public class PUMLDriver {
     Include
     */
     
-    public static String getCoreElementUmlCode(UmlCoreElement el){
+    public static String getElementDefinition(UmlCoreElement el){
         StringBuffer sb =  new StringBuffer();
         
         if(UseCase.class.isInstance(el)){
@@ -165,72 +223,31 @@ public class PUMLDriver {
 
         else if(ConditionalBlock.class.isInstance(el)){
             ConditionalBlock cn = (ConditionalBlock)el;
-            sb.append(getConditionalBlockUmlCode(cn));
+            sb.append(getConditionalBlockDefinition(cn));
         }
 
         else if(WhileLoop.class.isInstance(el)){
             WhileLoop cn = (WhileLoop)el;
-            sb.append(getWhileLoopUmlCode(cn));
+            sb.append(getWhileLoopDefinition(cn));
         }
 
         else if(RepeatLoop.class.isInstance(el)){
             RepeatLoop cn = (RepeatLoop)el;
-            sb.append(getRepeatLoopUmlCode(cn));
+            sb.append(getRepeatDefinition(cn));
         }
 
         else if(Split.class.isInstance(el)){
             Split cn = (Split)el;
-            sb.append(getSplitUmlCode(cn));
+            sb.append(getSplitDefinition(cn));
         }
 
         else if(Fork.class.isInstance(el)){
             Fork cn = (Fork)el;
-            sb.append(getForkUmlCode(cn));
+            sb.append(getForkDefinition(cn));
         }
 
         
-        else if(Association.class.isInstance(el) &&
-            ((Association)el).getPartyA() != null &&
-            ((Association)el).getPartyB() != null
-        ){
-            sb.append(((Association)el).getPartyA().getId());
-            sb.append("--");
-            sb.append(((Association)el).getPartyB().getId());
-
-            sb.append("\n");
-        }
-
-        else if(Include.class.isInstance(el) &&
-            ((Include)el).getPartyA() != null &&
-            ((Include)el).getPartyB() != null
-        ){
-            sb.append(((Include)el).getPartyA().getId());
-            sb.append("-->");
-            sb.append(((Include)el).getPartyB().getId());
-            sb.append(" : include");
-
-            sb.append("\n");
-        }
-
-        else if(Message.class.isInstance(el) &&
-            ((Message)el).getFrom() != null &&
-            ((Message)el).getTo() != null
-        ){
-            sb.append(((Message)el).getFrom().getId());
-            sb.append("->");
-            sb.append(((Message)el).getTo().getId());
-            sb.append(" : ").append(el.getName());
-
-            if(!((Message)el).getBusinessObjects().isEmpty()){
-                sb.append("(");
-                for(Iterator i = ((Message)el).getBusinessObjects().iterator() ; i.hasNext();){
-                    sb.append(i.next());
-                    if(i.hasNext()) sb.append(" , ");
-                }
-                sb.append(")");
-            }
-            sb.append("\n");
-        }
+        
 
         else if(BusinessObject.class.isInstance(el)
         ){
@@ -274,6 +291,56 @@ public class PUMLDriver {
     
     
     
+    public static String getInteractionDefinition(UmlCoreElement el){
+        StringBuffer sb =  new StringBuffer();
+        
+        if(Association.class.isInstance(el) &&
+            ((Association)el).getPartyA() != null &&
+            ((Association)el).getPartyB() != null
+        ){
+            sb.append(((Association)el).getPartyA().getId());
+            sb.append("--");
+            sb.append(((Association)el).getPartyB().getId());
+
+            sb.append("\n");
+        }
+
+        else if(Include.class.isInstance(el) &&
+            ((Include)el).getPartyA() != null &&
+            ((Include)el).getPartyB() != null
+        ){
+            sb.append(((Include)el).getPartyA().getId());
+            sb.append("-->");
+            sb.append(((Include)el).getPartyB().getId());
+            sb.append(" : include");
+
+            sb.append("\n");
+        }
+
+        else if(Message.class.isInstance(el) &&
+            ((Message)el).getFrom() != null &&
+            ((Message)el).getTo() != null
+        ){
+            sb.append(((Message)el).getFrom().getId());
+            sb.append("->");
+            sb.append(((Message)el).getTo().getId());
+            sb.append(" : ").append(el.getName());
+
+            if(!((Message)el).getBusinessObjects().isEmpty()){
+                sb.append("(");
+                for(Iterator i = ((Message)el).getBusinessObjects().iterator() ; i.hasNext();){
+                    sb.append(i.next());
+                    if(i.hasNext()) sb.append(" , ");
+                }
+                sb.append(")");
+            }
+            sb.append("\n");
+        }
+        
+        //TODO notes on interactions
+        
+        return sb.toString();
+    }
     
 
 
@@ -301,7 +368,7 @@ public class PUMLDriver {
         endif
 
         */
-    public static String getConditionalBlockUmlCode(ConditionalBlock cn){
+    public static String getConditionalBlockDefinition(ConditionalBlock cn){
         StringBuffer sb = new StringBuffer();
         
         for(ListIterator<LogicalTest> it = cn.getTestList().listIterator(); it.hasNext();){
@@ -326,7 +393,7 @@ public class PUMLDriver {
 
                 for(Iterator<UmlCoreElement> i = testActivityFlow.iterator() ;i.hasNext() ; ){
                     UmlCoreElement ac = i.next();
-                    sb.append(getCoreElementUmlCode(ac));
+                    sb.append(getElementDefinition(ac));
                 }
             }   
             //CASE#1 / 3
@@ -337,7 +404,7 @@ public class PUMLDriver {
 
                 for(Iterator<UmlCoreElement> i = testActivityFlow.iterator() ;i.hasNext() ; ){
                     UmlCoreElement ac = i.next();
-                    sb.append(getCoreElementUmlCode(ac));
+                    sb.append(getElementDefinition(ac));
                 }
             }
 
@@ -348,7 +415,7 @@ public class PUMLDriver {
 
                 for(Iterator<UmlCoreElement> i = testActivityFlow.iterator() ;i.hasNext() ; ){
                     UmlCoreElement ac = i.next();
-                    sb.append(getCoreElementUmlCode(ac));
+                    sb.append(getElementDefinition(ac));
                     sb.append("\n");
                 }
             }
@@ -362,7 +429,7 @@ public class PUMLDriver {
     }
     
     
-    public static String getWhileLoopUmlCode(WhileLoop el){
+    public static String getWhileLoopDefinition(WhileLoop el){
         StringBuffer sb = new StringBuffer();
         
         if(el.getLogicalTest().getOperandA() != null &&
@@ -388,7 +455,7 @@ public class PUMLDriver {
 
             for(Iterator<UmlCoreElement> i = el.getActivityFlow().iterator() ;i.hasNext() ; ){
                 UmlCoreElement ac = i.next();
-                sb.append(getCoreElementUmlCode(ac));
+                sb.append(getElementDefinition(ac));
             }
         }
         
@@ -399,7 +466,7 @@ public class PUMLDriver {
  
     
     //TODO backward repeat, break
-    public static String getRepeatLoopUmlCode(RepeatLoop el){
+    public static String getRepeatDefinition(RepeatLoop el){
         StringBuffer sb = new StringBuffer();
         
         if(el.getLogicalTest().getOperandA() != null &&
@@ -411,7 +478,7 @@ public class PUMLDriver {
 
             for(Iterator<UmlCoreElement> i = el.getActivityFlow().iterator() ;i.hasNext() ; ){
                 UmlCoreElement ac = i.next();
-                sb.append(getCoreElementUmlCode(ac));
+                sb.append(getElementDefinition(ac));
             }
             
             sb.append("repeat while ");
@@ -436,7 +503,7 @@ public class PUMLDriver {
     }
     
     //TODO if split is first diagram element -> hidden
-    public static String getSplitUmlCode(Split el){
+    public static String getSplitDefinition(Split el){
         StringBuffer sb = new StringBuffer();
         
         if(el.getActivityFlows().size() > 0){
@@ -447,7 +514,7 @@ public class PUMLDriver {
                 ActivityFlow f = i.next();
                 for(Iterator<UmlCoreElement> ii = f.iterator() ;ii.hasNext() ; ){
                     UmlCoreElement ac = ii.next();
-                    sb.append(getCoreElementUmlCode(ac));
+                    sb.append(getElementDefinition(ac));
                 }
             }
             
@@ -457,7 +524,7 @@ public class PUMLDriver {
         return sb.toString();
     }
     
-    public static String getForkUmlCode(Fork el){
+    public static String getForkDefinition(Fork el){
         StringBuffer sb = new StringBuffer();
         
         if(el.getActivityFlows().size() > 0){
@@ -468,7 +535,7 @@ public class PUMLDriver {
                 ActivityFlow f = i.next();
                 for(Iterator<UmlCoreElement> ii = f.iterator() ;ii.hasNext() ; ){
                     UmlCoreElement ac = ii.next();
-                    sb.append(getCoreElementUmlCode(ac));
+                    sb.append(getElementDefinition(ac));
                 }
             }
             
@@ -477,5 +544,19 @@ public class PUMLDriver {
         
         return sb.toString();
     }
+    
+    
+    
+    
+    public static void updateImage(UmlDiagram umlDiagram) throws IOException{        
+        SourceStringReader reader = new SourceStringReader(umlDiagram.getUmlCode());
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        reader.outputImage(os);
+        os.flush();os.close();
+        umlDiagram.setImage(os.toByteArray());
+    }
+    
+    
+    
     
 }

@@ -113,6 +113,18 @@ String type;
         this.umlDiagram = umlDiagram;
     }
     
+    Package pckage;
+
+    public Package getPckage() {
+        return pckage;
+    }
+
+    public void setPckage(Package pckage) {
+        this.pckage = pckage;
+        pckage.getCoreElements().add(this);
+    }
+    
+    
     
     public UmlCoreElement(String type){
         this.type = type;
@@ -123,6 +135,7 @@ String type;
     }
     
     public boolean equals(Object o){
+        if(o==null) return false;
         try{
         if(((UmlCoreElement)o).getId() == getId())  return true;
         return false;
