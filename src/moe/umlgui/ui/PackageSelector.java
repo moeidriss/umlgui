@@ -117,7 +117,7 @@ public class PackageSelector extends javax.swing.JPanel {
             p.setName(n);
             diagram.getPackages().add(p);
             reloadSelector();
-            jComboBox1.setSelectedItem(p);
+            //jComboBox1.setSelectedItem(p);
         }
         
     }//GEN-LAST:event_addButtonActionPerformed

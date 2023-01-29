@@ -82,13 +82,34 @@ public class PUMLDriver {
     public static String getInteractions(UmlDiagram umlDiagram){
         StringBuffer sb =  new StringBuffer();
         
-        
+        if(SequenceDiagram.class.isInstance(umlDiagram) && 
+                                    !umlDiagram.getPackages().isEmpty()){    
+            ArrayList processed = new ArrayList();
+            
+            for(int i=0 ; i<umlDiagram.getCoreElementList().size(); i++){
+                UmlCoreElement el = umlDiagram.getCoreElementList().get(i);
+                //if(processed.contains(el))  continue;
+                
+                //if pckg exists
+                if(el.getPckage()!=null){
+                    UmlCoreElement nxl = null;
+                    if(i<(umlDiagram.getCoreElementList().size()-1)) nxl = umlDiagram.getCoreElementList().get(i+1);
+                    //el.setUmlCode
+                    sb.append(getPackagedMessageInteraction(el,nxl,processed));
+                }
+                else{
+                    el.setUmlCode(getInteractionDefinition(el));
+                    sb.append(el.getUmlCode());        
+                }
+            }
+        }
+        else{
             for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
                 UmlCoreElement el = i.next();
                 el.setUmlCode(getInteractionDefinition(el));
                 sb.append(el.getUmlCode());        
             }
-        
+        }
         
         return sb.toString();
     }
@@ -114,24 +135,6 @@ public class PUMLDriver {
         }
         return sb.toString();
     }
-    
-    
-    
-    /*
-    UseCase
-    Actor
-    Actor
-    CallActivity
-    AcceptEvent
-    AcceptTimeEvent
-    SendSignal
-    ActivityFinalNode
-    FlowFinalNode
-    ActivityInitialNode
-    ConditionalBlock
-    Association
-    Include
-    */
     
     public static String getElementDefinition(UmlCoreElement el){
         StringBuffer sb =  new StringBuffer();
@@ -290,6 +293,65 @@ public class PUMLDriver {
     }
     
     
+    public static String getPackagedMessageInteraction(UmlCoreElement el , UmlCoreElement nxtEl , ArrayList processed){
+        StringBuffer sb =  new StringBuffer();
+        if(processed.contains(el))  return sb.toString();
+        
+        if(Message.class.isInstance(el) &&
+            ((Message)el).getFrom() != null &&
+            ((Message)el).getTo() != null
+        ){  
+            //start pcge
+            
+            java.lang.System.out.println(el);
+            java.lang.System.out.println(el.getPckage());
+            java.lang.System.out.print(el.getPckage().getCoreElements().indexOf(el));
+            java.lang.System.out.print("/");
+            java.lang.System.out.println(el.getPckage().getCoreElements().size());
+            java.lang.System.out.println();
+
+            
+            processed.add(el);   
+        
+            //if first msg in group
+            if(el.getPckage().getCoreElements().indexOf(el)==0){
+                sb.append("group ").append(el.getPckage().getName()).append("\n");
+            }
+
+
+            sb.append(getInteractionDefinition(el));
+            
+            boolean nested = false; boolean nestingDone = false;
+            
+            if(!el.getPckage().getChildren().isEmpty()) nested = true;
+            if(nested && nxtEl==null)   nestingDone=true;
+            else if(nested && nxtEl!=null &&
+                    el.getPckage().getChildren().contains(nxtEl.getPckage())){   
+                moe.umlgui.model.Package chPkg = nxtEl.getPckage();
+                for(int i=0 ; i<chPkg.getCoreElements().size() ; i++){
+                    UmlCoreElement nl = null; 
+                    if(i<(chPkg.getCoreElements().size()-1))
+                            nl = chPkg.getCoreElements().get(i+1);
+                    sb.append(getPackagedMessageInteraction(chPkg.getCoreElements().get(i),nl, processed ));
+                }                        
+                
+                nestingDone=true;
+            }
+            
+            
+            //end only if last message in package & child packges done
+            if(el.getPckage().getCoreElements().indexOf(el)==(el.getPckage().getCoreElements().size()-1)
+                    &&
+                (!nested || nestingDone)
+            ){
+                sb.append("end\n");
+            }
+
+        }
+             
+        return sb.toString();
+    }
+    
     
     public static String getInteractionDefinition(UmlCoreElement el){
         StringBuffer sb =  new StringBuffer();
@@ -320,7 +382,7 @@ public class PUMLDriver {
         else if(Message.class.isInstance(el) &&
             ((Message)el).getFrom() != null &&
             ((Message)el).getTo() != null
-        ){
+        ){            
             sb.append(((Message)el).getFrom().getId());
             sb.append("->");
             sb.append(((Message)el).getTo().getId());

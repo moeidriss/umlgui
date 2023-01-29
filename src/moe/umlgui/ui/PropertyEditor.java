@@ -134,7 +134,15 @@ public class PropertyEditor extends javax.swing.JPanel {
         if(umlCoreElement.getUmlDiagram()!=null){
             //ucd:actor,uc
             //..
-            //if(1==1){
+            if( (UseCase.class.isInstance(umlCoreElement) && 
+                    UseCaseDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
+                    ||
+                (Actor.class.isInstance(umlCoreElement) && 
+                    UseCaseDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
+                ||
+                (Message.class.isInstance(umlCoreElement) && 
+                    SequenceDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
+            ){
                 PackageSelector ps = new PackageSelector(umlCoreElement.getUmlDiagram());
                 ps.setBorder(BorderFactory.createCompoundBorder(
                             BorderFactory.createTitledBorder("Package"), 
@@ -156,7 +164,7 @@ public class PropertyEditor extends javax.swing.JPanel {
                 gridBagConstraints.gridx = GridBagConstraints.RELATIVE;
                 gridBagConstraints.gridy = yCounter;    yCounter++;
                 editPanel.add(ps, gridBagConstraints);
-            //}
+            }
         }
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null, ex);
@@ -492,71 +500,74 @@ public class PropertyEditor extends javax.swing.JPanel {
         
         
         
-        
-        JList pckgList = new JList();
-        DefaultListModel lm = new DefaultListModel();
-        for(Iterator<moe.umlgui.model.Package> i = umlDiagram.getPackages().iterator() ; i.hasNext();){
-            lm.addElement(i.next());            
-        }
-        pckgList.setModel(lm);
-        
-        JToolBar jToolBar1 = new JToolBar();
-        jToolBar1.setOrientation(JToolBar.VERTICAL);
-        
-        JButton addButton = new JButton();
-        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                moe.umlgui.model.Package parent = null;
-                if(pckgList.getSelectedIndex()!=-1){
-                    parent = (moe.umlgui.model.Package)pckgList.getSelectedValue();            
-                }
-
-                String n = JOptionPane.showInputDialog("Name it");
-                if(n!=null && !n.isEmpty()){
-                    moe.umlgui.model.Package p = new moe.umlgui.model.Package(parent);
-                    p.setName(n);
-                    umlDiagram.getPackages().add(p);
-                    lm.removeAllElements();
-                    for(Iterator<moe.umlgui.model.Package> i = umlDiagram.getPackages().iterator() ; i.hasNext();){
-                        lm.addElement(i.next());            
-                    }
-                    pckgList.setSelectedValue(p,true);
-                }
+        if(UseCaseDiagram.class.isInstance(umlDiagram) ||
+            SequenceDiagram.class.isInstance(umlDiagram) ||
+            PackageDiagram.class.isInstance(umlDiagram)
+        ){
+            JList pckgList = new JList();
+            DefaultListModel lm = new DefaultListModel();
+            for(Iterator<moe.umlgui.model.Package> i = umlDiagram.getPackages().iterator() ; i.hasNext();){
+                lm.addElement(i.next());            
             }
-        });
-        jToolBar1.add(addButton);
+            pckgList.setModel(lm);
 
-        JButton removeButton = new JButton();
-        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
-        jToolBar1.add(removeButton);
+            JToolBar jToolBar1 = new JToolBar();
+            jToolBar1.setOrientation(JToolBar.VERTICAL);
 
-        //TODO iLabel -> EditorPanw. get html from file
-        JLabel iLabel = new JLabel();
-        if(UseCaseDiagram.class.isInstance(umlDiagram)){
-            iLabel.setText("Use packages in Use Case diagrams to group actors and use cases");
+            JButton addButton = new JButton();
+            addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+            addButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    moe.umlgui.model.Package parent = null;
+                    if(pckgList.getSelectedIndex()!=-1){
+                        parent = (moe.umlgui.model.Package)pckgList.getSelectedValue();            
+                    }
+
+                    String n = JOptionPane.showInputDialog("Name it");
+                    if(n!=null && !n.isEmpty()){
+                        moe.umlgui.model.Package p = new moe.umlgui.model.Package(parent);
+                        p.setName(n);
+                        umlDiagram.getPackages().add(p);
+                        lm.removeAllElements();
+                        for(Iterator<moe.umlgui.model.Package> i = umlDiagram.getPackages().iterator() ; i.hasNext();){
+                            lm.addElement(i.next());            
+                        }
+                        pckgList.setSelectedValue(p,true);
+                    }
+                }
+            });
+            jToolBar1.add(addButton);
+
+            JButton removeButton = new JButton();
+            removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+            jToolBar1.add(removeButton);
+
+            //TODO iLabel -> EditorPanw. get html from file
+            JLabel iLabel = new JLabel();
+            if(UseCaseDiagram.class.isInstance(umlDiagram)){
+                iLabel.setText("Use packages in Use Case diagrams to group actors and use cases");
+            }
+
+            JPanel pnl = new JPanel();
+            pnl.setLayout(new BorderLayout());
+            pnl.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createTitledBorder("Packages"), 
+                                BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED)));
+
+            pnl.add(iLabel , BorderLayout.NORTH);
+            pnl.add(new JScrollPane(pckgList) , BorderLayout.CENTER);
+            pnl.add(jToolBar1, java.awt.BorderLayout.EAST);
+
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+
+            //gridBagConstraints.gridheight = 5;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(pnl, gridBagConstraints);
+
         }
-        
-        JPanel pnl = new JPanel();
-        pnl.setLayout(new BorderLayout());
-        pnl.setBorder(BorderFactory.createCompoundBorder(
-                            BorderFactory.createTitledBorder("Packages"), 
-                            BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED)));
-            
-        pnl.add(iLabel , BorderLayout.NORTH);
-        pnl.add(new JScrollPane(pckgList) , BorderLayout.CENTER);
-        pnl.add(jToolBar1, java.awt.BorderLayout.EAST);
-        
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-
-        //gridBagConstraints.gridheight = 5;
-        gridBagConstraints.gridy = yCounter;    yCounter++;
-        editPanel.add(pnl, gridBagConstraints);
-        
-        
         
         
         if(ActivityDiagram.class.isInstance(umlDiagram)){
