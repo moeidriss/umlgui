@@ -37,17 +37,6 @@ public class PUMLDriver {
         //interactins
         sb.append(getInteractions(umlDiagram));
         
-        
-        
-        
-        
-        //define elements
-        
-        //TODO Note Element
-
-        //TODO Package
-
-        
         sb.append("@enduml");
         
         umlDiagram.setUmlCode(sb.toString());
@@ -64,8 +53,7 @@ public class PUMLDriver {
             ArrayList processed = new ArrayList();
             for(Iterator<moe.umlgui.model.Package> i =umlDiagram.getPackages().iterator() ; i.hasNext() ; ){
                 sb.append(getPackageDefinition(i.next() , processed));
-            }
-            
+            }            
         }
         else{
             for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
@@ -135,6 +123,8 @@ public class PUMLDriver {
         }
         return sb.toString();
     }
+    
+    
     
     public static String getElementDefinition(UmlCoreElement el){
         StringBuffer sb =  new StringBuffer();
@@ -303,11 +293,14 @@ public class PUMLDriver {
         ){  
             //start pcge
             
-            java.lang.System.out.println(el);
-            java.lang.System.out.println(el.getPckage());
-            java.lang.System.out.print(el.getPckage().getCoreElements().indexOf(el));
+            java.lang.System.out.println("PUML:getPackagedMessageInteraction");
+            java.lang.System.out.println("el:" + el);
+            java.lang.System.out.println("pack:" + el.getPckage());
+            java.lang.System.out.println("nxtEl:" + nxtEl);
+            if(nxtEl!=null) java.lang.System.out.println("nxtEl pack:" + nxtEl.getPckage());
+            java.lang.System.out.print(el + "::" + el.getPckage().getCoreElements().indexOf(el));
             java.lang.System.out.print("/");
-            java.lang.System.out.println(el.getPckage().getCoreElements().size());
+            java.lang.System.out.println(el.getPckage().getCoreElements().size() + " in " +  el.getPckage() );
             java.lang.System.out.println();
 
             
@@ -325,6 +318,7 @@ public class PUMLDriver {
             
             if(!el.getPckage().getChildren().isEmpty()) nested = true;
             if(nested && nxtEl==null)   nestingDone=true;
+            else if(nested && nxtEl.getPckage()==null)   nestingDone=true;
             else if(nested && nxtEl!=null &&
                     el.getPckage().getChildren().contains(nxtEl.getPckage())){   
                 moe.umlgui.model.Package chPkg = nxtEl.getPckage();

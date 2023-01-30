@@ -90,13 +90,6 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
             return;
         }
         
-        java.lang.System.out.println("DiExpl:" +
-                                    evt.getPropertyName() + "(" +
-                                    evt.getNewValue() + ") -- " +
-                                    ((ArrayList)evt.getOldValue()).size() +
-                                    "consumers so far"
-                
-                );
         
         //PropertyEditor events
         if(evt.getPropertyName().equals("Element updated") && !((ArrayList)evt.getOldValue()).contains(this)){
