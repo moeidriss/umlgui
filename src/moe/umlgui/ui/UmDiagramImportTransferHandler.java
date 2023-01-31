@@ -42,6 +42,7 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
        
        //java.lang.System.out.println(elClass);
        
+       //TODO levelOfDetail rules
        if(elClass.equals("UseCase")){
             if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
         }
@@ -128,6 +129,8 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
             
             super.importData(support);
             UmlCoreElement el = (UmlCoreElement)support.getTransferable().getTransferData(support.getDataFlavors()[0]);
+            
+            //TODO accomodate Explorer source, 
             ((UmlDiagramPanel)support.getComponent()).insertElement(el);
             
             return true;

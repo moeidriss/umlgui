@@ -6,7 +6,10 @@ package moe.umlgui.model;
 
 import java.util.ArrayList;
 
-
+/*
+Can only be created in a UseCase (BusinessObject), Actor (Controller),
+Activity, Messsge
+*/
 public class CoreObject extends UmlElement  implements java.io.Serializable{
 
     public CoreObject() {

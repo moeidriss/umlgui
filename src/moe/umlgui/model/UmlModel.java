@@ -5,6 +5,8 @@
 package moe.umlgui.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
@@ -39,7 +41,107 @@ public abstract class UmlModel implements java.io.Serializable{
         return diagrams;
     }
     
+    
+    
+    HashMap<Long,UmlCoreElement> coreElementMap = new HashMap();
+    ArrayList<UmlCoreElement> coreElementList = new ArrayList();
+    
+    public HashMap<Long,UmlCoreElement> getCoreElementMap() {
+        return coreElementMap;
+    }
+    
+    public ArrayList<UmlElement> getElementList(){
+        ArrayList elementList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(UmlElement.class.isInstance(o))  elementList.add(o);
+        }
+        return elementList;
+    }
+    
+    public ArrayList<UmlCoreElement> getCoreElementList(){
+        return coreElementList;
+    }
+    
+    public ArrayList<Activity> getActivityList(){
+        ArrayList activityList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(Activity.class.isInstance(o))  activityList.add(o);
+        }
+        return activityList;
+    }
+    
+    
+    public ArrayList<UmlRelationship> getRelationshipList(){
+        ArrayList relationshipList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(UmlRelationship.class.isInstance(o))  relationshipList.add(o);
+        }
+        return relationshipList;
+    }
+    
+    public ArrayList<CoreObject> getBusinessObjects(){
+        ArrayList<CoreObject> ar = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(BusinessObjectOwner.class.isInstance(o))
+                ar.addAll(((BusinessObjectOwner)o).getBusinessObjects());
+        }
+        return ar;
+    }
+    
+    public ArrayList<CoreObject> getControllers(){
+        ArrayList<CoreObject> ar = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(ControllerOwner.class.isInstance(o))
+                ar.addAll(((ControllerOwner)o).getControllers());
+        }
+        return ar;
+    }
+    
+    public ArrayList<CoreObject> getCoreObjects(){
+        ArrayList<CoreObject> ar = new ArrayList();
+        ar.addAll(getBusinessObjects());
+        ar.addAll(getControllers());
+        return ar;
+    }
+    
+    
+
+    public void addCoreElement(UmlCoreElement umlCoreElement){
+        coreElementMap.put(umlCoreElement.getId(), umlCoreElement);        
+        coreElementList.add(umlCoreElement);
+    }
+    
+    public ArrayList<Actor> getActors(){        
+        ArrayList aList = new ArrayList();
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(Actor.class.isInstance(o))  aList.add(o);
+        }
+        return aList;
+    }
+    
+    
+    
     public String toString(){
         return name;
+    }
+    
+    
+    /*populated  by checkConsistency */
+    String consistencyCheck;
+
+    public String getConsistencyCheck() {
+        return consistencyCheck;
+    }
+    
+    
+    public boolean checkConsistency(){
+        //TODO all CoreObject methods referenced in SeqD or ActD
+        return false;
     }
 }

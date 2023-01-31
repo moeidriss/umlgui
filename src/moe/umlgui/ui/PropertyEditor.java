@@ -129,6 +129,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         gridBagConstraints.gridy = yCounter;    yCounter++;
         editPanel.add(nameTextField, gridBagConstraints);
 
+        //Packages & swimlanes
         try{
         //Package        
         if(umlCoreElement.getUmlDiagram()!=null){
@@ -165,11 +166,39 @@ public class PropertyEditor extends javax.swing.JPanel {
                 gridBagConstraints.gridy = yCounter;    yCounter++;
                 editPanel.add(ps, gridBagConstraints);
             }
+            
+            //swimlanes
+            if( (Activity.class.isInstance(umlCoreElement) && 
+                    ActivityDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
+                    ||
+                (ControlNode.class.isInstance(umlCoreElement) && 
+                ActivityDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
+            ){
+                JComboBox cb =  new JComboBox(((ActivityDiagram)umlCoreElement.getUmlDiagram()).getSwimlanes().keySet().toArray());
+                cb.addActionListener(new ActionListener(){                    
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(cb.getSelectedIndex()!=-1)
+                        ((ActivityDiagram)umlCoreElement.getUmlDiagram()).addToSwimlane(umlCoreElement, (String)cb.getSelectedItem());
+                    }
+                });
+                String s = ((ActivityDiagram)umlCoreElement.getUmlDiagram()).getSwimlane(umlCoreElement);
+                if(s!=null) cb.setSelectedItem(s);
+                
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.gridx = GridBagConstraints.RELATIVE;
+                gridBagConstraints.gridy = yCounter;    yCounter++;
+                editPanel.add(cb, gridBagConstraints);
+            }
         }
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null, ex);
                     ex.printStackTrace();
         }
+        
+        
         if(UseCase.class.isInstance(umlCoreElement)){
             
             try {
@@ -487,6 +516,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
         int yCounter = 0;
 
+        //name
         nameTextField.setText(umlDiagram.getName());
         nameTextField.setBorder(BorderFactory.createCompoundBorder(
                             BorderFactory.createTitledBorder("Name"), 
@@ -498,8 +528,10 @@ public class PropertyEditor extends javax.swing.JPanel {
         gridBagConstraints.gridy = yCounter;    yCounter++;
         editPanel.add(nameTextField, gridBagConstraints);
         
+        //lo detail
+        //TODO levelOfDetail combo box
         
-        
+        //pckg
         if(UseCaseDiagram.class.isInstance(umlDiagram) ||
             SequenceDiagram.class.isInstance(umlDiagram) ||
             PackageDiagram.class.isInstance(umlDiagram)
@@ -569,7 +601,7 @@ public class PropertyEditor extends javax.swing.JPanel {
 
         }
         
-        
+        //AcD: swimlanes
         if(ActivityDiagram.class.isInstance(umlDiagram)){
             JCheckBox cb1 = new JCheckBox("Use Swimlanes");
             cb1.setSelected(((ActivityDiagram)umlDiagram).isUseSwimlanes());
@@ -601,6 +633,57 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(cb2, gridBagConstraints);
+        
+            //swimlanee
+            JList swList = new JList(((ActivityDiagram)umlDiagram).getSwimlanes().keySet().toArray());
+
+            JToolBar jToolBar1 = new JToolBar();
+            jToolBar1.setOrientation(JToolBar.VERTICAL);
+
+            JButton addButton = new JButton();
+            addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+            addButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    String n = JOptionPane.showInputDialog("Name it");
+                    if(n!=null && !n.isEmpty()){
+                        ((DefaultListModel)swList.getModel()).addElement(n);
+                        swList.setSelectedValue(n,true);
+                    }
+                }
+            });
+            jToolBar1.add(addButton);
+
+            JButton removeButton = new JButton();
+            removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+            jToolBar1.add(removeButton);
+
+            //TODO iLabel -> EditorPanw. get html from file
+            JLabel iLabel = new JLabel();
+            if(UseCaseDiagram.class.isInstance(umlDiagram)){
+                iLabel.setText("...");
+            }
+
+            if(((ActivityDiagram)umlDiagram).isAutoActorsForSwimlanes()){
+                addButton.setEnabled(false);    removeButton.setEnabled(false);
+            }
+
+            JPanel pnl = new JPanel();
+            pnl.setLayout(new BorderLayout());
+            pnl.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createTitledBorder("Swimlanes"), 
+                                BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED)));
+
+            pnl.add(iLabel , BorderLayout.NORTH);
+            pnl.add(new JScrollPane(swList) , BorderLayout.CENTER);
+            pnl.add(jToolBar1, java.awt.BorderLayout.EAST);
+
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.weighty = 1.0;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(pnl, gridBagConstraints);
+            
         }
         
         //filler
@@ -694,10 +777,20 @@ public class PropertyEditor extends javax.swing.JPanel {
     }
     
     public void save(){
-        if(nowEditing == ELEMENT)   saveElement();       
-        else if(nowEditing == DIAGRAM)   saveDiagram();
-        else if(nowEditing == PROJECT)   saveProject();
+        if(validateForm()){
+            if(nowEditing == ELEMENT)   saveElement();       
+            else if(nowEditing == DIAGRAM)   saveDiagram();
+            else if(nowEditing == PROJECT)   saveProject();
+        }
     }
+    
+    //TODO 
+    //ActivityDiagram: useSwimlanes? -> all elements assigned swimlanes
+    private boolean validateForm(){
+        
+        return true;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -715,9 +808,6 @@ public class PropertyEditor extends javax.swing.JPanel {
         folderButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         editPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        saveButton1 = new javax.swing.JButton();
-        editPanel1 = new javax.swing.JPanel();
 
         nameTextField.setText("jTextField1");
 
@@ -744,25 +834,6 @@ public class PropertyEditor extends javax.swing.JPanel {
 
         editPanel.setLayout(new java.awt.GridBagLayout());
         add(editPanel, java.awt.BorderLayout.CENTER);
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Properties"));
-        jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel1.setLayout(new java.awt.BorderLayout());
-
-        saveButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/24x24/media-floppy.png"))); // NOI18N
-        saveButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        saveButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        saveButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(saveButton1, java.awt.BorderLayout.NORTH);
-
-        editPanel1.setLayout(new java.awt.GridBagLayout());
-        jPanel1.add(editPanel1, java.awt.BorderLayout.CENTER);
-
-        add(jPanel1, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -780,21 +851,14 @@ public class PropertyEditor extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_folderButtonActionPerformed
 
-    private void saveButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_saveButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private moe.umlgui.ui.MultilineTextComponent descriptionMultilineTextComponent;
     private javax.swing.JPanel editPanel;
-    private javax.swing.JPanel editPanel1;
     private javax.swing.JButton folderButton;
     private javax.swing.JComboBox<String> fromComboBox;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField nameTextField;
     private moe.umlgui.ui.MultilineTextComponent noteMultilineTextComponent;
     private javax.swing.JButton saveButton;
-    private javax.swing.JButton saveButton1;
     private javax.swing.JComboBox<String> toComboBox;
     // End of variables declaration//GEN-END:variables
 }

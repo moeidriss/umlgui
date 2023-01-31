@@ -51,8 +51,6 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     }
 
     
-    //TODO BizObjs as method parameters and return types...
-    //TODO Model.visibility INTERNAL EXTERNAL
     
     private void buildEditor(){ 
         //controlsTabbedPane.addTab("Palette", palette);

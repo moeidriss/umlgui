@@ -51,7 +51,7 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
     }
     
     
-    //TODO ImageRaster to replace jlabel
+    //TODO ImgPanel to replace jlabel
     
     private void loadDiagramPanel(){
         setName(umlDiagram.getName());        

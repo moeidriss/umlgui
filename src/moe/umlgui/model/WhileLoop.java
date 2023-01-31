@@ -23,7 +23,7 @@ public class WhileLoop extends ControlNode implements java.io.Serializable{
     
     ActivityFlow activityFlow =  new ActivityFlow();
     
-    //TODO convert Activity to Activity Ordered/Linked set/map
+
 
     public LogicalTest getLogicalTest() {
         return logicalTest;

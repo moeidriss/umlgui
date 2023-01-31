@@ -166,48 +166,80 @@ public class PUMLDriver {
          
 
         else if(Action.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append(":").append(el.getName()).append(";");
 
             sb.append("\n");
         }
 
         else if(CallActivity.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append(":").append(el.getName()).append(" <&vertical-align-top>;");
 
             sb.append("\n");
         }
 
         else if(AcceptEvent.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append(":").append(el.getName()).append("<");
 
             sb.append("\n");
         }
 
         else if(AcceptTimeEvent.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append(":").append(el.getName()).append(" <&timer> <");
 
             sb.append("\n");
         }
 
         else if(SendSignal.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append(":").append(el.getName()).append(">");
 
             sb.append("\n");
         }
 
         else if(ActivityFinalNode.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append("stop");
 
             sb.append("\n");
         }
 
         else if(FlowFinalNode.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append("end");
 
             sb.append("\n");
         }
 
         else if(ActivityInitialNode.class.isInstance(el)){
+            if(((ActivityDiagram)el.getUmlDiagram()).isUseSwimlanes()){
+                sb.append("|").append(((ActivityDiagram)el.getUmlDiagram()).getSwimlane(el)).append("|").append("\n");
+            }
+            
             sb.append("start");
 
             sb.append("\n");

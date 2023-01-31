@@ -28,7 +28,7 @@ public class LogicalTestComponent extends javax.swing.JPanel {
     }
     
     
-    //TODO Action list, join, split, fork
+    
     
     
     CoreObjectPropertySelector propSelector;

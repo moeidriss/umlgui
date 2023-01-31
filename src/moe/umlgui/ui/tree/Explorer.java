@@ -187,12 +187,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             setSelection(selection);
         }
         
-        //TODO REMOVE
-        if(nowExploring==PROJECT){
-            for(UmlElement el : project.getElementList()){
-                System.out.println(el.dump());
-            }
-        }
+
     }
 
     
@@ -213,7 +208,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     */
     
     Object selection;
-    //TODO fix::
+    //TODO ...::
     public void setSelection(Object selection){
         this.selection = selection;
         
@@ -379,6 +374,8 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
         
+        //TODO levelOfDetail rules
+        
         //elements only in D mode
         if(nowExploring==DIAGRAM){
             ArrayList options = new ArrayList();
@@ -526,7 +523,6 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             q.add(this);
             firePropertyChange("Element inserted", q, newElement);
         }
-        //TODO model, diagram, element subnodes
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed

@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import moe.umlgui.controller.PUMLDriver;
 
-//TODO swimlanes, ...
+
 /**
  *
  * @author Moe
@@ -149,6 +149,7 @@ public abstract class UmlDiagram implements Serializable{
         umlCoreElement.setUmlDiagram(this);
         coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
         coreElementList.add(umlCoreElement);
+        if(umlModel!=null)  umlModel.addCoreElement(umlCoreElement);
         
         try {
             PUMLDriver.update(this);
@@ -166,6 +167,7 @@ public abstract class UmlDiagram implements Serializable{
         umlCoreElement.setUmlDiagram(this);
         coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
         coreElementList.add(index , umlCoreElement);
+        if(umlModel!=null)  umlModel.addCoreElement(umlCoreElement);
         
         try {
             PUMLDriver.update(this);
@@ -224,5 +226,30 @@ public abstract class UmlDiagram implements Serializable{
     public String toString(){
         return name;
     }
+ 
+    public static int FREE = 0;
+    public static int CONSTRAINED = 1;
+    
+    /* Applies to
+    Sequence Diagrams
+            free: 
+            constrained: participants ONLY CoreObjects
+                         meesages ONLY methods of CoreObjects
+    Activity Diagrams
+            free: 
+            constrained: participants ONLY CoreObject methods (Activity)
+    Pac
+    */
+    int levelOfDetail = FREE;
+
+    public int getLevelOfDetail() {
+        return levelOfDetail;
+    }
+
+    public void setLevelOfDetail(int levelOfDetail) {
+        this.levelOfDetail = levelOfDetail;
+    }
+
+    
     
 }

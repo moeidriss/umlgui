@@ -79,6 +79,8 @@ public class ExplorerTreeModel extends DefaultTreeModel {
             Model
                 Diagram
                     AttOwner
+                TODO CoreObject List
+                    CoreObject
     DIAGRAM
         Element
             Diagram

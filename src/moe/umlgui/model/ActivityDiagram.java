@@ -4,7 +4,10 @@
  */
 package moe.umlgui.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 
 public class ActivityDiagram extends UmlDiagram implements java.io.Serializable{
@@ -13,12 +16,36 @@ public class ActivityDiagram extends UmlDiagram implements java.io.Serializable{
         setName("New Activity Diagram");
     }
     
-    HashSet<String> swimlanes = new HashSet();
+    HashMap<String,ArrayList<UmlCoreElement>> swimlanes = new HashMap();
 
-    public HashSet<String> getSwimlanes() {
+    public HashMap<String,ArrayList<UmlCoreElement>> getSwimlanes() {
+        if(autoActorsForSwimlanes){
+            for(Iterator<Actor> i = umlModel.getActors().iterator() ; i.hasNext() ;){
+                Actor a = i.next();
+                java.lang.System.out.println(a);
+                if(!swimlanes.containsKey(a.getName()))
+                    swimlanes.put(a.getName(), new ArrayList());
+            }
+            //TODO actors with same name??
+            //TODO cleanup removed actors
+            
+        }
+        
         return swimlanes;
     }
     
+    public void addToSwimlane(UmlCoreElement el , String swimlane){
+        //add to list and remove from all others //TODO
+        swimlanes.get(swimlane).add(el);
+    }
+    
+    public String getSwimlane(UmlCoreElement el){
+        for(String ss : swimlanes.keySet()){
+            ArrayList l = swimlanes.get(ss);
+            if(l.contains(el))  return ss;
+        }
+        return null;
+    }
     
     //------------------------------ OPTIONS ---------------------------------
     boolean autoActorsForSwimlanes = true;
