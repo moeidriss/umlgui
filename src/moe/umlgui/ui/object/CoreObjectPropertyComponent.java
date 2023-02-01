@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package moe.umlgui.ui;
+package moe.umlgui.ui.object;
 
 import javax.swing.DefaultComboBoxModel;
 import moe.umlgui.model.*;
@@ -63,7 +63,7 @@ public class CoreObjectPropertyComponent extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         add(nameTextField, gridBagConstraints);
 
-        typeComboBox.setModel(new DefaultComboBoxModel(CoreObjectProperty.DATA_TYPES));
+        typeComboBox.setModel(new DefaultComboBoxModel(moe.umlgui.model.CoreObjectProperty.DATA_TYPES));
         typeComboBox.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder("Data Type"), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED)));
         typeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

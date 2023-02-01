@@ -67,7 +67,7 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
                 b.addActionListener(new ActionListener(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        ActivityFlowComponent fComp = new ActivityFlowComponent((ActivityFlow)value,context);
+                        ActivityFlowComponent fComp = new ActivityFlowComponent((ActivityFlow)value,context,entity.getUmlDiagram().getControlLevel());
                         JDialog d = new JDialog();
                         d.getContentPane().add(fComp , BorderLayout.CENTER);
 
@@ -266,7 +266,7 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
         LogicalTest t = entity.newTest();
         if(entity.getTestList().isEmpty())  t.setCondition("IF");
         
-        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t),context);
+        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t),context,entity.getUmlDiagram().getControlLevel());
         
         LogicalTestComponent tComp = new LogicalTestComponent(t,context);
         

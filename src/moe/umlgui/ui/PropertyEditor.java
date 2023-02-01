@@ -4,6 +4,7 @@
  */
 package moe.umlgui.ui;
 
+import moe.umlgui.ui.object.CoreObjectPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
@@ -129,6 +130,12 @@ public class PropertyEditor extends javax.swing.JPanel {
         gridBagConstraints.gridy = yCounter;    yCounter++;
         editPanel.add(nameTextField, gridBagConstraints);
 
+        //TODO constrained ...
+        if(umlCoreElement.getUmlDiagram().getControlLevel()==UmlDiagram.CONSTRAINED){
+            nameTextField.setEditable(false);
+        }
+        
+        
         //Packages & swimlanes
         try{
         //Package        
@@ -258,7 +265,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ActivityFlowComponent(((WhileLoop)umlCoreElement).getActivityFlow(),context), gridBagConstraints);
+            editPanel.add(new ActivityFlowComponent(((WhileLoop)umlCoreElement).getActivityFlow(),context,umlDiagram.getControlLevel()), gridBagConstraints);
         }
         
         
@@ -269,7 +276,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow(),context), gridBagConstraints);
+            editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow(),context,umlDiagram.getControlLevel()), gridBagConstraints);
 
             LogicalTestComponent tComp = 
                     new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() ,context);
@@ -290,7 +297,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ParallelFlowsComponent(((Split)umlCoreElement).getActivityFlows(),context), gridBagConstraints);
+            editPanel.add(new ParallelFlowsComponent(((Split)umlCoreElement).getActivityFlows(),context,umlDiagram.getControlLevel()), gridBagConstraints);
         }
         
         else if(Fork.class.isInstance(umlCoreElement)){
@@ -300,7 +307,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ParallelFlowsComponent(((Fork)umlCoreElement).getActivityFlows(),context), gridBagConstraints);
+            editPanel.add(new ParallelFlowsComponent(((Fork)umlCoreElement).getActivityFlows(),context,umlDiagram.getControlLevel()), gridBagConstraints);
         }
         
         
@@ -461,8 +468,6 @@ public class PropertyEditor extends javax.swing.JPanel {
         this.firePropertyChange("form loaded", null, null);
     }
     
-    //TODO 
-    HashMap<String,JComponent> propertyComponents = new HashMap();
     
     
     private void loadProject(){
@@ -529,7 +534,31 @@ public class PropertyEditor extends javax.swing.JPanel {
         editPanel.add(nameTextField, gridBagConstraints);
         
         //lo detail
-        //TODO levelOfDetail combo box
+        //TODO levelOfDetail combo box        
+        if(SequenceDiagram.class.isInstance(umlDiagram) ||
+            ActivityDiagram.class.isInstance(umlDiagram)
+        ){
+            JComboBox controlCb = new JComboBox(new Object[]{"Free" , "Constrained"});
+            controlCb.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createTitledBorder("Control Level"), 
+                            BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED)));
+            
+            controlCb.addActionListener(new ActionListener(){                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(controlCb.getSelectedIndex()==-1)    return;
+                    umlDiagram.setControlLevel(controlCb.getSelectedIndex());
+                }
+            });
+            controlCb.setSelectedIndex(umlDiagram.getControlLevel());
+            
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.gridy = yCounter;    yCounter++;
+            editPanel.add(controlCb, gridBagConstraints);
+        }
+        
         
         //pckg
         if(UseCaseDiagram.class.isInstance(umlDiagram) ||
@@ -704,9 +733,10 @@ public class PropertyEditor extends javax.swing.JPanel {
         else if(nowEditing == DIAGRAM)   loadDiagram();
         else if(nowEditing == PROJECT)   loadProject();
     }
+        
+    //TODO 
+    HashMap<String,JComponent> propertyComponents = new HashMap();
     
-    //TODO find a better solution for initializing, loading and persisting
-    //from components, see WhileLoop
     private void saveElement(){        
         umlCoreElement.setName(nameTextField.getText());
 

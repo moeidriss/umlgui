@@ -132,7 +132,6 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setOneTouchExpandable(true);
 
-        jSplitPane2.setDividerLocation(100);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setOneTouchExpandable(true);
         jSplitPane2.setBottomComponent(jTabbedPane1);
@@ -211,6 +210,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             
             explorer.reload();
             revalidate();
+            this.getParent().revalidate();
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
@@ -284,7 +284,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         else if(evt.getPropertyName().equals("Element inserted") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             UmlCoreElement el = (UmlCoreElement)evt.getNewValue();
-            project.addCoreElement(el);
+            //project.addCoreElement(el);
             propertyEditor.edit(el);        
             explorer.reload();
             

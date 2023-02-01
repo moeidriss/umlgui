@@ -86,8 +86,7 @@ public class Project implements java.io.Serializable{
         ArrayList<CoreObject> ar = new ArrayList();
         for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
             Object o = i.next();
-            if(BusinessObjectOwner.class.isInstance(o))
-                ar.addAll(((BusinessObjectOwner)o).getBusinessObjects());
+            if(BusinessObject.class.isInstance(o))  ar.add((CoreObject) o);
         }
         return ar;
     }
@@ -96,24 +95,28 @@ public class Project implements java.io.Serializable{
         ArrayList<CoreObject> ar = new ArrayList();
         for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
             Object o = i.next();
-            if(ControllerOwner.class.isInstance(o))
-                ar.addAll(((ControllerOwner)o).getControllers());
+            if(Controller.class.isInstance(o)) ar.add((CoreObject) o);
         }
         return ar;
     }
     
     public ArrayList<CoreObject> getCoreObjects(){
         ArrayList<CoreObject> ar = new ArrayList();
-        ar.addAll(getBusinessObjects());
-        ar.addAll(getControllers());
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(CoreObject.class.isInstance(o)) ar.add((CoreObject) o);
+        }
         return ar;
     }
     
     
     //TODO update from UmlDiagram.add
     public void addCoreElement(UmlCoreElement umlCoreElement){
-        coreElementMap.put(umlCoreElement.getId(), umlCoreElement);        
-        coreElementList.add(umlCoreElement);
+        java.lang.System.out.println("proj adding "+ umlCoreElement + umlCoreElement.getClass());
+        if(!coreElementList.contains(umlCoreElement)){
+            coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
+            coreElementList.add(umlCoreElement);
+        }                
     }
     
     
@@ -131,6 +134,15 @@ public class Project implements java.io.Serializable{
         return name;
     }
     
+    public String dump(){
+        StringBuffer sb = new StringBuffer();
+        
+        sb.append("Projct.dump()\n");
+        for(UmlCoreElement e : this.coreElementList){
+            sb.append(e.dump());
+        }
+        return sb.toString();
+    }
     
     
 }

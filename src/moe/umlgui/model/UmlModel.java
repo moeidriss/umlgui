@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *
+ * TODO replace project as context...
  * @author Moe
  */
 public abstract class UmlModel implements java.io.Serializable{
@@ -86,8 +86,7 @@ public abstract class UmlModel implements java.io.Serializable{
         ArrayList<CoreObject> ar = new ArrayList();
         for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
             Object o = i.next();
-            if(BusinessObjectOwner.class.isInstance(o))
-                ar.addAll(((BusinessObjectOwner)o).getBusinessObjects());
+            if(BusinessObject.class.isInstance(o))  ar.add((CoreObject) o);
         }
         return ar;
     }
@@ -96,24 +95,29 @@ public abstract class UmlModel implements java.io.Serializable{
         ArrayList<CoreObject> ar = new ArrayList();
         for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
             Object o = i.next();
-            if(ControllerOwner.class.isInstance(o))
-                ar.addAll(((ControllerOwner)o).getControllers());
+            if(Controller.class.isInstance(o)) ar.add((CoreObject) o);
         }
         return ar;
     }
     
     public ArrayList<CoreObject> getCoreObjects(){
         ArrayList<CoreObject> ar = new ArrayList();
-        ar.addAll(getBusinessObjects());
-        ar.addAll(getControllers());
+        for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){
+            Object o = i.next();
+            if(CoreObject.class.isInstance(o)) ar.add((CoreObject) o);
+        }
         return ar;
     }
     
     
 
     public void addCoreElement(UmlCoreElement umlCoreElement){
-        coreElementMap.put(umlCoreElement.getId(), umlCoreElement);        
-        coreElementList.add(umlCoreElement);
+        if(!coreElementList.contains(umlCoreElement)){
+            coreElementMap.put(umlCoreElement.getId(), umlCoreElement);        
+            coreElementList.add(umlCoreElement);
+        }
+        if(project!=null)
+            project.addCoreElement(umlCoreElement);
     }
     
     public ArrayList<Actor> getActors(){        

@@ -146,9 +146,11 @@ public abstract class UmlDiagram implements Serializable{
     override to enforce biz rules (element allowed, biz vs it model)
     */
     public void addCoreElement(UmlCoreElement umlCoreElement) throws ModelException{
-        umlCoreElement.setUmlDiagram(this);
-        coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
-        coreElementList.add(umlCoreElement);
+        if(!coreElementList.contains(umlCoreElement)){
+            umlCoreElement.setUmlDiagram(this);
+            coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
+            coreElementList.add(umlCoreElement);
+        }
         if(umlModel!=null)  umlModel.addCoreElement(umlCoreElement);
         
         try {
@@ -164,9 +166,11 @@ public abstract class UmlDiagram implements Serializable{
     override to enforce biz rules (element allowed, biz vs it model)
     */
     public void insertCoreElement(int index , UmlCoreElement umlCoreElement) throws ModelException{
-        umlCoreElement.setUmlDiagram(this);
-        coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
-        coreElementList.add(index , umlCoreElement);
+        if(!coreElementList.contains(umlCoreElement)){
+            umlCoreElement.setUmlDiagram(this);
+            coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
+            coreElementList.add(index , umlCoreElement);
+        }
         if(umlModel!=null)  umlModel.addCoreElement(umlCoreElement);
         
         try {
@@ -240,16 +244,25 @@ public abstract class UmlDiagram implements Serializable{
             constrained: participants ONLY CoreObject methods (Activity)
     Pac
     */
-    int levelOfDetail = FREE;
+    int controlLevel = FREE;
 
-    public int getLevelOfDetail() {
-        return levelOfDetail;
+    public int getControlLevel() {
+        return controlLevel;
     }
 
-    public void setLevelOfDetail(int levelOfDetail) {
-        this.levelOfDetail = levelOfDetail;
+    public void setControlLevel(int controlLevel) {
+        this.controlLevel = controlLevel;
     }
 
+    /*
+    e.g. activity: method
+    actor: method
+    */
+    HashMap<UmlCoreElement,Object> constraints = new HashMap();
+
+    public HashMap<UmlCoreElement, Object> getConstraints() {
+        return constraints;
+    }
     
     
 }

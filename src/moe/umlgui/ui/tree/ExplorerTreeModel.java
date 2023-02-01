@@ -67,6 +67,9 @@ public class ExplorerTreeModel extends DefaultTreeModel {
                     buildDiagramNode(dN);
                 }
             }
+            for(Iterator<CoreObject> i= project.getCoreObjects().iterator() ; i.hasNext() ;){
+                ((DefaultMutableTreeNode)root).add(new DefaultMutableTreeNode(i.next()));
+            }
         }
         else if(nowExploring==DIAGRAM){
             buildDiagramNode((DefaultMutableTreeNode)root);

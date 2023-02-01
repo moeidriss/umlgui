@@ -50,13 +50,15 @@ public class ParallelFlowsComponent extends javax.swing.JPanel {
 
     ArrayList<ActivityFlow> flows;
     Project context;
+    int controlLevel;
     
     /**
      * Creates new form ActivityFlowComponent
      */
-    public ParallelFlowsComponent(ArrayList<ActivityFlow> flows , Project context) {
+    public ParallelFlowsComponent(ArrayList<ActivityFlow> flows , Project context , int controlLevel) {
         this.flows = flows;
         this.context = context;
+        this.controlLevel = controlLevel;
         initComponents();
         reloadList();
     }
@@ -149,7 +151,7 @@ public class ParallelFlowsComponent extends javax.swing.JPanel {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         ActivityFlow f = new ActivityFlow();
-        ActivityFlowComponent fc = new ActivityFlowComponent(f,context);
+        ActivityFlowComponent fc = new ActivityFlowComponent(f,context,controlLevel);
 
 
         JDialog acDialog = new JDialog();

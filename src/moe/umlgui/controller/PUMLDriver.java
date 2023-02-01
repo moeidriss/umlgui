@@ -277,7 +277,7 @@ public class PUMLDriver {
         else if(BusinessObject.class.isInstance(el)
         ){
             sb.append("entity ");
-            sb.append(el.getName());
+            sb.append(el.getName().replace(" ", ""));
 
             sb.append("\n");
         }
@@ -285,7 +285,7 @@ public class PUMLDriver {
         else if(Controller.class.isInstance(el)
         ){
             sb.append("control ");
-            sb.append(el.getName());
+            sb.append(el.getName().replace(" ", ""));
 
             sb.append("\n");
         }

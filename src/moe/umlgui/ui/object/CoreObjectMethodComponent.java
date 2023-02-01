@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package moe.umlgui.ui;
+package moe.umlgui.ui.object;
 
 import java.awt.Component;
 import java.util.Iterator;

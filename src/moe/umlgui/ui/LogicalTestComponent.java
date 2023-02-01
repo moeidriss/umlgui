@@ -4,6 +4,7 @@
  */
 package moe.umlgui.ui;
 
+import moe.umlgui.ui.object.CoreObjectPropertySelector;
 import java.awt.BorderLayout;
 import javax.swing.DefaultComboBoxModel;
 import moe.umlgui.model.*;

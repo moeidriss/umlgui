@@ -4,14 +4,22 @@
  */
 package moe.umlgui.ui.tree;
 
+import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
 import static javax.swing.TransferHandler.COPY_OR_MOVE;
@@ -20,6 +28,7 @@ import javax.swing.tree.TreePath;
 import moe.umlgui.controller.ReportEngine;
 import moe.umlgui.model.AcceptEvent;
 import moe.umlgui.model.AcceptTimeEvent;
+import moe.umlgui.model.Activity;
 import moe.umlgui.model.Action;
 import moe.umlgui.model.ActivityDiagram;
 import moe.umlgui.model.ActivityFinalNode;
@@ -31,6 +40,7 @@ import moe.umlgui.model.BusinessSystem;
 import moe.umlgui.model.CallActivity;
 import moe.umlgui.model.ConditionalBlock;
 import moe.umlgui.model.ControlNode;
+import moe.umlgui.model.CoreObject;
 import moe.umlgui.model.FlowFinalNode;
 import moe.umlgui.model.Include;
 import moe.umlgui.model.ItSystem;
@@ -50,6 +60,7 @@ import moe.umlgui.model.UseCaseDiagram;
 import moe.umlgui.model.User;
 import moe.umlgui.model.WhileLoop;
 import moe.umlgui.ui.TransferrableImpl;
+import moe.umlgui.ui.object.CoreObjectMethodSelector;
 
 /**
  *
@@ -186,7 +197,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         if (selection!=null){
             setSelection(selection);
         }
-        
+        if(project!=null)   java.lang.System.out.println(project.dump());
 
     }
 
@@ -222,18 +233,11 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((UmlDiagram)selection).getUmlModel()));
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlDiagram)selection).getUmlModel().getDiagrams().indexOf(selection)))));
             }
-            else if(UmlElement.class.isInstance(selection)){
+            else if(UmlElement.class.isInstance(selection) && !CoreObject.class.isInstance(selection) ){
                 DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((UmlElement)selection).getUmlDiagram().getUmlModel()));
                 if(((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection)!= -1){
                     DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlElement)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
                     jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)))));
-                }
-            }
-            else if(ControlNode.class.isInstance(selection)){
-                DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((ControlNode)selection).getUmlDiagram().getUmlModel()));
-                if(((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection)!= -1){
-                    DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
-                    jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((ControlNode)selection).getUmlDiagram().getCoreElementList().indexOf(selection)))));
                 }
             }
             //TODO SELECTION
@@ -247,6 +251,13 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             else if(UmlElement.class.isInstance(selection)){
                 if(diagram.getElementList().indexOf(selection) != -1)
                     jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), diagram.getElementList().indexOf(selection)))));
+            }            
+            else if(ControlNode.class.isInstance(selection)){
+                DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((ControlNode)selection).getUmlDiagram().getUmlModel()));
+                if(((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection)!= -1){
+                    DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
+                    jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((ControlNode)selection).getUmlDiagram().getCoreElementList().indexOf(selection)))));
+                }
             }
             else{ }
         }
@@ -372,26 +383,17 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        selection = ((DefaultMutableTreeNode)jTree.getLastSelectedPathComponent()).getUserObject();
-        
-        //TODO levelOfDetail rules
         
         //elements only in D mode
-        if(nowExploring==DIAGRAM){
+        if(nowExploring==DIAGRAM && diagram!=null && diagram.getControlLevel()==UmlDiagram.FREE){
             ArrayList options = new ArrayList();
-            //module, diagram
-
-            //restrict options based on diagram
-            //TODO diagram is null (exploring project)
-                //selected node is diagram or element within
-
 
             //ucd
             if(diagram!=null & UseCaseDiagram.class.isInstance(diagram)){
                 options.add("Actor");   
                 options.add("Use Case");
             }
-            else if(diagram!=null & ActivityDiagram.class.isInstance(diagram)){
+            else if(diagram!=null & ActivityDiagram.class.isInstance(diagram)){                
                 options.add("Action");options.add("Call Activity");
                 options.add("Accept Event");options.add("Accept Time Event");
                 options.add("Send Signal");options.add("Activity Initial Node");
@@ -399,7 +401,6 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                 options.add("Conditional Block");options.add("While Loop");
                 options.add("Repeat Loop");
                 options.add("Split");   options.add("Fork"); 
-
             }
             else if(diagram!=null & SequenceDiagram.class.isInstance(diagram)){
                 options.add("Actor");   options.add("System");
@@ -498,13 +499,11 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             }
             else if(newElementType.equals("Repeat Loop")){
                 newElement = new RepeatLoop();
-            }
-
-
-            
+            }            
             else if(newElementType.equals("Message")){
                 newElement = new Message();
             }
+            
 
             if(diagram!=null){
                 try{
@@ -523,8 +522,109 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             q.add(this);
             firePropertyChange("Element inserted", q, newElement);
         }
+        else if(nowExploring==DIAGRAM && diagram!=null && diagram.getControlLevel()==UmlDiagram.CONSTRAINED){
+            addConstrainedElement();
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
+    private void addConstrainedElement(){
+        
+        if(ActivityDiagram.class.isInstance(diagram) &&
+            diagram.getControlLevel()==UmlDiagram.CONSTRAINED
+        ){
+            JDialog d = new JDialog();
+            
+            //el type
+            ArrayList options = new ArrayList();
+            options.add("Action");options.add("Call Activity");
+            options.add("Accept Event");options.add("Accept Time Event");
+            options.add("Send Signal");options.add("Activity Initial Node");
+            options.add("Activity Final Node");options.add("Flow Final Node");
+            options.add("Conditional Block");options.add("While Loop");
+            options.add("Repeat Loop");
+            options.add("Split");   options.add("Fork");    
+            
+            JComboBox tC = new JComboBox(options.toArray());
+            //TODO actionlistnr: if sel controlNode disable/null methSelector
+            
+            //if activity: method
+            CoreObjectMethodSelector methSelector = new CoreObjectMethodSelector(diagram.getUmlModel().getProject());
+
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(new ActionListener(){                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(tC.getSelectedIndex()!=-1 && methSelector.getSelectedIndex()!=-1){
+                        String newElementType = (String)tC.getSelectedItem();
+                        UmlCoreElement newElement = null;
+                        if(newElementType.equals("Action")){
+                            newElement = new Action();
+                        }
+                        else if(newElementType.equals("Call Activity")){
+                            newElement = new CallActivity();
+                        }
+                        else if(newElementType.equals("Accept Event")){
+                            newElement = new AcceptEvent();
+                        }
+                        else if(newElementType.equals("Accept Time Event")){
+                            newElement = new AcceptTimeEvent();
+                        }
+                        else if(newElementType.equals("Send Signal")){
+                            newElement = new SendSignal();
+                        }
+                        else if(newElementType.equals("Activity Initial Node")){
+                            newElement = new ActivityInitialNode();
+                        }
+                        else if(newElementType.equals("Activity Final Node")){
+                            newElement = new ActivityFinalNode();
+                        }
+                        else if(newElementType.equals("Flow Final Node")){
+                            newElement = new FlowFinalNode();
+                        }
+                        else if(newElementType.equals("Conditional Block")){
+                            newElement = new ConditionalBlock();
+                        }
+                        else if(newElementType.equals("While Loop")){
+                            newElement = new WhileLoop();
+                        }
+                        else if(newElementType.equals("Repeat Loop")){
+                            newElement = new RepeatLoop();
+                        }   
+                        
+                        int newIndex = -1;
+                        String[] s = {"Before" , "After"};
+                        String ss = ((String)JOptionPane.showInputDialog(Explorer.this, "Before or after", "Insert", JOptionPane.INFORMATION_MESSAGE, null, s, "After"));
+                        if(ss .equals("Before"))
+                            newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection);
+                        else
+                            newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)+1;
+
+                        if(Activity.class.isInstance(newElement)){
+                            newElement.setName(methSelector.getSelectedMethod().toFullString());
+                            try {
+                                diagram.addCoreElement(newElement);
+                            } catch (ModelException ex) {
+                                JOptionPane.showMessageDialog(Explorer.this, ex);
+                                ex.printStackTrace();
+                            }
+                            diagram.getConstraints().put(newElement, methSelector.getSelectedMethod());
+                        }
+                        
+                        d.setVisible(false);
+                    }
+                }
+            });
+            
+            d.add(tC, BorderLayout.NORTH);
+            d.getContentPane().add(methSelector , BorderLayout.CENTER);
+            d.add(okButton, BorderLayout.SOUTH);
+            
+            d.pack();
+            d.setLocationRelativeTo(null);
+            d.setVisible(true);
+        }
+    }
+    
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_removeButtonActionPerformed

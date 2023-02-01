@@ -78,6 +78,11 @@ public class CoreObjectMethod implements java.io.Serializable{
         return name + "()";
     }
     
+    
+    public String toFullString(){
+        return businessObject.name + "." + name + "()";//TODO params
+    }
+    
      public String dump(){
         StringBuffer sb = new StringBuffer();
         sb.append(name ).append(":").append(returnType);

@@ -49,13 +49,17 @@ public class ActivityFlowComponent extends javax.swing.JPanel {
 
     ActivityFlow activityFlow;
     Project context;
+    int controlLevel;
     
+    
+    //TODO if
     /**
      * Creates new form ActivityFlowComponent
      */
-    public ActivityFlowComponent(ActivityFlow flow , Project context) {
+    public ActivityFlowComponent(ActivityFlow flow , Project context , int controlLevel) {
         this.activityFlow = flow;
         this.context = context;
+        this.controlLevel = controlLevel;
         initComponents();
         reloadList();
     }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package moe.umlgui.ui;
+package moe.umlgui.ui.object;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,6 +84,7 @@ public class CoreObjectPropertySelector extends javax.swing.JPanel {
     private void initComponents() {
 
         jComboBox1 = new javax.swing.JComboBox<>();
+        newButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -94,6 +95,9 @@ public class CoreObjectPropertySelector extends javax.swing.JPanel {
             }
         });
         add(jComboBox1, java.awt.BorderLayout.CENTER);
+
+        newButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        add(newButton, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -105,5 +109,6 @@ public class CoreObjectPropertySelector extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton newButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -2,13 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package moe.umlgui.ui;
+package moe.umlgui.ui.object;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -18,6 +20,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import moe.umlgui.model.*;
+import moe.umlgui.ui.tree.Explorer;
 /**
  *
  * @author Moe
@@ -214,22 +217,21 @@ public class CoreObjectPanel extends javax.swing.JPanel {
             this.obj = obj;
         }        
         
-        boolean saveObj(){
+        boolean saveObj() throws ModelException{
             //boooean
             if(type==BUSINESS_OBJECT){
                 if(!((BusinessObjectOwner)entity).getBusinessObjects().contains(obj))     
                     ((BusinessObjectOwner)entity).getBusinessObjects().add(((BusinessObject)obj));
-                if(!context.getBusinessObjects().contains(obj)) 
-                    context.getBusinessObjects().add(obj);            
             }
             else if(type==CONTROLLER){
                 if(!((ControllerOwner)entity).getControllers().contains(obj))     
                     ((ControllerOwner)entity).getControllers().add(((Controller)obj));
-                if(!context.getControllers().contains(obj)) 
-                    context.getControllers().add(obj);
             }
             else    return false;
             
+            if(!entity.getUmlDiagram().getUmlModel().getElementList().contains(obj)){
+                    entity.getUmlDiagram().getUmlModel().addCoreElement(obj);
+            }
             return true;
         }
     }
@@ -254,7 +256,12 @@ public class CoreObjectPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(comp.save()){         
-                    proxy.saveObj();
+                    try {
+                        proxy.saveObj();
+                    } catch (ModelException ex) {
+                        JOptionPane.showMessageDialog(CoreObjectPanel.this, ex);
+                        ex.printStackTrace();
+                    }
                     jTable1.revalidate();
                     d.setVisible(false);                    
                 }
@@ -293,7 +300,12 @@ public class CoreObjectPanel extends javax.swing.JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(comp.save()){         
-                        proxy.saveObj();
+                        try {
+                            proxy.saveObj();
+                        } catch (ModelException ex) {
+                            JOptionPane.showMessageDialog(CoreObjectPanel.this, ex);
+                            ex.printStackTrace();
+                        }
                         jTable1.revalidate();
                         d.setVisible(false);                    
                     }

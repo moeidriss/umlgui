@@ -4,17 +4,26 @@
  */
 package moe.umlgui.ui;
 
+import java.awt.BorderLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
 import moe.umlgui.controller.PUMLDriver;
 import moe.umlgui.model.*;
+import moe.umlgui.ui.object.CoreObjectMethodSelector;
+import moe.umlgui.ui.tree.Explorer;
 
 /**
  *
@@ -22,11 +31,11 @@ import moe.umlgui.model.*;
  */
 public class UmDiagramImportTransferHandler extends TransferHandler {
     
-    UmlDiagram umlDiagram;
+    UmlDiagram diagram;
     
     public UmDiagramImportTransferHandler(UmlDiagram umlDiagram){
         super();
-        this.umlDiagram = umlDiagram;
+        this.diagram = umlDiagram;
     }
     
     
@@ -44,84 +53,87 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
        
        //TODO levelOfDetail rules
        if(elClass.equals("UseCase")){
-            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
+            if(UseCaseDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("Association")){
-            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
+            if(UseCaseDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("Include")){            
-            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
+            if(UseCaseDiagram.class.isInstance(diagram)) return true;
         }    
         else if(elClass.equals("Action")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("CallActivity")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("AcceptEvent")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("AcceptTimeEvent")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("SendSignal")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("ActivityInitialNode")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("ActivityFinalNode")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("FlowFinalNode")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("ConditionalBlock")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("WhileLoop")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("RepeatLoop")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("Split")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("Join")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("Fork")){
-            if(ActivityDiagram.class.isInstance(umlDiagram)) return true;
+            if(ActivityDiagram.class.isInstance(diagram)) return true;
         }
         
         else if(elClass.equals("Message")){
-            if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
+            if(SequenceDiagram.class.isInstance(diagram)) return true;
         }
         
        
         else if(elClass.equals("Actor")
         ){
-            if(UseCaseDiagram.class.isInstance(umlDiagram)) return true;
-            else if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
+            if(UseCaseDiagram.class.isInstance(diagram)) return true;
+            else if(SequenceDiagram.class.isInstance(diagram)) return true;
         }
         else if(elClass.equals("System") ||
                 elClass.equals("BusinessSystem") ||
                 elClass.equals("ItSystem") ||
                 elClass.equals("User")
         ){
-            if(SequenceDiagram.class.isInstance(umlDiagram)) return true;
+            if(SequenceDiagram.class.isInstance(diagram)) return true;
         }
        
         else if(elClass.equals("BusinessObject") ||
                 elClass.equals("Controller") 
         ){
-            if(PackageDiagram.class.isInstance(umlDiagram)) return true;
+            if(PackageDiagram.class.isInstance(diagram)) return true;
         }
        
-       JOptionPane.showMessageDialog(null, elClass + " not allowed in " + umlDiagram.getType());
+       JOptionPane.showMessageDialog(null, elClass + " not allowed in " + diagram.getType());
         return false;
     }
+    
+    
+    
     
     @Override
     public boolean importData(TransferHandler.TransferSupport support){
@@ -130,10 +142,22 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
             super.importData(support);
             UmlCoreElement el = (UmlCoreElement)support.getTransferable().getTransferData(support.getDataFlavors()[0]);
             
-            //TODO accomodate Explorer source, 
-            ((UmlDiagramPanel)support.getComponent()).insertElement(el);
             
-            return true;
+            if(diagram.getControlLevel()==UmlDiagram.FREE){
+                ((UmlDiagramPanel)support.getComponent()).insertElement(el);
+                return true;
+            }
+            else if(ActivityDiagram.class.isInstance(diagram) && 
+                    Activity.class.isInstance(el)
+                    // || ...
+            ){
+                addConstrainedElement(el , ((UmlDiagramPanel)support.getComponent()));
+                return true;
+            }
+            else {
+                ((UmlDiagramPanel)support.getComponent()).insertElement(el);
+                return true;
+            }
         } catch (UnsupportedFlavorException ex) {
             Logger.getLogger(UmDiagramImportTransferHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ModelException ex) {
@@ -143,6 +167,47 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
         }
         return false;
     }
+    
+    
+    private void addConstrainedElement(UmlCoreElement newElement , UmlDiagramPanel udp){
+        
+        if(ActivityDiagram.class.isInstance(diagram)  && 
+                    Activity.class.isInstance(newElement)
+        ){
+            JDialog d = new JDialog();
+            
+            //if activity: method
+            CoreObjectMethodSelector methSelector = new CoreObjectMethodSelector(diagram.getUmlModel().getProject());
+
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(new ActionListener(){                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(methSelector.getSelectedIndex()!=-1){
+                        newElement.setName(methSelector.getSelectedMethod().toFullString());
+                        try {
+                            udp.insertElement(newElement);
+                        } catch (ModelException ex) {
+                            JOptionPane.showMessageDialog(null, ex);
+                            ex.printStackTrace();
+                        }
+                        diagram.getConstraints().put(newElement, methSelector.getSelectedMethod());
+
+                        
+                        d.setVisible(false);
+                    }
+                }
+            });
+            
+            d.getContentPane().add(methSelector , BorderLayout.CENTER);
+            d.add(okButton, BorderLayout.SOUTH);
+            
+            d.pack();
+            d.setLocationRelativeTo(null);
+            d.setVisible(true);
+        }
+    }
+
 
     @Override
     protected void exportDone(JComponent source, Transferable data, int action) {
