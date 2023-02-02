@@ -219,7 +219,8 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
         else if(SequenceDiagram.class.isInstance(diagram)  && 
                     CoreObject.class.isInstance(newElement)
         ){
-            if(!diagram.getConstraints().containsKey(newElement)){
+            JOptionPane.showMessageDialog(null, "!");
+            if(!diagram.getConstraints().values().contains(newElement)){
                 Actor a = new Actor();
                 a.setName(newElement.getName());                                
                 try {
@@ -228,7 +229,7 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
                     JOptionPane.showMessageDialog(null, ex);
                     ex.printStackTrace();
                 }
-                diagram.getConstraints().put(newElement, a);
+                diagram.getConstraints().put(a,newElement);
             }
         }
         else if(SequenceDiagram.class.isInstance(diagram)  && 

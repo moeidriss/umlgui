@@ -364,6 +364,8 @@ public class PropertyEditor extends javax.swing.JPanel {
                     public void actionPerformed(ActionEvent e) {
                         ((Message)umlCoreElement).setTo((Actor) toComboBox.getSelectedItem());
                         umlCoreElement.getUmlDiagram().getConstraints().put(umlCoreElement, mC.getSelectedItem());
+                        umlCoreElement.setName(((CoreObjectMethod)mC.getSelectedItem()).getName() + "()");
+                        nameTextField.setText(umlCoreElement.getName());
                     }
                 });
                 

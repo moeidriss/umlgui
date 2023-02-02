@@ -686,7 +686,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                                 JOptionPane.showMessageDialog(null, ex);
                                 ex.printStackTrace();
                             }
-                            diagram.getConstraints().put(obj, a);
+                            diagram.getConstraints().put(a,obj);
 
                             ArrayList q =new ArrayList();
                             q.add(this);
