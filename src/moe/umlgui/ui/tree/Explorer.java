@@ -6,6 +6,7 @@ package moe.umlgui.ui.tree;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
+import java.awt.GridBagLayout;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,9 +21,15 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 import static javax.swing.TransferHandler.COPY_OR_MOVE;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import moe.umlgui.controller.ReportEngine;
@@ -529,9 +536,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
     private void addConstrainedElement(){
         
-        if(ActivityDiagram.class.isInstance(diagram) &&
-            diagram.getControlLevel()==UmlDiagram.CONSTRAINED
-        ){
+        if(ActivityDiagram.class.isInstance(diagram)){
             JDialog d = new JDialog();
             
             //el type
@@ -601,15 +606,34 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
                         if(Activity.class.isInstance(newElement)){
                             newElement.setName(methSelector.getSelectedMethod().toFullString());
-                            try {
-                                diagram.addCoreElement(newElement);
-                            } catch (ModelException ex) {
+                            try{
+                                if(newIndex !=-1 )
+                                    diagram.insertCoreElement(newIndex,newElement);            
+                                else 
+                                    diagram.addCoreElement(newElement);            
+                            }catch(ModelException ex){
                                 JOptionPane.showMessageDialog(Explorer.this, ex);
                                 ex.printStackTrace();
                             }
-                            diagram.getConstraints().put(newElement, methSelector.getSelectedMethod());
+                            diagram.getConstraints().put(newElement, methSelector.getSelectedMethod());                            
+                        }
+                        else if(ControlNode.class.isInstance(newElement)){
+                            try{
+                                if(newIndex !=-1 )
+                                    diagram.insertCoreElement(newIndex,newElement);            
+                                else 
+                                    diagram.addCoreElement(newElement);            
+                            }catch(ModelException ex){
+                                JOptionPane.showMessageDialog(Explorer.this, ex);
+                                ex.printStackTrace();
+                            }
                         }
                         
+                        
+                        ArrayList q =new ArrayList();
+                        q.add(this);
+                        firePropertyChange("Element inserted", q, newElement);
+                       
                         d.setVisible(false);
                     }
                 }
@@ -622,6 +646,89 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             d.pack();
             d.setLocationRelativeTo(null);
             d.setVisible(true);
+        }
+        else if(SequenceDiagram.class.isInstance(diagram)){
+            
+            String elType = (String) JOptionPane.showInputDialog(this,
+                    "Type", "Type" , JOptionPane.INFORMATION_MESSAGE ,
+                    null , new String[]{"Actor","Controller/Business Object","Message"} , null);
+            
+            if(elType=="Controller/Business Object"){
+                JDialog d = new JDialog();
+
+                JList fList = new JList(diagram.getUmlModel().getCoreObjects().toArray());
+                fList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                //TODO remove obj already in dgrm cnstrnts
+
+                JButton okButton = new JButton("OK");
+                okButton.addActionListener(new ActionListener(){                
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        CoreObject obj = (CoreObject) fList.getSelectedValue();
+                        if(diagram.getConstraints().get(obj)==null){
+                            /*int newIndex = -1;
+                            String[] s = {"Before" , "After"};
+                            String ss = ((String)JOptionPane.showInputDialog(Explorer.this, "Before or after", "Insert", JOptionPane.INFORMATION_MESSAGE, null, s, "After"));
+                            if(ss .equals("Before"))
+                                newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection);
+                            else
+                                newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)+1;
+                            */
+                            //TODO fix 
+                            Actor a = new Actor();
+                            a.setName(obj.getName());                                
+                            try {
+                            //    if(newIndex !=-1 )  
+                                //    diagram.insertCoreElement(newIndex,a);
+                              //  else 
+                                    diagram.addCoreElement(a); 
+                            } catch (ModelException ex) {
+                                JOptionPane.showMessageDialog(null, ex);
+                                ex.printStackTrace();
+                            }
+                            diagram.getConstraints().put(obj, a);
+
+                            ArrayList q =new ArrayList();
+                            q.add(this);
+                            firePropertyChange("Element inserted", q, a);
+                            d.setVisible(false);
+                        }
+                    }
+                });
+
+                d.getContentPane().add(new JScrollPane(fList) , BorderLayout.CENTER);
+                d.getContentPane().add(okButton , BorderLayout.SOUTH);
+                d.pack();
+                d.setLocationRelativeTo(null);
+                d.setVisible(true);
+            }
+            else if(elType=="Message"){
+                Message m = new Message();
+                try {
+                        diagram.addCoreElement(m); 
+                } catch (ModelException ex) {
+                    JOptionPane.showMessageDialog(null, ex);
+                    ex.printStackTrace();
+                }               
+
+                ArrayList q =new ArrayList();
+                q.add(this);
+                firePropertyChange("Element inserted", q, m);                
+            }
+            //TODO allow Actors that can receive no messages and can only send to cntlrs i.e userDel            
+            else if(elType=="Actor"){
+                Actor m = new Actor();
+                try {
+                        diagram.addCoreElement(m); 
+                } catch (ModelException ex) {
+                    JOptionPane.showMessageDialog(null, ex);
+                    ex.printStackTrace();
+                }               
+
+                ArrayList q =new ArrayList();
+                q.add(this);
+                firePropertyChange("Element inserted", q, m);                
+            }
         }
     }
     

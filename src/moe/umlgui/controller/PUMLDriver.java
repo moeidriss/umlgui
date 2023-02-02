@@ -55,6 +55,17 @@ public class PUMLDriver {
                 sb.append(getPackageDefinition(i.next() , processed));
             }            
         }
+        else if (SequenceDiagram.class.isInstance(umlDiagram) && 
+                umlDiagram.getControlLevel()==UmlDiagram.CONSTRAINED
+        ){
+            //TODO declare userDelegates??
+            
+            for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
+                UmlCoreElement el = i.next();
+                el.setUmlCode(getElementDefinition(el));
+                sb.append(el.getUmlCode());        
+            }
+        }
         else{
             for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
                 UmlCoreElement el = i.next();
@@ -274,19 +285,28 @@ public class PUMLDriver {
         
         
 
-        else if(BusinessObject.class.isInstance(el)
+        else if(BusinessObject.class.isInstance(el) &&
+                PackageDiagram.class.isInstance(el.getUmlDiagram()) //or classD 
         ){
             sb.append("entity ");
             sb.append(el.getName().replace(" ", ""));
-
             sb.append("\n");
         }
 
-        else if(Controller.class.isInstance(el)
+        else if(Controller.class.isInstance(el) &&
+                PackageDiagram.class.isInstance(el.getUmlDiagram()) //or classD 
         ){
             sb.append("control ");
             sb.append(el.getName().replace(" ", ""));
-
+            sb.append("\n");
+        }
+        
+        else if(CoreObject.class.isInstance(el) &&
+                SequenceDiagram.class.isInstance(el.getUmlDiagram()) && 
+                el.getUmlDiagram().getControlLevel()==UmlDiagram.CONSTRAINED
+        ){
+            sb.append("actor ");
+            sb.append(el.getName().replace(" ", ""));
             sb.append("\n");
         }
 

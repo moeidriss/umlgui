@@ -5,6 +5,7 @@
 package moe.umlgui.ui;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -18,8 +19,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.TransferHandler;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import moe.umlgui.controller.PUMLDriver;
 import moe.umlgui.model.*;
 import moe.umlgui.ui.object.CoreObjectMethodSelector;
@@ -126,6 +131,10 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
                 elClass.equals("Controller") 
         ){
             if(PackageDiagram.class.isInstance(diagram)) return true;
+            
+            else if(diagram.getControlLevel()==UmlDiagram.CONSTRAINED){
+                if(SequenceDiagram.class.isInstance(diagram)) return true;
+            }
         }
        
        JOptionPane.showMessageDialog(null, elClass + " not allowed in " + diagram.getType());
@@ -147,9 +156,11 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
                 ((UmlDiagramPanel)support.getComponent()).insertElement(el);
                 return true;
             }
-            else if(ActivityDiagram.class.isInstance(diagram) && 
-                    Activity.class.isInstance(el)
-                    // || ...
+            else if( (ActivityDiagram.class.isInstance(diagram) && 
+                    Activity.class.isInstance(el))
+                    || 
+                    (SequenceDiagram.class.isInstance(diagram) && 
+                    CoreObject.class.isInstance(el))
             ){
                 addConstrainedElement(el , ((UmlDiagramPanel)support.getComponent()));
                 return true;
@@ -192,7 +203,6 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
                             ex.printStackTrace();
                         }
                         diagram.getConstraints().put(newElement, methSelector.getSelectedMethod());
-
                         
                         d.setVisible(false);
                     }
@@ -205,6 +215,31 @@ public class UmDiagramImportTransferHandler extends TransferHandler {
             d.pack();
             d.setLocationRelativeTo(null);
             d.setVisible(true);
+        }
+        else if(SequenceDiagram.class.isInstance(diagram)  && 
+                    CoreObject.class.isInstance(newElement)
+        ){
+            if(!diagram.getConstraints().containsKey(newElement)){
+                Actor a = new Actor();
+                a.setName(newElement.getName());                                
+                try {
+                    udp.insertElement(a);
+                } catch (ModelException ex) {
+                    JOptionPane.showMessageDialog(null, ex);
+                    ex.printStackTrace();
+                }
+                diagram.getConstraints().put(newElement, a);
+            }
+        }
+        else if(SequenceDiagram.class.isInstance(diagram)  && 
+                    Message.class.isInstance(newElement)
+        ){                              
+            try {
+                udp.insertElement(newElement);
+            } catch (ModelException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+                ex.printStackTrace();
+            }
         }
     }
 

@@ -134,7 +134,9 @@ public class PropertyEditor extends javax.swing.JPanel {
         if(umlCoreElement.getUmlDiagram().getControlLevel()==UmlDiagram.CONSTRAINED){
             nameTextField.setEditable(false);
         }
-        
+        else{
+            nameTextField.setEditable(true);
+        }
         
         //Packages & swimlanes
         try{
@@ -312,25 +314,77 @@ public class PropertyEditor extends javax.swing.JPanel {
         
         
         else if(Message.class.isInstance(umlCoreElement)){
-            fromComboBox.setModel(new DefaultComboBoxModel(getElementList()));
-            if(((Message)umlCoreElement).getFrom() != null){
-                fromComboBox.setSelectedItem(((Message)umlCoreElement).getFrom());
-            }
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(fromComboBox, gridBagConstraints);
+            if(umlCoreElement.getUmlDiagram().getControlLevel()==UmlDiagram.FREE){
+                fromComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+                if(((Message)umlCoreElement).getFrom() != null){
+                    fromComboBox.setSelectedItem(((Message)umlCoreElement).getFrom());
+                }
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.gridy = yCounter;    yCounter++;
+                editPanel.add(fromComboBox, gridBagConstraints);
 
-            toComboBox.setModel(new DefaultComboBoxModel(getElementList()));
-            if(((Message)umlCoreElement).getTo() != null){
-                toComboBox.setSelectedItem(((Message)umlCoreElement).getTo());
+                toComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+                if(((Message)umlCoreElement).getTo() != null){
+                    toComboBox.setSelectedItem(((Message)umlCoreElement).getTo());
+                }
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.gridy = yCounter;    yCounter++;
+                editPanel.add(toComboBox, gridBagConstraints);
             }
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(toComboBox, gridBagConstraints);
+            else{
+                //from: actor (bo)
+                fromComboBox.setModel(new DefaultComboBoxModel(((SequenceDiagram)umlCoreElement.getUmlDiagram()).getActors().toArray()));
+                if(((Message)umlCoreElement).getFrom() != null){
+                    fromComboBox.setSelectedItem(((Message)umlCoreElement).getFrom());
+                }
+                
+                //to: actor (bo.meth)
+                toComboBox.setModel(new DefaultComboBoxModel(((SequenceDiagram)umlCoreElement.getUmlDiagram()).getObjectActors().toArray()));
+                if(((Message)umlCoreElement).getTo() != null){
+                    toComboBox.setSelectedItem(((Message)umlCoreElement).getTo());
+                }
+                
+                JComboBox mC = new JComboBox();
+                
+                toComboBox.addActionListener(new ActionListener(){                    
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ((Message)umlCoreElement).setTo((Actor) toComboBox.getSelectedItem());
+                        CoreObject obj =  (CoreObject) umlCoreElement.getUmlDiagram().getConstraints().get(toComboBox.getSelectedItem());
+                        mC.setModel(new DefaultComboBoxModel(obj.getMethods().toArray()));
+                    }
+                });
+                
+                mC.addActionListener(new ActionListener(){                    
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ((Message)umlCoreElement).setTo((Actor) toComboBox.getSelectedItem());
+                        umlCoreElement.getUmlDiagram().getConstraints().put(umlCoreElement, mC.getSelectedItem());
+                    }
+                });
+                
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.gridy = yCounter;    yCounter++;
+                editPanel.add(fromComboBox, gridBagConstraints);
+                
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.gridy = yCounter;    yCounter++;
+                editPanel.add(toComboBox, gridBagConstraints);
+                
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.gridy = yCounter;    yCounter++;
+                editPanel.add(mC, gridBagConstraints);
+            }
         }
         
         //TODO Note Element

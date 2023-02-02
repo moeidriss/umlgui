@@ -255,8 +255,9 @@ public abstract class UmlDiagram implements Serializable{
     }
 
     /*
-    e.g. activity: method
-    actor: method
+    ActD > activity: method
+    SeqD > CorObj: Actor
+           Msg: method
     */
     HashMap<UmlCoreElement,Object> constraints = new HashMap();
 

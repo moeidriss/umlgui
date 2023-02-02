@@ -48,6 +48,8 @@ public class Message extends UmlCoreElement  implements java.io.Serializable , B
     }
     
     
+    
+    
     @Override
     public UmlCoreElement clone() {
         Message x = new Message();
