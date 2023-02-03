@@ -274,4 +274,15 @@ public abstract class UmlDiagram implements Serializable{
     }
     
     
+    boolean attached = false;
+
+    public boolean isAttached() {
+        return attached;
+    }
+
+    public void setAttached(boolean attached) {
+        this.attached = attached;
+    }
+    
+    
 }

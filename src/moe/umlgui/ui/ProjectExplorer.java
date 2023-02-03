@@ -144,6 +144,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
 
         jSplitPane2.setDividerLocation(100);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane2.setResizeWeight(1.0);
         jSplitPane2.setOneTouchExpandable(true);
 
         jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -314,12 +315,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         else if(evt.getPropertyName().equals("Element inserted") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             UmlCoreElement el = (UmlCoreElement)evt.getNewValue();
-            //project.addCoreElement(el);
             propertyEditor.edit(el);        
             explorer.reload();
-            
-            //TODO SELECTION
-            //only if element is displayable: attOwner with parent diagram inserted
             explorer.setSelection(el);    
         }
         
@@ -331,10 +328,6 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             ((ArrayList)evt.getOldValue()).add(this);
             
             UmlDiagram ud = (UmlDiagram)evt.getNewValue();
-            //project.getDiagrams().add(ud);
-            //project.getModels().get(0).getDiagrams().add(ud);
-            //TODO assoc attached diagrams to project (!) only for an inventory of diagrams in the project
-            //
             propertyEditor.edit(ud);
                 
             DiagramExplorer diagramExplorer = openDiagramExplorers.get(ud);

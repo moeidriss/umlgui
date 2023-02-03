@@ -38,6 +38,16 @@ public abstract class UmlModel implements java.io.Serializable{
     ArrayList<UmlDiagram> diagrams =new ArrayList();
 
     public ArrayList<UmlDiagram> getDiagrams() {
+        /*ArrayList<UmlDiagram> l = new ArrayList();
+        for(Iterator<UmlDiagram> i = diagrams.iterator() ; i.hasNext() ;){
+            UmlDiagram u = i.next();
+            if(!u.isAttached()) l.add(u);
+        }
+        return l;*/return getAllDiagrams();
+    }
+
+    /* incluing attached diagrama */
+    public ArrayList<UmlDiagram> getAllDiagrams() {
         return diagrams;
     }
     

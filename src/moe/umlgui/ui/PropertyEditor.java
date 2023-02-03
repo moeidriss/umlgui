@@ -514,14 +514,14 @@ public class PropertyEditor extends javax.swing.JPanel {
         }
         
         //filler
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        /*gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = java.awt.GridBagConstraints.RELATIVE;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.gridy = yCounter;
         editPanel.add(new javax.swing.JPanel(), gridBagConstraints);
-        this.firePropertyChange("form loaded", null, null);
+        this.firePropertyChange("form loaded", null, null);*/
     }
     
     

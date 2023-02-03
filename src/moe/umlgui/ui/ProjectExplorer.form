@@ -98,6 +98,7 @@
           <Properties>
             <Property name="dividerLocation" type="int" value="100"/>
             <Property name="orientation" type="int" value="0"/>
+            <Property name="resizeWeight" type="double" value="1.0"/>
             <Property name="oneTouchExpandable" type="boolean" value="true"/>
           </Properties>
           <Constraints>

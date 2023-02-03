@@ -853,29 +853,30 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     private void attachDiagramButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attachDiagramButtonActionPerformed
         if(AttachmentOwner.class.isInstance(selection)){
             UmlDiagram ud = null;
+            UmlModel model = ((UmlCoreElement)selection).getUmlDiagram().getUmlModel();
             String[] ld = {"Use Case Diagram","Activity Diagram",
                         "Sequence Diagram" , "Package Diagram"};
             String s = (String)JOptionPane.showInputDialog(null, "Select type of diagram", "Attach Diagram", JOptionPane.INFORMATION_MESSAGE, null, ld, null);
             if(s.equals("Use Case Diagram")){
-                ud = new UseCaseDiagram(null);            
+                ud = new UseCaseDiagram(model);            
             }
             else if(s.equals("Activity Diagram")){
-                ud = new ActivityDiagram(null);
+                ud = new ActivityDiagram(model);
             }
             else if(s.equals("Sequence Diagram")){
-                ud = new SequenceDiagram(null);
+                ud = new SequenceDiagram(model);
             }
             else if(s.equals("Package Diagram")){
-                ud = new PackageDiagram(null);
+                ud = new PackageDiagram(model);
             }
             
             if(ud !=  null){                
                 String n = JOptionPane.showInputDialog(this, "Name it" , ud.getName());
                 if(n!=null &&!n.isEmpty()) ud.setName(n);
-            
-                //TODO link to project other way
-                //project.getDiagrams().add(ud);
-                //project.getModels().get(0).getDiagrams().add(ud);
+                
+                
+                ud.setAttached(true);
+                
                 ((AttachmentOwner)selection).getAttachedDiagrams().add(ud);
                 
 

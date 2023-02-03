@@ -4,7 +4,7 @@
  */
 package moe.umlgui.model;
 
-
+//TODO extend UmlElement
 public abstract class ActivityNode extends Activity  implements java.io.Serializable{
 
     public ActivityNode() {
