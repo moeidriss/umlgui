@@ -112,13 +112,16 @@ public class Project implements java.io.Serializable{
     
     //TODO update from UmlDiagram.add
     public void addCoreElement(UmlCoreElement umlCoreElement){
-        java.lang.System.out.println("proj adding "+ umlCoreElement + umlCoreElement.getClass());
         if(!coreElementList.contains(umlCoreElement)){
             coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
             coreElementList.add(umlCoreElement);
         }                
     }
     
+    public void removeCoreElement(UmlCoreElement el){
+        coreElementList.remove(el);
+        coreElementMap.remove(el.getId());
+    }
     
     public Project(){
     }

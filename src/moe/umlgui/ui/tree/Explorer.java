@@ -733,7 +733,15 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     }
     
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        // TODO add your handling code here:
+        if(UmlCoreElement.class.isInstance(selection)){
+            ((UmlCoreElement)selection).getUmlDiagram().removeCoreElement((UmlCoreElement)selection);
+            
+            ArrayList q =new ArrayList();
+            q.add(this);
+            firePropertyChange("Element removed", q, selection);                
+            
+            setSelection(((UmlCoreElement)selection).getUmlDiagram());
+        }
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void upButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upButtonActionPerformed

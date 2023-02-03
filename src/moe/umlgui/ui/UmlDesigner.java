@@ -24,6 +24,7 @@ import java.util.HashSet;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -134,11 +135,11 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         jToolBar1 = new javax.swing.JToolBar();
         newProjectButton = new javax.swing.JButton();
         openProjectButton = new javax.swing.JButton();
+        helpButton = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         contentPanel = new javax.swing.JPanel();
-        jProgressBar1 = new javax.swing.JProgressBar();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jLabel1 = new javax.swing.JLabel();
+        manScrollPane = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
         controlsSplitPane = new javax.swing.JSplitPane();
         paletteScrollPane = new javax.swing.JScrollPane();
         palette = new moe.umlgui.ui.Palette();
@@ -175,30 +176,40 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         });
         jToolBar1.add(openProjectButton);
 
+        helpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/24x24/preferences-desktop-notification.png"))); // NOI18N
+        helpButton.setText("Manual");
+        helpButton.setFocusable(false);
+        helpButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        helpButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(helpButton);
+
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setOneTouchExpandable(true);
 
         contentPanel.setLayout(new java.awt.BorderLayout());
 
-        jProgressBar1.setForeground(new java.awt.Color(204, 0, 0));
-        jProgressBar1.setIndeterminate(true);
-        jProgressBar1.setString("IN PROGRESS");
-        jProgressBar1.setStringPainted(true);
-        contentPanel.add(jProgressBar1, java.awt.BorderLayout.SOUTH);
+        manScrollPane.setBackground(new java.awt.Color(204, 0, 0));
 
-        jScrollPane1.setBackground(new java.awt.Color(204, 0, 0));
+        jEditorPane1.setEditable(false);
+        jEditorPane1.setContentType("text/html"); // NOI18N
+        try {
+            jEditorPane1.setPage(getClass().getResource("man.html"));
+        } catch (java.io.IOException e1) {
+            e1.printStackTrace();
+        }
+        manScrollPane.setViewportView(jEditorPane1);
 
-        jLabel1.setBackground(new java.awt.Color(204, 0, 0));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/w4g.png"))); // NOI18N
-        jScrollPane1.setViewportView(jLabel1);
-
-        contentPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        contentPanel.add(manScrollPane, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setRightComponent(contentPanel);
 
+        controlsSplitPane.setDividerLocation(200);
         controlsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         controlsSplitPane.setOneTouchExpandable(true);
 
@@ -268,8 +279,16 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         }//StreamCorruptedException | OptionalDataException  | InvalidClassException  | 
     }//GEN-LAST:event_openProjectButtonActionPerformed
 
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
+        contentPanel.removeAll();
+        contentPanel.add(manScrollPane , BorderLayout.CENTER);
+    }//GEN-LAST:event_helpButtonActionPerformed
+
+    //TODO file command line args
+    
     /**
      * @param args the command line arguments
+     * 
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -296,10 +315,21 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         //</editor-fold>
         //</editor-fold>
 
+        /*JDialog d = new JDialog();
+        JLabel l =new JLabel();
+        l.setIcon(new javax.swing.ImageIcon(d.getClass().getResource("w4g.png")));
+        d.getContentPane().add(l , BorderLayout.CENTER);
+        //getClass().getResource("man.html")
+        d.pack();
+        d.setLocationRelativeTo(null);
+        d.setAlwaysOnTop(true);
+        d.setVisible(true);
+        */
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new UmlDesigner().setVisible(true);
+                //d.setVisible(false);
             }
         });
     }
@@ -308,11 +338,11 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
     private javax.swing.JPanel contentPanel;
     private javax.swing.JSplitPane controlsSplitPane;
     private javax.swing.JTabbedPane controlsTabbedPane;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton helpButton;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JScrollPane manScrollPane;
     private javax.swing.JButton newProjectButton;
     private javax.swing.JButton openProjectButton;
     private moe.umlgui.ui.Palette palette;

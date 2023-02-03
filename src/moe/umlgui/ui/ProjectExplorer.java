@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
@@ -75,6 +77,10 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         revalidate();
     }
     
+    private void closeDiagram(int i){
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,6 +98,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         jSplitPane1 = new javax.swing.JSplitPane();
         jSplitPane2 = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        pHolderPanel2 = new javax.swing.JPanel();
+        pHolderPanel1 = new javax.swing.JPanel();
         propertyEditorScrollPane = new javax.swing.JScrollPane();
         propertyEditor = new moe.umlgui.ui.PropertyEditor();
 
@@ -111,6 +119,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         });
         jPanel1.add(saveProjectButton);
 
+        jToolBar1.setFloatable(true);
         jToolBar1.setRollover(true);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/24x24/DiagramNew.PNG"))); // NOI18N
@@ -129,12 +138,23 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
+        jSplitPane1.setDividerLocation(200);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setOneTouchExpandable(true);
 
+        jSplitPane2.setDividerLocation(100);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setOneTouchExpandable(true);
+
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
+        jTabbedPane1.addTab("tab1", pHolderPanel2);
+
         jSplitPane2.setBottomComponent(jTabbedPane1);
+        jSplitPane2.setLeftComponent(pHolderPanel1);
 
         jSplitPane1.setLeftComponent(jSplitPane2);
 
@@ -194,7 +214,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             addPropertyChangeListener(diagramExplorer);
             openDiagramExplorers.put(ud, diagramExplorer);
             
-            jTabbedPane1.addTab(ud.getName(), diagramExplorer);
+            jTabbedPane1.addTab(ud.getName(), new ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Cancel.png")), diagramExplorer );
             jTabbedPane1.setSelectedComponent(diagramExplorer);
             
             UmlDiagramPanel dp = new UmlDiagramPanel(ud);
@@ -216,18 +236,25 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
 
     private void saveProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectButtonActionPerformed
         try{
-            JFileChooser fc = new JFileChooser(new File(project.getFolder(),project.getName()));
+            JFileChooser fc = new JFileChooser((project.getFolder()));
             fc.setFileFilter(new FileNameExtensionFilter("Waiting4Godot files","w4g"));
-            int i = fc.showSaveDialog(null);
-            FileOutputStream out = new FileOutputStream(new File(project.getFolder()+"/"+project.getName())+".wfg");
-            ObjectOutputStream s = new ObjectOutputStream(out);
-            s.writeObject(project);
-            s.flush();
+            if(fc.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
+                File f = new File(fc.getSelectedFile().getAbsolutePath()+".w4g");//TODO fix
+                FileOutputStream out = new FileOutputStream(f);
+                ObjectOutputStream s = new ObjectOutputStream(out);
+                s.writeObject(project);
+                s.flush();
+            }
         } catch (java.io.IOException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error saving", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }//GEN-LAST:event_saveProjectButtonActionPerformed
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        int i = jTabbedPane1.getUI().tabForCoordinate(jTabbedPane1, evt.getX(), evt.getY());
+        if(i!=-1)   closeDiagram(i);
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -238,6 +265,8 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JPanel pHolderPanel1;
+    private javax.swing.JPanel pHolderPanel2;
     private moe.umlgui.ui.PropertyEditor propertyEditor;
     private javax.swing.JScrollPane propertyEditorScrollPane;
     private javax.swing.JButton saveProjectButton;
@@ -255,6 +284,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             !evt.getPropertyName().equals("Diagram updated")  &&
             !evt.getPropertyName().equals("Project updated") &&
             !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Element removed")  &&
             !evt.getPropertyName().equals("Diagram attached")  &&
             !evt.getPropertyName().equals("Explorer selection")   &&
             !evt.getPropertyName().equals("Tab selection") 
@@ -291,6 +321,10 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             //TODO SELECTION
             //only if element is displayable: attOwner with parent diagram inserted
             explorer.setSelection(el);    
+        }
+        
+        else if(evt.getPropertyName().equals("Element removed")){
+            explorer.reload();
         }
         
         else if(evt.getPropertyName().equals("Diagram attached") && !((ArrayList)evt.getOldValue()).contains(this)){

@@ -180,6 +180,14 @@ public abstract class UmlDiagram implements Serializable{
         }
     }
     
+    //TODO remove relations?
+    public void removeCoreElement(UmlCoreElement el){
+        coreElementList.remove(el);
+        coreElementMap.remove(el.getId());
+        if(umlModel!=null)  umlModel.removeCoreElement(el);
+    }
+    
+    
     public void moveUp(UmlElement el)throws ModelException{
         if(coreElementList.indexOf(el)==0)
             throw new ModelException("Can't move up");

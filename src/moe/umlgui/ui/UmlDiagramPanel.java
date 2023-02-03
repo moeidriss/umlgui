@@ -138,6 +138,7 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
     public void propertyChange(PropertyChangeEvent evt) {
         if(!evt.getPropertyName().equals("Element updated") &&
             !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Element removed")  &&
             !evt.getPropertyName().equals("Diagram updated") 
         ){
             return;
@@ -161,6 +162,21 @@ public class UmlDiagramPanel extends javax.swing.JPanel  implements PropertyChan
         else if(evt.getPropertyName().equals("Diagram updated") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             loadDiagramPanel();
+        }
+        
+        if( (evt.getPropertyName().equals("Element removed") ) 
+                &&
+                !((ArrayList)evt.getOldValue()).contains(this)
+                //&& TODO it's already removed from umlDiagram.getCoreElementMap()
+                //umlDiagram.getCoreElementMap().containsKey(((UmlCoreElement)evt.getNewValue()).getId())
+        ){
+            ((ArrayList)evt.getOldValue()).add(this);
+            try {
+                PUMLDriver.update(umlDiagram);
+                updateImage();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, ".");
+            }
         }
     }
 

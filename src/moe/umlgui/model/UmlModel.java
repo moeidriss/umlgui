@@ -120,6 +120,12 @@ public abstract class UmlModel implements java.io.Serializable{
             project.addCoreElement(umlCoreElement);
     }
     
+    public void removeCoreElement(UmlCoreElement el){
+        coreElementList.remove(el);
+        coreElementMap.remove(el.getId());
+        if(project!=null) project.removeCoreElement(el);
+    }
+    
     public ArrayList<Actor> getActors(){        
         ArrayList aList = new ArrayList();
         for(Iterator i = coreElementList.iterator() ; i.hasNext() ;){

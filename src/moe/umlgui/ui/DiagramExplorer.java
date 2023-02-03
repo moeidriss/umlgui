@@ -83,6 +83,7 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
     public void propertyChange(PropertyChangeEvent evt) {
         if(!evt.getPropertyName().equals("Element updated") &&
             !evt.getPropertyName().equals("Element inserted")  &&
+            !evt.getPropertyName().equals("Element removed")  &&
             !evt.getPropertyName().equals("Diagram updated") &&
             !evt.getPropertyName().equals("Diagram attached")  &&
             !evt.getPropertyName().equals("Explorer selection") 
@@ -107,6 +108,10 @@ public class DiagramExplorer extends javax.swing.JPanel implements PropertyChang
             explorer.setSelection(evt.getNewValue());
             firePropertyChange("Element inserted", evt.getOldValue(), evt.getNewValue());
         }
+        else if(evt.getPropertyName().equals("Element removed")){
+            explorer.reload();
+        }
+        
         else if(evt.getPropertyName().equals("Explorer selection") && !((ArrayList)evt.getOldValue()).contains(this)){
             ((ArrayList)evt.getOldValue()).add(this);
             explorer.reload();
