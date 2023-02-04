@@ -150,8 +150,9 @@ String type;
     
     public String dump(){
         StringBuffer sb = new StringBuffer();
-        sb.append("!!! Dumping element " + name + " !!!\n");
-        if(BusinessObjectOwner.class.isInstance(this)){
+        sb.append("Dumping element " + name + ":" + getClass() + "\n");
+        
+        /*if(BusinessObjectOwner.class.isInstance(this)){
             sb.append("\t Business Objects\n");
             for(CoreObject o : ((BusinessObjectOwner)this).getBusinessObjects()){
                 sb.append(o.dump());
@@ -168,6 +169,14 @@ String type;
         if(AttachmentOwner.class.isInstance(this)){
             for(UmlDiagram o : ((AttachmentOwner)this).getAttachedDiagrams()){
                 sb.append(o.dump());
+            }
+        }*/
+        if(ConditionalBlock.class.isInstance(this)){
+            sb.append("\t"); sb.append(((ConditionalBlock)this).getTestList().size()).append(" members");
+            sb.append(" isComplete=").append(((ConditionalBlock)this).isComplete());
+            sb.append("\n");
+            for(LogicalTest o : ((ConditionalBlock)this).getTestMap().keySet()){
+                sb.append("\t\t").append(o).append("::").append(((ConditionalBlock)this).getTestMap().get(o));
             }
         }
         

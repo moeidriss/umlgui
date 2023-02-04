@@ -251,6 +251,10 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(tComp, gridBagConstraints);
             
+            //need to set ActivityFlow diagram despite constructor init 
+            //since cnstcr is called at RepeatLoop init with null dgrm... UmlFiagram.addCoreElement
+            ((WhileLoop)umlCoreElement).getActivityFlow().setDiagram(umlCoreElement.getUmlDiagram());
+            
             
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -263,11 +267,14 @@ public class PropertyEditor extends javax.swing.JPanel {
         
         
         else if(RepeatLoop.class.isInstance(umlCoreElement)){
+            //need to set ActivityFlow diagram despite constructor init 
+            //since cnstcr is called at RepeatLoop init with null dgrm... UmlFiagram.addCoreElement
+            ((RepeatLoop)umlCoreElement).getActivityFlow().setDiagram(umlCoreElement.getUmlDiagram());
+            
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 1.0;
-            
+            gridBagConstraints.weighty = 1.0;            
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow()), gridBagConstraints);
 
@@ -831,6 +838,10 @@ public class PropertyEditor extends javax.swing.JPanel {
                     comp.save();
                 }
             }
+        }
+        
+        if(ControlNode.class.isInstance(umlCoreElement)){
+            ((ControlNode)umlCoreElement).setComplete(true);
         }
         
         ArrayList q =new ArrayList();

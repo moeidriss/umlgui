@@ -57,9 +57,7 @@ public class PUMLDriver {
         }
         else if (SequenceDiagram.class.isInstance(umlDiagram) && 
                 umlDiagram.getControlLevel()==UmlDiagram.CONSTRAINED
-        ){
-            //TODO declare userDelegates??
-            
+        ){//TODO
             for(Iterator<UmlCoreElement> i= umlDiagram.getCoreElementList().iterator(); i.hasNext();){
                 UmlCoreElement el = i.next();
                 el.setUmlCode(getElementDefinition(el));
@@ -257,27 +255,27 @@ public class PUMLDriver {
         }
 
 
-        else if(ConditionalBlock.class.isInstance(el)){
+        else if(ConditionalBlock.class.isInstance(el) && ((ControlNode)el).isComplete()){
             ConditionalBlock cn = (ConditionalBlock)el;
             sb.append(getConditionalBlockDefinition(cn));
         }
 
-        else if(WhileLoop.class.isInstance(el)){
+        else if(WhileLoop.class.isInstance(el) && ((ControlNode)el).isComplete()){
             WhileLoop cn = (WhileLoop)el;
             sb.append(getWhileLoopDefinition(cn));
         }
 
-        else if(RepeatLoop.class.isInstance(el)){
+        else if(RepeatLoop.class.isInstance(el) && ((ControlNode)el).isComplete()){
             RepeatLoop cn = (RepeatLoop)el;
             sb.append(getRepeatDefinition(cn));
         }
 
-        else if(Split.class.isInstance(el)){
+        else if(Split.class.isInstance(el) && ((ControlNode)el).isComplete()){
             Split cn = (Split)el;
             sb.append(getSplitDefinition(cn));
         }
 
-        else if(Fork.class.isInstance(el)){
+        else if(Fork.class.isInstance(el) && ((ControlNode)el).isComplete()){
             Fork cn = (Fork)el;
             sb.append(getForkDefinition(cn));
         }

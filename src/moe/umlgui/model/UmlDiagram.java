@@ -146,6 +146,8 @@ public abstract class UmlDiagram implements Serializable{
     override to enforce biz rules (element allowed, biz vs it model)
     */
     public void addCoreElement(UmlCoreElement umlCoreElement) throws ModelException{
+        java.lang.System.out.println("Di::addCoreElement()");
+        java.lang.System.out.println(umlCoreElement.dump());
         if(!coreElementList.contains(umlCoreElement)){
             umlCoreElement.setUmlDiagram(this);
             coreElementMap.put(umlCoreElement.getId(), umlCoreElement);
@@ -153,10 +155,17 @@ public abstract class UmlDiagram implements Serializable{
         }
         if(umlModel!=null)  umlModel.addCoreElement(umlCoreElement);
         
-        try {
-            PUMLDriver.update(this);
-        } catch (IOException ex) {
-            throw new ModelException("Error updating PUML definition",ex);
+        //exclude unfiniished ControlNodes
+        if(!ControlNode.class.isInstance(umlCoreElement) 
+                ||
+            (ControlNode.class.isInstance(umlCoreElement) &&
+          ((ControlNode)umlCoreElement).isComplete())
+        ){
+            try {
+                PUMLDriver.update(this);
+            } catch (IOException ex) {
+                throw new ModelException("Error updating PUML definition",ex);
+            }
         }
     }
     

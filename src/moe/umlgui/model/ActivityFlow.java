@@ -16,6 +16,7 @@
 package moe.umlgui.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -27,6 +28,11 @@ public class ActivityFlow<UmlCoreElement> extends ArrayList{
     public UmlDiagram getDiagram() {
         return diagram;
     }
+
+    public void setDiagram(UmlDiagram diagram) {
+        this.diagram = diagram;
+    }
+    
     
     public ActivityFlow(UmlDiagram diagram){
         this.diagram = diagram;
@@ -34,5 +40,13 @@ public class ActivityFlow<UmlCoreElement> extends ArrayList{
     
     public String toString(){
         return "Activity Flow";
+    }
+    
+    public String dump(){
+        StringBuffer sb = new StringBuffer();
+        for(Iterator<UmlCoreElement> i = iterator() ; i.hasNext();){
+            sb.append(i.next());    if(i.hasNext()) sb.append(",");
+        }
+        return sb.toString();
     }
 }

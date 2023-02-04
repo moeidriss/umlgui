@@ -65,7 +65,7 @@ public class ActivityFlowComponent extends javax.swing.JPanel {
     }
 
     
-    private void reloadList(){
+    private void reloadList(){//jList1.setModel(new DefaultListModel(activityFlow.toArray()));
         ((DefaultListModel)jList1.getModel()).removeAllElements();
         for(Iterator i = activityFlow.iterator() ; i.hasNext() ; ){
           ((DefaultListModel)jList1.getModel()).addElement(i.next());
@@ -198,8 +198,9 @@ public class ActivityFlowComponent extends javax.swing.JPanel {
         }
         
         if(ac!=null){
-            try {
-                activityFlow.getDiagram().addCoreElement(ac);
+            //try {
+                //activityFlow.getDiagram().addCoreElement(ac);
+                ac.setUmlDiagram(activityFlow.getDiagram());
                 pe.showToolbar(false);
                 pe.edit(ac);
 
@@ -225,9 +226,9 @@ public class ActivityFlowComponent extends javax.swing.JPanel {
                 acDialog.setLocationRelativeTo(null);
 
                 acDialog.setVisible(true);
-            } catch (ModelException ex) {
+            /*} catch (ModelException ex) {
                 Logger.getLogger(ActivityFlowComponent.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
             
         }
 

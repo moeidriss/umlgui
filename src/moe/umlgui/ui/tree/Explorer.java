@@ -265,12 +265,12 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                     jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), diagram.getElementList().indexOf(selection)))));
             }            
             else if(ControlNode.class.isInstance(selection)){
-                DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((ControlNode)selection).getUmlDiagram().getUmlModel()));
-                if(((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection)!= -1){
-                    DefaultMutableTreeNode diagramNode = (DefaultMutableTreeNode)treeModel.getChild(modelNode, ((ControlNode)selection).getUmlDiagram().getUmlModel().getDiagrams().indexOf(selection));
-                    jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((ControlNode)selection).getUmlDiagram().getCoreElementList().indexOf(selection)))));
-                }
+                //DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((ControlNode)selection).getUmlDiagram().getUmlModel()));
+                if(diagram.getElementList().indexOf(selection) != -1)
+                    jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), diagram.getElementList().indexOf(selection)))));
             }
+            
+            //TODO check ActivityNode
             else{ }
         }
         
@@ -620,13 +620,16 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                         }   
                         
                         int newIndex = -1;
-                        String[] s = {"Before" , "After"};
-                        String ss = ((String)JOptionPane.showInputDialog(Explorer.this, "Before or after", "Insert", JOptionPane.INFORMATION_MESSAGE, null, s, "After"));
-                        if(ss .equals("Before"))
-                            newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection);
-                        else
-                            newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)+1;
-
+                        
+                        if(UmlElement.class.isInstance(selection)){
+                            String[] s = {"Before" , "After"};
+                            String ss = ((String)JOptionPane.showInputDialog(Explorer.this, "Before or after", "Insert", JOptionPane.INFORMATION_MESSAGE, null, s, "After"));
+                            if(ss .equals("Before"))
+                                newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection);
+                            else
+                                newIndex = ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)+1;
+                        }
+                        
                         if(Activity.class.isInstance(newElement)){
                             newElement.setName(methSelector.getSelectedMethod().toFullString());
                             try{

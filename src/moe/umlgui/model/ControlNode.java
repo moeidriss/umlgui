@@ -22,4 +22,15 @@ public abstract class ControlNode extends UmlCoreElement  implements java.io.Ser
         super(type);
         setName("New Control Node");
     }
+    
+    boolean complete = false;
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+    
 }
