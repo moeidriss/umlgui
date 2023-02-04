@@ -22,8 +22,14 @@ import java.util.ArrayList;
  * @author Moe
  */
 public class ActivityFlow<UmlCoreElement> extends ArrayList{
-    public ActivityFlow(){
-        
+    UmlDiagram diagram;
+
+    public UmlDiagram getDiagram() {
+        return diagram;
+    }
+    
+    public ActivityFlow(UmlDiagram diagram){
+        this.diagram = diagram;
     }
     
     public String toString(){

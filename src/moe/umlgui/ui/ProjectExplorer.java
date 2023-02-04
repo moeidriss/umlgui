@@ -53,11 +53,6 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     }
 
     private void loadProject(){        
-        //setBorder(new TitledBorder(project.getName()));
-        
-        propertyEditor.setContext(project);
-        //palette.setProject(project);
-        
         explorer = new Explorer(project);      
         explorer.addPropertyChangeListener(this);
         jSplitPane2.setTopComponent(explorer);
@@ -185,6 +180,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         if(model==null){
             model = new BusinessModel(project);
             model.setName("New Business Model");
+            project.getModels().add(model);
         }
 
         
@@ -204,7 +200,6 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         }
         
         if(ud !=  null){
-            project.getDiagrams().add(ud);
             model.getDiagrams().add(ud);
             propertyEditor.edit(ud);
             

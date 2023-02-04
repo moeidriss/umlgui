@@ -151,6 +151,21 @@ public abstract class UmlModel implements java.io.Serializable{
         return name;
     }
     
+    public String dump(){
+        StringBuffer sb = new StringBuffer();
+        
+        sb.append("Model.dump():").append(name).append("\n");
+        sb.append("\tElements\n");
+        for(UmlCoreElement e : this.coreElementList){
+            sb.append(e.dump());
+        }
+        sb.append("\tDiagrams\n");
+        for(UmlDiagram e : this.getDiagrams()){
+            sb.append(e.dump());
+        }
+        return sb.toString();
+    }
+    
     
     /*populated  by checkConsistency */
     String consistencyCheck;

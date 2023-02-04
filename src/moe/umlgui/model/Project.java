@@ -35,12 +35,6 @@ public class Project implements java.io.Serializable{
         this.folder = folder;
     }
     
-    ArrayList<UmlDiagram> diagrams = new ArrayList();
-    public ArrayList<UmlDiagram> getDiagrams() {
-        return diagrams;
-    }
-
-    
     
     
     HashMap<Long,UmlCoreElement> coreElementMap = new HashMap();
@@ -140,10 +134,16 @@ public class Project implements java.io.Serializable{
     public String dump(){
         StringBuffer sb = new StringBuffer();
         
-        sb.append("Projct.dump()\n");
+        sb.append("Projct.dump():").append(name).append("\n");
+        sb.append("\tElements\n");
         for(UmlCoreElement e : this.coreElementList){
             sb.append(e.dump());
         }
+        sb.append("\tDi\n");
+        for(UmlModel e : this.getModels()){
+            sb.append(e.dump());
+        }
+        sb.append("==========================================\n");
         return sb.toString();
     }
     

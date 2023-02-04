@@ -230,13 +230,15 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
     public void setSelection(Object selection){
         this.selection = selection;
         
+        
         if(nowExploring==PROJECT){
             if(selection==project)
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getRoot())));
             else if(UmlModel.class.isInstance(selection)){
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(selection)))));
             }
-            else if(UmlDiagram.class.isInstance(selection)){
+            //top lev dgrms
+            else if(UmlDiagram.class.isInstance(selection) && !((UmlDiagram)selection).isAttached() ){
                 DefaultMutableTreeNode modelNode = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), project.getModels().indexOf(((UmlDiagram)selection).getUmlModel()));
                 jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(modelNode, ((UmlDiagram)selection).getUmlModel().getDiagrams().indexOf(selection)))));
             }
@@ -247,8 +249,10 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                     jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot((DefaultMutableTreeNode)treeModel.getChild(diagramNode, ((UmlElement)selection).getUmlDiagram().getElementList().indexOf(selection)))));
                 }
             }
-            //TODO SELECTION
-            //diagramNode =... will throw exception if selection is 
+            //attached dgrm
+            else if(UmlDiagram.class.isInstance(selection) && !((UmlDiagram)selection).isAttached() ){
+                
+            }
             else{ }
         }
         

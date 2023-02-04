@@ -227,7 +227,6 @@ public class UmlDesigner extends javax.swing.JFrame implements PropertyChangeLis
         JDialog d = new JDialog(this);
         Project project = new Project();
         PropertyEditor pe = new PropertyEditor();
-        pe.setContext(project);
         pe.edit(project);
         pe.addPropertyChangeListener(new PropertyChangeListener(){
             public void propertyChange(PropertyChangeEvent evt) {

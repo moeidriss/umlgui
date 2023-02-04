@@ -38,14 +38,11 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
     ConditionalBlock entity;
     TestTableModel testTableModel;
     
-    Project context;
-    
     /**
      * Creates new form LogicalTestPanel
      */
-    public ConditionalBlockPanel(ConditionalBlock entity, Project context) {
+    public ConditionalBlockPanel(ConditionalBlock entity) {
         this.entity = entity;
-        this.context = context;
         testTableModel = new TestTableModel();
         initComponents();
         
@@ -67,7 +64,7 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
                 b.addActionListener(new ActionListener(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        ActivityFlowComponent fComp = new ActivityFlowComponent((ActivityFlow)value,context,entity.getUmlDiagram().getControlLevel());
+                        ActivityFlowComponent fComp = new ActivityFlowComponent((ActivityFlow)value);
                         JDialog d = new JDialog();
                         d.getContentPane().add(fComp , BorderLayout.CENTER);
 
@@ -266,9 +263,9 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
         LogicalTest t = entity.newTest();
         if(entity.getTestList().isEmpty())  t.setCondition("IF");
         
-        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t),context,entity.getUmlDiagram().getControlLevel());
+        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t));
         
-        LogicalTestComponent tComp = new LogicalTestComponent(t,context);
+        LogicalTestComponent tComp = new LogicalTestComponent(t,entity.getUmlDiagram());
         
         JPanel p = new JPanel();
         p.setLayout(new GridLayout(0,1));

@@ -17,11 +17,12 @@ public class WhileLoop extends ControlNode implements java.io.Serializable{
     public WhileLoop() {
         super("While Loop");
         setName("New While Loop");
+        activityFlow =  new ActivityFlow(umlDiagram);
     }
 
     LogicalTest logicalTest = new LogicalTest();
     
-    ActivityFlow activityFlow =  new ActivityFlow();
+    ActivityFlow activityFlow;
     
 
 

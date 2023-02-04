@@ -40,6 +40,7 @@ import moe.umlgui.model.Project;
 import moe.umlgui.model.RepeatLoop;
 import moe.umlgui.model.SendSignal;
 import moe.umlgui.model.UmlCoreElement;
+import moe.umlgui.model.UmlDiagram;
 import moe.umlgui.model.WhileLoop;
 
 /**
@@ -49,16 +50,14 @@ import moe.umlgui.model.WhileLoop;
 public class ParallelFlowsComponent extends javax.swing.JPanel {
 
     ArrayList<ActivityFlow> flows;
-    Project context;
-    int controlLevel;
+    UmlDiagram context;
     
     /**
      * Creates new form ActivityFlowComponent
      */
-    public ParallelFlowsComponent(ArrayList<ActivityFlow> flows , Project context , int controlLevel) {
+    public ParallelFlowsComponent(ArrayList<ActivityFlow> flows , UmlDiagram context) {
         this.flows = flows;
         this.context = context;
-        this.controlLevel = controlLevel;
         initComponents();
         reloadList();
     }
@@ -150,8 +149,8 @@ public class ParallelFlowsComponent extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        ActivityFlow f = new ActivityFlow();
-        ActivityFlowComponent fc = new ActivityFlowComponent(f,context,controlLevel);
+        ActivityFlow f = new ActivityFlow(context);
+        ActivityFlowComponent fc = new ActivityFlowComponent(f);
 
 
         JDialog acDialog = new JDialog();

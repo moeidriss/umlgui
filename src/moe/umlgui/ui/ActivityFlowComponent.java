@@ -20,6 +20,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -35,10 +37,12 @@ import moe.umlgui.model.ActivityFinalNode;
 import moe.umlgui.model.ActivityFlow;
 import moe.umlgui.model.ConditionalBlock;
 import moe.umlgui.model.FlowFinalNode;
+import moe.umlgui.model.ModelException;
 import moe.umlgui.model.Project;
 import moe.umlgui.model.RepeatLoop;
 import moe.umlgui.model.SendSignal;
 import moe.umlgui.model.UmlCoreElement;
+import moe.umlgui.model.UmlDiagram;
 import moe.umlgui.model.WhileLoop;
 
 /**
@@ -48,18 +52,14 @@ import moe.umlgui.model.WhileLoop;
 public class ActivityFlowComponent extends javax.swing.JPanel {
 
     ActivityFlow activityFlow;
-    Project context;
-    int controlLevel;
     
     
     //TODO if
     /**
      * Creates new form ActivityFlowComponent
      */
-    public ActivityFlowComponent(ActivityFlow flow , Project context , int controlLevel) {
+    public ActivityFlowComponent(ActivityFlow flow) {
         this.activityFlow = flow;
-        this.context = context;
-        this.controlLevel = controlLevel;
         initComponents();
         reloadList();
     }
@@ -159,90 +159,80 @@ public class ActivityFlowComponent extends javax.swing.JPanel {
              "While Loop" , "Repeat Loop"}, "Action");
         
         final PropertyEditor pe = new PropertyEditor();
-        pe.setContext(context);
         UmlCoreElement ac = null;
         if(sel.equals("Action")){
             ac = new Action();
-            pe.edit(ac);
         }
         else if(sel.equals("Flow End")){
             ac = new FlowFinalNode();
-            pe.edit(ac);
         }
         else if(sel.equals("Stop")){
             ac = new ActivityFinalNode();
-            pe.edit(ac);
         }
         else if(sel.equals("Stop")){
             ac = new ActivityFinalNode();
-            pe.edit(ac);
         }
         else if(sel.equals("Call Activity")){
             ac = new CallActivity();
-            pe.edit(ac);
         }
         else if(sel.equals("Accept Event")){
             ac = new AcceptEvent();
-            pe.edit(ac);
         }
         else if(sel.equals("Accept Time Event")){
             ac = new AcceptTimeEvent();
-            pe.edit(ac);
         }
         else if(sel.equals("Send Signal")){
             ac = new SendSignal();
-            pe.edit(ac);
         }
         else if(sel.equals("Conditional Block")){
             ac = new ConditionalBlock();
-            pe.edit(ac);
         }
         else if(sel.equals("While Loop")){
             ac = new WhileLoop();
-            pe.edit(ac);
         }
         else if(sel.equals("Repeat Loop")){
             ac = new RepeatLoop();
-            pe.edit(ac);
         }
         else if(sel.equals("Split")){
             ac = new WhileLoop();
-            pe.edit(ac);
         }
         else if(sel.equals("Fork")){
             ac = new RepeatLoop();
-            pe.edit(ac);
+            
         }
         
         if(ac!=null){
-            pe.setContext(context);
-            //TODO add nested activities to project? impact PUMLDriver
-            //done.
+            try {
+                activityFlow.getDiagram().addCoreElement(ac);
+                pe.showToolbar(false);
+                pe.edit(ac);
+
+                JDialog acDialog = new JDialog();
+                acDialog.getContentPane().add(pe , BorderLayout.CENTER);
+
+                JPanel buttonsP = new JPanel();
+                JButton okButton = new JButton("OK");
+                okButton.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        pe.save();                    
+                        activityFlow.add(pe.umlCoreElement);//position   
+                        reloadList();
+                        acDialog.setVisible(false);
+                    }            
+                });
+                buttonsP.add(okButton);
+
+                acDialog.getContentPane().add(buttonsP , BorderLayout.SOUTH);
+                acDialog.pack();
+                acDialog.setSize(acDialog.getSize().width , (int)(Toolkit.getDefaultToolkit().getScreenSize().height*0.75));
+                acDialog.setLocationRelativeTo(null);
+
+                acDialog.setVisible(true);
+            } catch (ModelException ex) {
+                Logger.getLogger(ActivityFlowComponent.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
-            pe.showToolbar(false);
-
-            JDialog acDialog = new JDialog();
-            acDialog.getContentPane().add(pe , BorderLayout.CENTER);
-
-            JPanel buttonsP = new JPanel();
-            JButton okButton = new JButton("OK");
-            okButton.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    pe.save();                    
-                    activityFlow.add(pe.umlCoreElement);//position   
-                    reloadList();
-                    acDialog.setVisible(false);
-                }            
-            });
-            buttonsP.add(okButton);
-
-            acDialog.getContentPane().add(buttonsP , BorderLayout.SOUTH);
-            acDialog.pack();
-            acDialog.setSize(acDialog.getSize().width , (int)(Toolkit.getDefaultToolkit().getScreenSize().height*0.75));
-            acDialog.setLocationRelativeTo(null);
-
-            acDialog.setVisible(true);
         }
 
     }//GEN-LAST:event_addButtonActionPerformed

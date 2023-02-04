@@ -40,7 +40,7 @@ public class ConditionalBlock extends ControlNode implements java.io.Serializabl
     
     public LogicalTest newTest(){
         LogicalTest t = new LogicalTest();
-        testMap.put(t, new ActivityFlow());
+        testMap.put(t, new ActivityFlow(this.umlDiagram));
         testList.add(t);
         return t;
     }

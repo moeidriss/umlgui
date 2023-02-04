@@ -17,11 +17,12 @@ public class RepeatLoop extends ControlNode implements java.io.Serializable{
     public RepeatLoop() {
         super("Repeat Loop");
         setName("New Repeat Loop");
+        activityFlow =  new ActivityFlow(umlDiagram);
     }
 
     LogicalTest logicalTest = new LogicalTest();
     
-    ActivityFlow activityFlow =  new ActivityFlow();
+    ActivityFlow activityFlow;
     
 
     public LogicalTest getLogicalTest() {

@@ -238,6 +238,16 @@ public abstract class UmlDiagram implements Serializable{
     public String toString(){
         return name;
     }
+    
+    public String dump(){
+        StringBuffer sb = new StringBuffer();
+        
+        sb.append("diagram.dump() : ").append(name).append(" - attached:").append(attached).append("\n");
+        for(UmlCoreElement e : this.coreElementList){
+            sb.append(e.dump());
+        }
+        return sb.toString();
+    }
  
     public static int FREE = 0;
     public static int CONSTRAINED = 1;

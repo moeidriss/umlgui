@@ -150,7 +150,7 @@ String type;
     
     public String dump(){
         StringBuffer sb = new StringBuffer();
-        sb.append("!!! Dumping " + name + " !!!\n");
+        sb.append("!!! Dumping element " + name + " !!!\n");
         if(BusinessObjectOwner.class.isInstance(this)){
             sb.append("\t Business Objects\n");
             for(CoreObject o : ((BusinessObjectOwner)this).getBusinessObjects()){
@@ -165,7 +165,11 @@ String type;
             }
         }
         
-        sb.append("==========================================\n");
+        if(AttachmentOwner.class.isInstance(this)){
+            for(UmlDiagram o : ((AttachmentOwner)this).getAttachedDiagrams()){
+                sb.append(o.dump());
+            }
+        }
         
         return sb.toString();
     }

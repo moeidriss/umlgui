@@ -57,18 +57,12 @@ public class PropertyEditor extends javax.swing.JPanel {
     
     int nowEditing = -1;
     
-    Project context;
-    
     /**
      * Creates new form PropertyEditor
      * @param context if null, context is global library
      */
     public PropertyEditor() {
         initComponents();
-    }
-
-    public void setContext(Project context){
-        this.context = context;
     }
     
     /**
@@ -107,7 +101,9 @@ public class PropertyEditor extends javax.swing.JPanel {
     
     private Object[] getElementList(){
         ArrayList<Object> l = new ArrayList();
-        l.addAll(context.getElementList());
+        if(nowEditing==ELEMENT){
+            l.addAll(umlCoreElement.getUmlDiagram().getUmlModel().getElementList());
+        }
         return (Object[])l.toArray();
     }
 
@@ -236,7 +232,7 @@ public class PropertyEditor extends javax.swing.JPanel {
 
         else if(ConditionalBlock.class.isInstance(umlCoreElement)){
             ConditionalBlockPanel tPanel = 
-                    new ConditionalBlockPanel((ConditionalBlock)umlCoreElement , context);
+                    new ConditionalBlockPanel((ConditionalBlock)umlCoreElement);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
@@ -250,7 +246,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         
         else if(WhileLoop.class.isInstance(umlCoreElement)){
             LogicalTestComponent tComp = 
-                    new LogicalTestComponent(((WhileLoop)umlCoreElement).getLogicalTest(),context );
+                    new LogicalTestComponent(((WhileLoop)umlCoreElement).getLogicalTest() , umlCoreElement.getUmlDiagram() );
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -267,7 +263,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ActivityFlowComponent(((WhileLoop)umlCoreElement).getActivityFlow(),context,umlDiagram.getControlLevel()), gridBagConstraints);
+            editPanel.add(new ActivityFlowComponent(((WhileLoop)umlCoreElement).getActivityFlow()), gridBagConstraints);
         }
         
         
@@ -278,10 +274,10 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow(),context,umlDiagram.getControlLevel()), gridBagConstraints);
+            editPanel.add(new ActivityFlowComponent(((RepeatLoop)umlCoreElement).getActivityFlow()), gridBagConstraints);
 
             LogicalTestComponent tComp = 
-                    new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() ,context);
+                    new LogicalTestComponent(((RepeatLoop)umlCoreElement).getLogicalTest() , umlCoreElement.getUmlDiagram() );
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -299,7 +295,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ParallelFlowsComponent(((Split)umlCoreElement).getActivityFlows(),context,umlDiagram.getControlLevel()), gridBagConstraints);
+            editPanel.add(new ParallelFlowsComponent(((Split)umlCoreElement).getActivityFlows(),umlDiagram), gridBagConstraints);
         }
         
         else if(Fork.class.isInstance(umlCoreElement)){
@@ -309,7 +305,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.weighty = 1.0;
             
             gridBagConstraints.gridy = yCounter;    yCounter++;
-            editPanel.add(new ParallelFlowsComponent(((Fork)umlCoreElement).getActivityFlows(),context,umlDiagram.getControlLevel()), gridBagConstraints);
+            editPanel.add(new ParallelFlowsComponent(((Fork)umlCoreElement).getActivityFlows(),umlDiagram), gridBagConstraints);
         }
         
         
@@ -486,7 +482,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         if(BusinessObjectOwner.class.isInstance(umlCoreElement)){
 
             CoreObjectPanel tPanel = 
-                    new CoreObjectPanel((BusinessObjectOwner)umlCoreElement , context);
+                    new CoreObjectPanel((BusinessObjectOwner)umlCoreElement);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;
@@ -501,7 +497,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         if(ControllerOwner.class.isInstance(umlCoreElement)){
 
             CoreObjectPanel tPanel = 
-                    new CoreObjectPanel((ControllerOwner)umlCoreElement , context);
+                    new CoreObjectPanel((ControllerOwner)umlCoreElement );
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
             gridBagConstraints.weightx = 1.0;

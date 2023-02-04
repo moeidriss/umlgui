@@ -30,7 +30,6 @@ public class CoreObjectPanel extends javax.swing.JPanel {
     UmlCoreElement entity;
     CoreObjectTableModel tableModel;
     
-    Project context;
     
     static int BUSINESS_OBJECT = 0;
     static int CONTROLLER = 1;
@@ -40,10 +39,9 @@ public class CoreObjectPanel extends javax.swing.JPanel {
     /**
      * Creates new form LogicalTestPanel
      */
-    public CoreObjectPanel(BusinessObjectOwner entity, Project context){
+    public CoreObjectPanel(BusinessObjectOwner entity){
         this.entity = (UmlCoreElement)entity;
         type = BUSINESS_OBJECT;
-        this.context = context;
         tableModel = new CoreObjectTableModel();
         initComponents();
         
@@ -55,10 +53,9 @@ public class CoreObjectPanel extends javax.swing.JPanel {
     /**
      * Creates new form LogicalTestPanel
      */
-    public CoreObjectPanel(ControllerOwner entity, Project context){
+    public CoreObjectPanel(ControllerOwner entity){
         this.entity = (UmlCoreElement)entity;
         type = CONTROLLER;
-        this.context = context;
         tableModel = new CoreObjectTableModel();
         initComponents();
         
@@ -322,7 +319,7 @@ public class CoreObjectPanel extends javax.swing.JPanel {
 
     private void linkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkButtonActionPerformed
         ArrayList l = new ArrayList();
-        for(CoreObject obj : context.getCoreObjects()){
+        for(CoreObject obj : entity.getUmlDiagram().getUmlModel().getProject().getCoreObjects()){
             if((type==BUSINESS_OBJECT && !((BusinessObjectOwner)entity).getBusinessObjects().contains(obj))
                 ||
             (type==CONTROLLER && !((ControllerOwner)entity).getControllers().contains(obj)))

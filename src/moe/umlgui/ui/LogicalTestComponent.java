@@ -16,12 +16,12 @@ import moe.umlgui.model.*;
 public class LogicalTestComponent extends javax.swing.JPanel {
 
     LogicalTest test;
-    Project context;
+    UmlDiagram context;
     
     /**
      * Creates new form LogicalTestComponent
      */
-    public LogicalTestComponent(LogicalTest test , Project context) {
+    public LogicalTestComponent(LogicalTest test , UmlDiagram context) {
         this.test = test;
         this.context = context;
         initComponents();
@@ -35,7 +35,7 @@ public class LogicalTestComponent extends javax.swing.JPanel {
     CoreObjectPropertySelector propSelector;
 
     private void load(){
-        propSelector = new CoreObjectPropertySelector(context);
+        propSelector = new CoreObjectPropertySelector(context.getUmlModel().getProject());
         jPanel1.add(propSelector , BorderLayout.CENTER);
         
         if(test.getCondition()!=null) conditionComboBox.setSelectedItem(test.getCondition());
