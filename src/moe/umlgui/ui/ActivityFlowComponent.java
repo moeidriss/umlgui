@@ -22,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -31,18 +30,15 @@ import javax.swing.JPanel;
 import moe.umlgui.model.AcceptEvent;
 import moe.umlgui.model.AcceptTimeEvent;
 import moe.umlgui.model.Action;
-import moe.umlgui.model.Activity;
 import moe.umlgui.model.CallActivity;
 import moe.umlgui.model.ActivityFinalNode;
 import moe.umlgui.model.ActivityFlow;
 import moe.umlgui.model.ConditionalBlock;
 import moe.umlgui.model.FlowFinalNode;
 import moe.umlgui.model.ModelException;
-import moe.umlgui.model.Project;
 import moe.umlgui.model.RepeatLoop;
 import moe.umlgui.model.SendSignal;
 import moe.umlgui.model.UmlCoreElement;
-import moe.umlgui.model.UmlDiagram;
 import moe.umlgui.model.WhileLoop;
 
 /**

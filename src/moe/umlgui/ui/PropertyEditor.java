@@ -99,14 +99,6 @@ public class PropertyEditor extends javax.swing.JPanel {
         if(b)   add(saveButton , BorderLayout.NORTH);
     }
     
-    private Object[] getElementList(){
-        ArrayList<Object> l = new ArrayList();
-        if(nowEditing==ELEMENT){
-            l.addAll(umlCoreElement.getUmlDiagram().getUmlModel().getElementList());
-        }
-        return (Object[])l.toArray();
-    }
-
     
     private void loadElement(){
         setBorder(javax.swing.BorderFactory.createTitledBorder(umlCoreElement.getName()));
@@ -177,6 +169,9 @@ public class PropertyEditor extends javax.swing.JPanel {
                     ActivityDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
                     ||
                 (ControlNode.class.isInstance(umlCoreElement) && 
+                ActivityDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
+                    ||
+                (ActivityNode.class.isInstance(umlCoreElement) && 
                 ActivityDiagram.class.isInstance(umlCoreElement.getUmlDiagram()))
             ){
                 JComboBox cb =  new JComboBox(((ActivityDiagram)umlCoreElement.getUmlDiagram()).getSwimlanes().keySet().toArray());
@@ -311,7 +306,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         
         else if(Message.class.isInstance(umlCoreElement)){
             if(umlCoreElement.getUmlDiagram().getControlLevel()==UmlDiagram.FREE){
-                fromComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+                fromComboBox.setModel(new DefaultComboBoxModel(umlCoreElement.getUmlDiagram().getElementList().toArray()));
                 if(((Message)umlCoreElement).getFrom() != null){
                     fromComboBox.setSelectedItem(((Message)umlCoreElement).getFrom());
                 }
@@ -321,7 +316,7 @@ public class PropertyEditor extends javax.swing.JPanel {
                 gridBagConstraints.gridy = yCounter;    yCounter++;
                 editPanel.add(fromComboBox, gridBagConstraints);
 
-                toComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+                toComboBox.setModel(new DefaultComboBoxModel(umlCoreElement.getUmlDiagram().getElementList().toArray()));
                 if(((Message)umlCoreElement).getTo() != null){
                     toComboBox.setSelectedItem(((Message)umlCoreElement).getTo());
                 }
@@ -388,7 +383,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         //TODO Note Element
 
         else if(Association.class.isInstance(umlCoreElement)){
-            fromComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+            fromComboBox.setModel(new DefaultComboBoxModel(umlCoreElement.getUmlDiagram().getElementList().toArray()));
             if(((Association)umlCoreElement).getPartyA() != null){
                 fromComboBox.setSelectedItem(((Association)umlCoreElement).getPartyA());
             }
@@ -402,7 +397,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(fromComboBox, gridBagConstraints);
 
-            toComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+            toComboBox.setModel(new DefaultComboBoxModel(umlCoreElement.getUmlDiagram().getElementList().toArray()));
             if(((Association)umlCoreElement).getPartyB() != null){
                 toComboBox.setSelectedItem(((Association)umlCoreElement).getPartyA());
             }
@@ -417,7 +412,7 @@ public class PropertyEditor extends javax.swing.JPanel {
         }
 
         else if(Include.class.isInstance(umlCoreElement)){
-            fromComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+            fromComboBox.setModel(new DefaultComboBoxModel(umlCoreElement.getUmlDiagram().getElementList().toArray()));
             if(((Include)umlCoreElement).getPartyA() != null){
                 fromComboBox.setSelectedItem(((Include)umlCoreElement).getPartyA());
             }
@@ -431,7 +426,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             gridBagConstraints.gridy = yCounter;    yCounter++;
             editPanel.add(fromComboBox, gridBagConstraints);
 
-            toComboBox.setModel(new DefaultComboBoxModel(getElementList()));
+            toComboBox.setModel(new DefaultComboBoxModel(umlCoreElement.getUmlDiagram().getElementList().toArray()));
             if(((Include)umlCoreElement).getPartyB() != null){
                 toComboBox.setSelectedItem(((Include)umlCoreElement).getPartyA());
             }

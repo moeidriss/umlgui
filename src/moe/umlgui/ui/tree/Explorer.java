@@ -40,6 +40,7 @@ import moe.umlgui.model.Action;
 import moe.umlgui.model.ActivityDiagram;
 import moe.umlgui.model.ActivityFinalNode;
 import moe.umlgui.model.ActivityInitialNode;
+import moe.umlgui.model.ActivityNode;
 import moe.umlgui.model.Actor;
 import moe.umlgui.model.Association;
 import moe.umlgui.model.AttachmentOwner;
@@ -554,11 +555,29 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
             options.add("Split");   options.add("Fork");    
             
             JComboBox tC = new JComboBox(options.toArray());
-            //TODO actionlistnr: if sel controlNode disable/null methSelector
             
             //if activity: method
             CoreObjectMethodSelector methSelector = new CoreObjectMethodSelector(diagram.getUmlModel().getProject());
 
+            tC.addActionListener(new ActionListener(){                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(tC.getSelectedIndex()!=-1  &&
+                       !tC.getSelectedItem().equals("Action") &&
+                       !tC.getSelectedItem().equals("Call Activity")&&
+                       !tC.getSelectedItem().equals("Accept Event") &&
+                       !tC.getSelectedItem().equals("Accept Time Event") &&
+                       !tC.getSelectedItem().equals("Send Signal")
+                    ){
+                        methSelector.setSelectedMethod(null);
+                        methSelector.setEnabled(false);
+                    }
+                    else{
+                        methSelector.setEnabled(true);
+                    }
+                }
+            });
+            
             JButton okButton = new JButton("OK");
             okButton.addActionListener(new ActionListener(){                
                 @Override
@@ -621,7 +640,9 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
                             }
                             diagram.getConstraints().put(newElement, methSelector.getSelectedMethod());                            
                         }
-                        else if(ControlNode.class.isInstance(newElement)){
+                        else if(ControlNode.class.isInstance(newElement) ||
+                                ActivityNode.class.isInstance(newElement)
+                        ){
                             try{
                                 if(newIndex !=-1 )
                                     diagram.insertCoreElement(newIndex,newElement);            
