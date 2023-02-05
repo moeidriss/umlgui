@@ -98,7 +98,7 @@
             <Component class="javax.swing.JButton" name="addPropertyButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/moe/umlgui/img/16x16/Add.png"/>
+                  <Image iconType="3" name="/16x16/Add.png"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -111,7 +111,7 @@
             <Component class="javax.swing.JButton" name="deletePropertyButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/moe/umlgui/img/16x16/Remove.png"/>
+                  <Image iconType="3" name="/16x16/Remove.png"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -183,7 +183,7 @@
             <Component class="javax.swing.JButton" name="addMethodButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/moe/umlgui/img/16x16/Add.png"/>
+                  <Image iconType="3" name="/16x16/Add.png"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -196,7 +196,7 @@
             <Component class="javax.swing.JButton" name="deleteMethodButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/moe/umlgui/img/16x16/Remove.png"/>
+                  <Image iconType="3" name="/16x16/Remove.png"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>

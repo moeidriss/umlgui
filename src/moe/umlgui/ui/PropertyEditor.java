@@ -910,9 +910,11 @@ public class PropertyEditor extends javax.swing.JPanel {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLayout(new java.awt.BorderLayout());
 
-        saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/24x24/media-floppy.png"))); // NOI18N
-        saveButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        saveButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        saveButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/24x24/media-floppy.png"))); // NOI18N
+        saveButton.setText("Save");
+        saveButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        saveButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);

@@ -51,12 +51,15 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         this.project = project;
         loadProject();
     }
+    
+    PropertyEditor propertyEditor = new PropertyEditor();
 
     private void loadProject(){        
         explorer = new Explorer(project);      
         explorer.addPropertyChangeListener(this);
         jSplitPane2.setTopComponent(explorer);
         propertyEditor.addPropertyChangeListener(this);
+        propertyEditorScrollPane.setViewportView(propertyEditor);
         
         jTabbedPane1.addChangeListener(new ChangeListener(){
             @Override
@@ -96,13 +99,12 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         pHolderPanel2 = new javax.swing.JPanel();
         pHolderPanel1 = new javax.swing.JPanel();
         propertyEditorScrollPane = new javax.swing.JScrollPane();
-        propertyEditor = new moe.umlgui.ui.PropertyEditor();
 
         setLayout(new java.awt.BorderLayout());
 
         jPanel1.setLayout(new java.awt.GridLayout(2, 0));
 
-        saveProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/24x24/media-floppy.png"))); // NOI18N
+        saveProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/24x24/media-floppy.png"))); // NOI18N
         saveProjectButton.setText("Save Project");
         saveProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         saveProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
@@ -117,7 +119,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         jToolBar1.setFloatable(true);
         jToolBar1.setRollover(true);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/24x24/DiagramNew.PNG"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/24x24/DiagramNew.PNG"))); // NOI18N
         jLabel1.setText("New Diagram: ");
         jToolBar1.add(jLabel1);
 
@@ -153,9 +155,6 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
         jSplitPane2.setLeftComponent(pHolderPanel1);
 
         jSplitPane1.setLeftComponent(jSplitPane2);
-
-        propertyEditorScrollPane.setViewportView(propertyEditor);
-
         jSplitPane1.setRightComponent(propertyEditorScrollPane);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
@@ -263,7 +262,6 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel pHolderPanel1;
     private javax.swing.JPanel pHolderPanel2;
-    private moe.umlgui.ui.PropertyEditor propertyEditor;
     private javax.swing.JScrollPane propertyEditorScrollPane;
     private javax.swing.JButton saveProjectButton;
     // End of variables declaration//GEN-END:variables

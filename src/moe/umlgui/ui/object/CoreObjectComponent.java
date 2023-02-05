@@ -111,7 +111,7 @@ public class CoreObjectComponent extends javax.swing.JPanel {
         propToolBar.setBackground(new java.awt.Color(255, 255, 255));
         propToolBar.setRollover(true);
 
-        addPropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addPropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Add.png"))); // NOI18N
         addPropertyButton.setFocusable(false);
         addPropertyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addPropertyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -122,7 +122,7 @@ public class CoreObjectComponent extends javax.swing.JPanel {
         });
         propToolBar.add(addPropertyButton);
 
-        deletePropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        deletePropertyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Remove.png"))); // NOI18N
         deletePropertyButton.setFocusable(false);
         deletePropertyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deletePropertyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -153,7 +153,7 @@ public class CoreObjectComponent extends javax.swing.JPanel {
         methToolBar.setBackground(new java.awt.Color(255, 255, 255));
         methToolBar.setRollover(true);
 
-        addMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Add.png"))); // NOI18N
         addMethodButton.setFocusable(false);
         addMethodButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addMethodButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -164,7 +164,7 @@ public class CoreObjectComponent extends javax.swing.JPanel {
         });
         methToolBar.add(addMethodButton);
 
-        deleteMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        deleteMethodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Remove.png"))); // NOI18N
         deleteMethodButton.setFocusable(false);
         deleteMethodButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteMethodButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

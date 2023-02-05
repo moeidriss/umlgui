@@ -319,7 +319,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
 
         jToolBar1.setRollover(true);
 
-        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Add.png"))); // NOI18N
         addButton.setEnabled(false);
         addButton.setFocusable(false);
         addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -331,7 +331,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         });
         jToolBar1.add(addButton);
 
-        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Remove.png"))); // NOI18N
         removeButton.setEnabled(false);
         removeButton.setFocusable(false);
         removeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -343,7 +343,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         });
         jToolBar1.add(removeButton);
 
-        upButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-up.png"))); // NOI18N
+        upButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/go-up.png"))); // NOI18N
         upButton.setEnabled(false);
         upButton.setFocusable(false);
         upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -355,7 +355,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         });
         jToolBar1.add(upButton);
 
-        downButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-down.png"))); // NOI18N
+        downButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/go-down.png"))); // NOI18N
         downButton.setEnabled(false);
         downButton.setFocusable(false);
         downButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -367,7 +367,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         });
         jToolBar1.add(downButton);
 
-        attachDiagramButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/DiagramLinked.png"))); // NOI18N
+        attachDiagramButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/DiagramLinked.png"))); // NOI18N
         attachDiagramButton.setToolTipText("Attach Diagram");
         attachDiagramButton.setEnabled(false);
         attachDiagramButton.setFocusable(false);
@@ -380,7 +380,7 @@ public class Explorer extends javax.swing.JPanel implements PropertyChangeListen
         });
         jToolBar1.add(attachDiagramButton);
 
-        exportPptButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/application-vnd.ms-powerpoint.png"))); // NOI18N
+        exportPptButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/application-vnd.ms-powerpoint.png"))); // NOI18N
         exportPptButton.setFocusable(false);
         exportPptButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         exportPptButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

@@ -38,7 +38,7 @@
         <Component class="javax.swing.JEditorPane" name="jEditorPane1">
           <Properties>
             <Property name="page" type="java.net.URL" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="getClass().getResource(&quot;man.html&quot;)" type="code"/>
+              <Connection code="getClass().getResource(&quot;/doc/man.html&quot;)" type="code"/>
             </Property>
           </Properties>
         </Component>

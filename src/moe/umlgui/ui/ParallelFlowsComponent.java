@@ -86,7 +86,7 @@ public class ParallelFlowsComponent extends javax.swing.JPanel {
         jToolBar1.setBackground(new java.awt.Color(255, 255, 255));
         jToolBar1.setRollover(true);
 
-        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Add.png"))); // NOI18N
         addButton.setFocusable(false);
         addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -97,7 +97,7 @@ public class ParallelFlowsComponent extends javax.swing.JPanel {
         });
         jToolBar1.add(addButton);
 
-        deleteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+        deleteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Remove.png"))); // NOI18N
         deleteButton.setFocusable(false);
         deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -108,7 +108,7 @@ public class ParallelFlowsComponent extends javax.swing.JPanel {
         });
         jToolBar1.add(deleteButton);
 
-        upButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-up.png"))); // NOI18N
+        upButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/go-up.png"))); // NOI18N
         upButton.setFocusable(false);
         upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         upButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -119,7 +119,7 @@ public class ParallelFlowsComponent extends javax.swing.JPanel {
         });
         jToolBar1.add(upButton);
 
-        downButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/go-down.png"))); // NOI18N
+        downButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/go-down.png"))); // NOI18N
         downButton.setFocusable(false);
         downButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         downButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

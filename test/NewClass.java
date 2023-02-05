@@ -27,7 +27,7 @@ public class NewClass {
         StringBuffer sb = new StringBuffer();
         File f = new File("C:\\Users\\Moe\\Documents\\NetBeansProjects\\MoeUmlGui\\dist\\lib");
         for(int i=0 ; i<f.list().length ; i++){
-            sb.append("lib/").append(f.list()[i]).append("\t");
+            sb.append("lib/").append(f.list()[i]).append(";");
         }
         System.out.println(sb.toString());
     }

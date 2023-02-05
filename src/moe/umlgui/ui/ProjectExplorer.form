@@ -31,7 +31,7 @@
         <Component class="javax.swing.JButton" name="saveProjectButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/moe/umlgui/img/24x24/media-floppy.png"/>
+              <Image iconType="3" name="/24x24/media-floppy.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Save Project"/>
             <Property name="horizontalAlignment" type="int" value="10"/>
@@ -53,7 +53,7 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/moe/umlgui/img/24x24/DiagramNew.PNG"/>
+                  <Image iconType="3" name="/24x24/DiagramNew.PNG"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="New Diagram: "/>
               </Properties>
@@ -153,10 +153,6 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-          <SubComponents>
-            <Component class="moe.umlgui.ui.PropertyEditor" name="propertyEditor">
-            </Component>
-          </SubComponents>
         </Container>
       </SubComponents>
     </Container>

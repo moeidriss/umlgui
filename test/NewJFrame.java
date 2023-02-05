@@ -36,7 +36,7 @@ public class NewJFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         try {
-            jEditorPane1.setPage(getClass().getResource("man.html"));
+            jEditorPane1.setPage(getClass().getResource("/doc/man.html"));
         } catch (java.io.IOException e1) {
             e1.printStackTrace();
         }

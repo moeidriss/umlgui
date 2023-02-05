@@ -55,7 +55,7 @@
         <Component class="javax.swing.JButton" name="addButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/moe/umlgui/img/16x16/Add.png"/>
+              <Image iconType="3" name="/16x16/Add.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -68,7 +68,7 @@
         <Component class="javax.swing.JButton" name="deleteButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/moe/umlgui/img/16x16/Remove.png"/>
+              <Image iconType="3" name="/16x16/Remove.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -81,7 +81,7 @@
         <Component class="javax.swing.JButton" name="upButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/moe/umlgui/img/16x16/go-up.png"/>
+              <Image iconType="3" name="/16x16/go-up.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -94,7 +94,7 @@
         <Component class="javax.swing.JButton" name="downButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/moe/umlgui/img/16x16/go-down.png"/>
+              <Image iconType="3" name="/16x16/go-down.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
