@@ -25,63 +25,63 @@ public class ExplorerTreeCellRenderer extends DefaultTreeCellRenderer {
         Object uObj = ((DefaultMutableTreeNode)value).getUserObject();
         
         if(Project.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/ProjectOpen.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/ProjectOpen.png")));
         else if(UmlModel.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/view-presentation.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/view-presentation.png")));
         else if(UmlDiagram.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Diagram.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Diagram.png")));
         
         
         else if(AcceptEvent.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/AcceptEvent.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/AcceptEvent.png")));
         else if(AcceptTimeEvent.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/AcceptTimeEvent.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/AcceptTimeEvent.png")));
         else if(Action.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Action.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Action.png")));
         else if(ActivityFinalNode.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/ActivityFinalNode.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/ActivityFinalNode.png")));
         else if(ActivityInitialNode.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/ActivityInitialNode.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/ActivityInitialNode.png")));
         else if(Association.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Association.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Association.png")));
         else if(BusinessObject.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/BusinessObject.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/BusinessObject.png")));
         else if(Controller.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Controller.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Controller.png")));
         else if(CallActivity.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/CallActivity.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/CallActivity.png")));
         else if(ConditionalBlock.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/ConditionalBlock.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/ConditionalBlock.png")));
         else if(FlowFinalNode.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/FlowFinalNode.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/FlowFinalNode.png")));
         else if(Actor.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Actor.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Actor.png")));
         else if(Message.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Message.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Message.png")));
         else if(Note.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Note.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Note.png")));
         else if(RepeatLoop.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/RepeatLoop.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/RepeatLoop.png")));
         else if(SendSignal.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/SendSignal.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/SendSignal.png")));
         else if(UseCase.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/UseCase.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/UseCase.png")));
         else if(moe.umlgui.model.System.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/System.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/System.png")));
         //else if(WorkerClass.class.isInstance(uObj)) 
-            //l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/WorkerClass.png")));
+            //l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/WorkerClass.png")));
         else if(WhileLoop.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/WhileLoop.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/WhileLoop.png")));
         else if(Split.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Split.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Split.png")));
         else if(Fork.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Fork.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Fork.png")));
         
         else if(UmlElement.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Element.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Element.png")));
         
         else if(ActivityFlow.class.isInstance(uObj)) 
-            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/ActivityFlow.png")));
+            l.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/ActivityFlow.png")));
             
         
         //TODO Arrays

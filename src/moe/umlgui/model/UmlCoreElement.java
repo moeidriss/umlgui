@@ -26,7 +26,7 @@ String type;
 
     public Image getImage() throws IOException {
         if(image==null){
-            return javax.imageio.ImageIO.read(getClass().getResource("/moe/umlgui/img/" + getClass().getSimpleName() + ".png"));
+            return javax.imageio.ImageIO.read(getClass().getResource("/" + getClass().getSimpleName() + ".png"));
         }
         return image;
     }

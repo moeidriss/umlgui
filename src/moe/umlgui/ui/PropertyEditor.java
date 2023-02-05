@@ -630,7 +630,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             jToolBar1.setOrientation(JToolBar.VERTICAL);
 
             JButton addButton = new JButton();
-            addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+            addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Add.png"))); // NOI18N
             addButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     moe.umlgui.model.Package parent = null;
@@ -654,7 +654,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             jToolBar1.add(addButton);
 
             JButton removeButton = new JButton();
-            removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+            removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Remove.png"))); // NOI18N
             jToolBar1.add(removeButton);
 
             //TODO iLabel -> EditorPanw. get html from file
@@ -724,7 +724,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             jToolBar1.setOrientation(JToolBar.VERTICAL);
 
             JButton addButton = new JButton();
-            addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Add.png"))); // NOI18N
+            addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Add.png"))); // NOI18N
             addButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     String n = JOptionPane.showInputDialog("Name it");
@@ -737,7 +737,7 @@ public class PropertyEditor extends javax.swing.JPanel {
             jToolBar1.add(addButton);
 
             JButton removeButton = new JButton();
-            removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Remove.png"))); // NOI18N
+            removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/16x16/Remove.png"))); // NOI18N
             jToolBar1.add(removeButton);
 
             //TODO iLabel -> EditorPanw. get html from file

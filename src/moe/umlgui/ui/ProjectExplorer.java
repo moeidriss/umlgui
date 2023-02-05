@@ -210,7 +210,7 @@ public class ProjectExplorer extends javax.swing.JPanel implements PropertyChang
             addPropertyChangeListener(diagramExplorer);
             openDiagramExplorers.put(ud, diagramExplorer);
             
-            jTabbedPane1.addTab(ud.getName(), new ImageIcon(getClass().getResource("/moe/umlgui/img/16x16/Cancel.png")), diagramExplorer );
+            jTabbedPane1.addTab(ud.getName(), new ImageIcon(getClass().getResource("/16x16/Cancel.png")), diagramExplorer );
             jTabbedPane1.setSelectedComponent(diagramExplorer);
             
             UmlDiagramPanel dp = new UmlDiagramPanel(ud);
