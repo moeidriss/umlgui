@@ -260,10 +260,11 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
     //TODO implement logic control (a single 'if', single 'else') and testList order
     
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        LogicalTest t = entity.newTest();
+        LogicalTest t = new LogicalTest();
         if(entity.getTestList().isEmpty())  t.setCondition("IF");
         
-        ActivityFlowComponent fComp = new ActivityFlowComponent(entity.getTestMap().get(t));
+        ActivityFlow af = new ActivityFlow(entity.getUmlDiagram());
+        ActivityFlowComponent fComp = new ActivityFlowComponent(af);
         
         LogicalTestComponent tComp = new LogicalTestComponent(t,entity.getUmlDiagram());
         
@@ -280,11 +281,25 @@ public class ConditionalBlockPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tComp.save();
+                entity.addTest(t,af);
                 jTable1.revalidate();
                 d.setVisible(false);
             }            
         });
-        d.getContentPane().add(okButton , BorderLayout.SOUTH);
+        
+        JButton clButton = new JButton("Cancel");
+        clButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                d.setVisible(false);
+            }            
+        });
+        
+        JPanel bPanel = new JPanel(new GridLayout(1,0));
+        bPanel.add(okButton);
+        bPanel.add(clButton);
+        
+        d.getContentPane().add(bPanel , BorderLayout.SOUTH);
         
         d.pack();
         d.setSize(600 , d.getSize().height);

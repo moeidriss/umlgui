@@ -5,6 +5,7 @@
 package moe.umlgui.ui.object;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -266,7 +268,19 @@ public class CoreObjectPanel extends javax.swing.JPanel {
             }            
         });
         
-        d.getContentPane().add(okButton , BorderLayout.SOUTH);
+        JButton clButton = new JButton("Cancel");
+        clButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                d.setVisible(false);
+            }            
+        });
+        
+        JPanel bPanel = new JPanel(new GridLayout(1,0));
+        bPanel.add(okButton);
+        bPanel.add(clButton);
+        
+        d.getContentPane().add(bPanel , BorderLayout.SOUTH);
         d.pack();
         d.setLocationRelativeTo(null);
         d.setVisible(true);
